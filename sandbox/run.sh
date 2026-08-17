@@ -198,6 +198,13 @@ is "a payload with no path at all" \
 # -------------------------------------------------- C. guard, shell calls
 
 sect "C. guard - shell calls"
+# every agent names its shell tool differently; the command identifies it
+for t in Bash Shell Terminal run_terminal_cmd; do
+  p=$(printf '{"tool_name":"%s","tool_input":{"command":"sed -i s/a/b/ billing.lazyspec.md"}}' "$t")
+  is "$t: a write is refused" "$(guard "$p")" 2
+  p=$(printf '{"tool_name":"%s","tool_input":{"command":"cat billing.lazyspec.md"}}' "$t")
+  is "$t: a read is allowed"  "$(guard "$p")" 0
+done
 is "redirect into a specification"  "$(guard "$(shell 'cat > services/api/specs/billing.lazyspec.md')")" 2
 is "append into a specification"    "$(guard "$(shell 'echo x >> billing.lazyspec.md')")" 2
 is "sed -i on a specification"      "$(guard "$(shell 'sed -i s/a/b/ billing.lazyspec.md')")" 2

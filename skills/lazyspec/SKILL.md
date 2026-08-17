@@ -62,12 +62,14 @@ the way in.
 3. **Open a window of your own, naming only what you are about to edit.**
 
    ```
-   printf '%s\n' path/to/the.lazyspec.md > .lazyspec-unlock.<your id>
+   printf '%s\n' path/to/the.lazyspec.md > ".lazyspec-unlock.$$"
    ```
 
-   Pick an `<id>` nobody else will use - your session id, or the branch
-   name. Other agents and subagents may be working in this same tree, and
-   a window of your own means finishing your work never shuts theirs.
+   The suffix must be unique to **this run of these steps**, not to you
+   and not to your session. One session opens and closes the lock many
+   times, and a subagent may be holding one while you work. `$$` is the
+   shell's own process id and needs no thought; a timestamp does as well.
+   Reuse an id and you will close a window somebody else is still using.
 
    Name every file you will touch, one per line. The window opens for
    those and nothing else, so a slip cannot reach a neighbouring
@@ -97,8 +99,10 @@ the way in.
 6. **Check your work.** Every heading has its test, and the repository's
    own test command passes. Find that command; do not guess it.
 
-7. **Lock again**: `rm -f .lazyspec-unlock.<your id>`. Always, including
-   when you give up part way, and only ever your own.
+7. **Lock again**: delete the one window you made, and only that one.
+   Always, including when you give up part way. Leaving it costs less
+   than it used to - a window stops counting four hours after it was
+   written - but four hours is not nothing.
 
 8. **Report**: which headings you touched, which tests now prove them,
    and what the test run did.

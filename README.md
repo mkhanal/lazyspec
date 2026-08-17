@@ -149,6 +149,16 @@ at it, never a second copy — see the table below.
   that will not be followed.
 - A plugin cannot do this. Plugins carry skills and hooks, not files in
   your repository.
+- **Already keep a `CONSTITUTION.md`, engineering principles, or house
+  rules your agents load?** That is the right home. Paste it there and
+  point `AGENTS.md` at it. Lock that document too, by naming it in
+  `.lazyspec-locked`.
+
+This is also the only thing restraining an agent with no pre-tool hook.
+It carries the lock protocol — name what you are about to change in a
+`.lazyspec-unlock.<unique>` file, change it, delete only that one — so
+that agents which cannot be stopped are at least told, in the same words
+every time.
 
 **2. Ignore the unlock file.**
 

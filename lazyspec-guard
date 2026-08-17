@@ -102,7 +102,11 @@ for window in "$UNLOCK" "$UNLOCK".*; do
   fi
 done
 
-if printf '%s' "$payload" | grep -qE '"tool_name"[[:space:]]*:[[:space:]]*"Bash"'; then
+# Every agent names its shell tool something different - Bash here,
+# Shell there - so the command it carries is what identifies it, not the
+# name. Get this wrong and a shell call falls through to being judged
+# whole, which refuses `cat` on a specification: safe, and unusable.
+if printf '%s' "$payload" | grep -qE '"(command|shell|script)"[[:space:]]*:'; then
   # A shell command cannot be reduced to a target path, so the whole
   # call is read and only a write is refused.
   printf '%s' "$payload" | grep -qE "$LOCKED" || exit 0

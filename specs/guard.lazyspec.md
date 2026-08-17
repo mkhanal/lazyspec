@@ -50,6 +50,11 @@ tool runs, with the call as JSON on stdin, and exit 2 refuses the call.
 - A notebook edit names its path as `notebook_path`.
 - A call naming no path at all is judged by its whole payload.
 
+## A Shell Call Is Recognised By Its Command
+
+- A call carrying a shell command is judged as a shell call whatever its
+  tool is named.
+
 ## A Shell Command That Writes To A Specification Is Refused
 
 - A shell call that redirects into a locked path is refused.

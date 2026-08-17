@@ -196,6 +196,29 @@ describe('A Structured Tool Is Judged By The Path It Writes To', () => {
   });
 });
 
+describe('A Shell Call Is Recognised By Its Command', () => {
+  // Cursor calls its shell tool Shell; others call it something else again.
+  const named = (tool, command) => ({
+    tool_name: tool,
+    tool_input: { command },
+  });
+
+  it('applies the shell rules whatever the tool is called', () => {
+    for (const tool of ['Bash', 'Shell', 'Terminal', 'run_terminal_cmd']) {
+      assert.equal(
+        guard(named(tool, 'sed -i "" s/a/b/ specs/billing.lazyspec.md')).status,
+        2,
+        `${tool} write`,
+      );
+      assert.equal(
+        guard(named(tool, 'cat specs/billing.lazyspec.md')).status,
+        0,
+        `${tool} read`,
+      );
+    }
+  });
+});
+
 describe('A Shell Command That Writes To A Specification Is Refused', () => {
   it('refuses a redirect into a specification', () => {
     assert.equal(guard(bash('cat > specs/billing.lazyspec.md <<EOF')).status, 2);

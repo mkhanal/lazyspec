@@ -35,17 +35,18 @@ test_billing.py            """Refunds Never Exceed What Was Captured"""
 billing_test.go            t.Run("Refunds Never Exceed What Was Captured", ..)
 ```
 
-One specification is married to one test file. Split a specification that
-grows too large, and split its test file with it. If the code already has
-tests, name the specification after the file that proves it. If a
-requirement cannot be tested, mark it `## Name <!-- no-test: why -->`.
+One specification is married to one test file. Split one that grows too
+large, and split its test file with it. If the code already has tests,
+name the specification after the file that proves it. If a requirement
+cannot be tested, mark it `## Name <!-- no-test: why -->`.
 
 **Changing a specification means updating its tests in the same edit,
 never alongside unrelated work.** Run `/lazyspec`.
 
-**Specifications are locked.** To change one, name it in your own
-`.lazyspec-unlock.<id>` file, change it, then delete only that file -
-others may be working in this tree. If nothing refuses you, do it anyway.
+**Specifications are locked.** To change one, name it in a
+`.lazyspec-unlock.<unique>` file of your own, change it, then delete only
+that one - others may be working here. If nothing refuses you, do it
+anyway, and say so.
 
 **Only write a requirement once you know what the code does.** The other
 direction is loose on purpose: code and tests may run ahead while you are
