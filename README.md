@@ -268,6 +268,16 @@ rm -f .lazyspec-unlock.<your id>    # always, even on abort
   window. Run agents and subagents in parallel and each gets its own, so
   one finishing never shuts another's, and one opening never widens
   another's.
+- **A forgotten window closes itself.** Four hours without being written
+  to and it stops counting. Sessions drop, logins expire, laptops sleep —
+  none of that should leave a specification writable for good, and no
+  human should have to remember to tidy up. Reopen it if you are somehow
+  still going.
+
+Nothing here needs maintaining. The window survives context compaction,
+because the guard reads the file rather than the agent's memory of it; it
+expires on its own if the session dies; and a leftover one is inert
+rather than dangerous.
 
 Which is why `.gitignore` matters. Commit `.lazyspec-unlock` once and
 every checkout is unlocked forever, with nothing to notice.

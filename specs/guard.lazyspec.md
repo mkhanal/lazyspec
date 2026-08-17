@@ -33,6 +33,10 @@ tool runs, with the call as JSON on stdin, and exit 2 refuses the call.
   them.
 - A call naming none of them is refused as though the window were shut.
 
+## A Forgotten Window Closes Itself
+
+- A window last written more than four hours ago is ignored.
+
 ## Each Flow Opens Its Own Window
 
 - Any file whose name begins `.lazyspec-unlock` is a window.

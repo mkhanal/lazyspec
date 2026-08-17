@@ -234,6 +234,16 @@ is "parallel: ...and closes alpha's"   "$(guard "$(edit services/api/specs/billi
 rm -f "$DEMO/.lazyspec-unlock.beta"
 is "parallel: both shut"               "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 2
 is "opening a window is never refused" "$(guard "$(shell 'printf %s specs/x.lazyspec.md > .lazyspec-unlock.gamma')")" 0
+
+# a session that dropped, hours ago, leaving its window behind
+touch "$DEMO/.lazyspec-unlock.dropped"
+is "a fresh forgotten window still counts" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 0
+touch -t 200001010000 "$DEMO/.lazyspec-unlock.dropped"
+is "an old one stops counting on its own"  "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
+printf 'apps/web/specs/checkout.lazyspec.md\n' > "$DEMO/.lazyspec-unlock.live"
+is "a live window works beside a stale one" "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 0
+is "...and the stale one still opens nothing" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
+rm -f "$DEMO/.lazyspec-unlock.dropped" "$DEMO/.lazyspec-unlock.live"
 touch "$SRC/.lazyspec-unlock.notreal"
 is "the parent's window cannot open the demo's" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
 rm -f "$SRC/.lazyspec-unlock.notreal"

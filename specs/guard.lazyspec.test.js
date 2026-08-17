@@ -1,6 +1,7 @@
 // The married test. Every describe is a requirement in
-// specs/lazyspec-guard.lazyspec.md, word for word.
+// specs/guard.lazyspec.md, word for word.
 const assert = require('node:assert');
+const fs = require('node:fs');
 const { describe, it } = require('node:test');
 const { tmp, write, guard, edit, bash, writeCall, notebookCall } = require('./support.js');
 
@@ -106,6 +107,35 @@ describe('The Window Can Name What It Opens', () => {
   it('leaves unlocked paths alone either way', () => {
     const cwd = scoped();
     assert.equal(guard(edit('src/billing.js'), { cwd }).status, 0);
+  });
+});
+
+describe('A Forgotten Window Closes Itself', () => {
+  const agedHours = (file, hours) => {
+    const when = new Date(Date.now() - hours * 3600 * 1000);
+    fs.utimesSync(file, when, when);
+  };
+
+  it('ignores a window nobody has touched for four hours', () => {
+    const cwd = tmp();
+    const w = write(cwd, '.lazyspec-unlock', '');
+    agedHours(w, 5);
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 2);
+  });
+
+  it('still honours one opened a moment ago', () => {
+    const cwd = tmp();
+    const w = write(cwd, '.lazyspec-unlock', '');
+    agedHours(w, 1);
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 0);
+  });
+
+  it('lets a live window stand beside a forgotten one', () => {
+    const cwd = tmp();
+    agedHours(write(cwd, '.lazyspec-unlock.abandoned', 'specs/old.lazyspec.md\n'), 9);
+    write(cwd, '.lazyspec-unlock.mine', 'specs/billing.lazyspec.md\n');
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 0);
+    assert.equal(guard(edit('specs/old.lazyspec.md'), { cwd }).status, 2);
   });
 });
 

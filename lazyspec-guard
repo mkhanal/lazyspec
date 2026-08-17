@@ -85,6 +85,12 @@ printf '%s' "$payload" | grep -qE '>[[:space:]]*"?'"'"'?\.?/?\.lazyspec-unlock' 
 # by another finishing first.
 for window in "$UNLOCK" "$UNLOCK".*; do
   [ -f "$window" ] || continue
+  # A window nobody has touched for four hours is one somebody forgot.
+  # Sessions drop, logins expire, laptops sleep - and none of that should
+  # leave a specification writable for good. Longer than any real flow,
+  # short enough that a lost one does not outlive the day. Reopen it if
+  # you are somehow still going.
+  [ -n "$(find "$window" -mmin +240 2>/dev/null)" ] && continue
   if grep -q '[^[:space:]]' "$window" 2>/dev/null; then
     while IFS= read -r allowed; do
       case $allowed in '' | '#'*) continue ;; esac
