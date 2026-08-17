@@ -4,8 +4,9 @@ This repository is the tool. It is also the first thing the tool is
 pointed at, so the instruction below is not an example: it governs work
 in here.
 
-Tests: `node --test specs/*.lazyspec.test.js`, and the same from inside
-`example/` for its fixture. There is no gate and no build.
+Tests: `node --test specs/*.lazyspec.test.js`. `sh sandbox/run.sh`
+builds a throwaway consumer repository and exercises every scenario
+against it. There is no gate and no build.
 `lazyspec-guard` is the only program, and `specs/guard.lazyspec.md` says
 what it does. Everything else is writing: two skills, one standing
 instruction.

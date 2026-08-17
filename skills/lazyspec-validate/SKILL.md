@@ -29,7 +29,10 @@ somewhere.
 
 ## Gather
 
-**Every specification.** Narrow this if `.lazyspec.yaml` says to.
+**Every specification.** `*.lazyspec.md` is the default. If
+`.lazyspec.yaml` exists, its `specs:` globs are the answer instead — a
+repository that arrived from another tool keeps its own filenames, so do
+not assume the default.
 
 ```
 git ls-files --cached --others --exclude-standard '*.lazyspec.md'

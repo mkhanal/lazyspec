@@ -41,6 +41,38 @@ describe('A Specification Is Locked Wherever It Lives', () => {
   });
 });
 
+describe('A Repository Can Name Its Own Locked Files', () => {
+  // A repository arriving from spec-kit, keeping specs/<n>-<name>/spec.md.
+  const migrated = () => {
+    const cwd = tmp();
+    write(cwd, '.lazyspec-locked', 'specs/[^/]*/spec\\.md\n');
+    return cwd;
+  };
+
+  it('locks the paths named in the first line', () => {
+    const cwd = migrated();
+    assert.equal(guard(edit('specs/001-billing/spec.md'), { cwd }).status, 2);
+  });
+
+  it('leaves everything else alone', () => {
+    const cwd = migrated();
+    assert.equal(guard(edit('src/billing.ts'), { cwd }).status, 0);
+    assert.equal(guard(edit('specs/001-billing/plan.md'), { cwd }).status, 0);
+  });
+
+  it('keeps .lazyspec.md locked as well', () => {
+    const cwd = migrated();
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 2);
+  });
+
+  it('ignores an empty file rather than locking everything', () => {
+    const cwd = tmp();
+    write(cwd, '.lazyspec-locked', '');
+    assert.equal(guard(edit('src/billing.ts'), { cwd }).status, 0);
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 2);
+  });
+});
+
 describe('The Unlock File Opens The Window', () => {
   it('allows a locked write while .lazyspec-unlock exists', () => {
     const cwd = tmp();

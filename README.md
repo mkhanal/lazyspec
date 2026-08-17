@@ -49,7 +49,8 @@ describe('Refunds Never Exceed What Was Captured', () => {
 })
 ```
 
-Both files are in `example/`. Run `node --test specs/*.test.js` inside it.
+`sh sandbox/run.sh` builds a whole repository like this - in four
+languages - and checks every claim on this page against it.
 
 ## How it binds
 
@@ -74,6 +75,22 @@ Neither cares what language you write in:
   agent reads all three off your repository.
 - Where your runner leaves names free, use `<name>.lazyspec.test.*`.
 - `<!-- no-test: why -->` marks a requirement nothing can prove.
+
+## Where specifications live
+
+Put a specification next to the code it describes.
+
+- **Small repository?** One `specs/` folder is fine.
+- **Anything bigger?** Co-locate: `services/api/specs/billing.lazyspec.md`.
+  An agent working in `services/api` finds the requirement by proximity
+  instead of scanning a global list, and reads fewer of them per task.
+- **Monorepo?** One `sets:` entry per package. `root` is the folder a
+  specification's name must be unique inside, so two packages can each
+  have a `billing.lazyspec.md`.
+
+Nesting is free and costs nothing to an agent. A single flat directory is
+what gets expensive: every requirement in it is a candidate every time
+somebody asks "which one covers this?"
 
 ## Install
 
@@ -155,6 +172,32 @@ Then, in a fresh session:
   once. If it starts searching, your instruction is not loaded and
   nothing else here matters.
 - Ask for a behaviour change. It reaches for `/lazyspec`.
+
+## Migrating from spec-kit, or anything else
+
+Keep your filenames. Nothing here demands a rename.
+
+- **Finding them** is already yours: `specs:` in `.lazyspec.yaml` is a
+  glob, so `specs: specs/*/spec.md` works as well as anything.
+- **Locking them** needs one file. Write the paths as an extended regular
+  expression in `.lazyspec-locked`, at your repository root:
+
+```
+specs/[^/]*/spec\.md
+```
+
+- It **adds to** the built-in pattern rather than replacing it, so
+  `*.lazyspec.md` cannot be unlocked by a typo.
+- It lives in your repository, so updating lazyspec cannot clobber it.
+  This matters on the plugin route, where `lazyspec-guard` is not yours
+  to edit.
+- Unlike `.lazyspec-unlock`, **commit it**.
+
+What does have to change is the inside of the file: a requirement is a
+`## ` heading whose words a test repeats. A spec-kit document written as
+prose has to be cut into headings before anything can prove it. Do that
+one specification at a time, as you touch them - the same way you would
+write them in the first place.
 
 ## Agent support
 
@@ -267,14 +310,15 @@ skills/lazyspec/            the only way to change a specification
 skills/lazyspec-validate/   the check
 lazyspec-guard              the one program
 specs/                      this repository's own requirements
-example/                    a whole project in three files
+sandbox/                    a throwaway consumer repo, and 48 scenarios
 ```
 
 **Tests**
 
 ```
-node --test specs/*.lazyspec.test.js      # from the root
-node --test specs/*.test.js               # from inside example/
+node --test specs/*.lazyspec.test.js   # this repository's own requirements
+sh sandbox/run.sh                      # 48 scenarios in a throwaway repo
+sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```
 
 No gate, no build.

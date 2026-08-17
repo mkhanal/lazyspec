@@ -6,6 +6,6 @@ sets:
   - root: .
     specs: specs/*.lazyspec.md
 
-# example/ carries a specification and its married test as a fixture -
-# three files showing the shape. It is locked like any other, but it is
-# not part of the set above: it proves nothing about this tool.
+# sandbox/demo is a throwaway consumer repository, rebuilt on every run
+# and gitignored. Its specifications are not part of the set above: they
+# prove things about the tool, not about this repository.

@@ -15,6 +15,13 @@ tool runs, with the call as JSON on stdin, and exit 2 refuses the call.
   specification, vendored or written by hand, is not ours to defend.
 - A married test is not locked, because a test is ordinary code.
 
+## A Repository Can Name Its Own Locked Files
+
+- The first line of `.lazyspec-locked` is added to the pattern of locked
+  paths.
+- A file ending `.lazyspec.md` stays locked whether or not
+  `.lazyspec-locked` exists.
+
 ## The Unlock File Opens The Window
 
 - While `.lazyspec-unlock` exists in the working directory, a write

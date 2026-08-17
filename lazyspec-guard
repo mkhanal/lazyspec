@@ -42,6 +42,22 @@
 # Add your own here if a project has one more, a CONSTITUTION.md say.
 LOCKED='\.lazyspec\.md'
 
+# A repository arriving from spec-kit or anything else keeps its own
+# filenames and names them here, one extended regex on the first line:
+#
+#   specs/[^/]*/spec\.md
+#
+# It adds to the pattern above rather than replacing it, so the standard
+# name cannot be unlocked by a typo. It lives in the repository being
+# guarded rather than in this file, so updating lazyspec cannot clobber
+# it - which matters most on the plugin route, where this file is not
+# yours to edit. Unlike the unlock file, commit it.
+EXTRA='.lazyspec-locked'
+if [ -f "$EXTRA" ]; then
+  extra=$(head -1 "$EXTRA")
+  [ -n "$extra" ] && LOCKED="$LOCKED|$extra"
+fi
+
 # What makes a shell command a write rather than a read.
 WRITES='>|(^|[^[:alnum:]_])(tee|mv|cp|rm|patch|truncate|dd|install|python[0-9.]*|perl|ruby|node|sed[[:space:]]+-i)([^[:alnum:]_]|$)'
 
