@@ -1,5 +1,7 @@
-# The lazyspec window. Committed once and the guard is off forever.
+# lazyspec windows, one per agent. Committed once and the guard is off
+# forever. .lazyspec-locked is the opposite: commit that one.
 .lazyspec-unlock
+.lazyspec-unlock.*
 
 # A throwaway consumer repo, rebuilt by sandbox/run.sh on every run.
 sandbox/demo/

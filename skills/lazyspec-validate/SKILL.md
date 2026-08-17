@@ -74,6 +74,11 @@ Report these as they stand. They need no judgement.
   are the name, so two things cannot have them.
 - **Moved alone.** A specification changed and no file containing its
   requirements changed with it. A specification takes its tests with it.
+- **The lock is open.** A `.lazyspec-unlock` exists. Outside a `/lazyspec`
+  flow that is a window somebody failed to close, and until it goes every
+  specification it names can be edited without anything refusing. Say so,
+  and say whether it is committed - a committed one is the lock switched
+  off permanently.
 
 ## What you settle
 

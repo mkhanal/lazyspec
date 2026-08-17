@@ -74,10 +74,70 @@ describe('A Repository Can Name Its Own Locked Files', () => {
 });
 
 describe('The Unlock File Opens The Window', () => {
-  it('allows a locked write while .lazyspec-unlock exists', () => {
+  it('allows a locked write while an empty .lazyspec-unlock exists', () => {
     const cwd = tmp();
     write(cwd, '.lazyspec-unlock', '');
     assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 0);
+    assert.equal(guard(edit('specs/checkout.lazyspec.md'), { cwd }).status, 0);
+  });
+});
+
+describe('The Window Can Name What It Opens', () => {
+  const scoped = () => {
+    const cwd = tmp();
+    write(cwd, '.lazyspec-unlock', 'specs/billing.lazyspec.md\n');
+    return cwd;
+  };
+
+  it('allows only the calls naming a listed path', () => {
+    const cwd = scoped();
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 0);
+    assert.equal(
+      guard(bash('sed -i "" s/a/b/ specs/billing.lazyspec.md'), { cwd }).status,
+      0,
+    );
+  });
+
+  it('refuses a neighbour the window did not name', () => {
+    const cwd = scoped();
+    assert.equal(guard(edit('specs/checkout.lazyspec.md'), { cwd }).status, 2);
+  });
+
+  it('leaves unlocked paths alone either way', () => {
+    const cwd = scoped();
+    assert.equal(guard(edit('src/billing.js'), { cwd }).status, 0);
+  });
+});
+
+describe('Each Flow Opens Its Own Window', () => {
+  // Two agents at work in one tree, each with its own window.
+  const parallel = () => {
+    const cwd = tmp();
+    write(cwd, '.lazyspec-unlock.alpha', 'specs/billing.lazyspec.md\n');
+    write(cwd, '.lazyspec-unlock.beta', 'specs/checkout.lazyspec.md\n');
+    return cwd;
+  };
+
+  it('honours a window whatever it is called', () => {
+    const cwd = parallel();
+    assert.equal(guard(edit('specs/billing.lazyspec.md'), { cwd }).status, 0);
+  });
+
+  it('lets either window open its own path', () => {
+    const cwd = parallel();
+    assert.equal(guard(edit('specs/checkout.lazyspec.md'), { cwd }).status, 0);
+  });
+
+  it('refuses a path no window named', () => {
+    const cwd = parallel();
+    assert.equal(guard(edit('specs/refunds.lazyspec.md'), { cwd }).status, 2);
+  });
+
+  it('does not refuse a shell call that writes a window', () => {
+    const cwd = tmp();
+    const open = "printf '%s\\n' specs/billing.lazyspec.md > .lazyspec-unlock.alpha";
+    assert.equal(guard(bash(open), { cwd }).status, 0);
+    assert.equal(guard(bash('echo specs/a.lazyspec.md >.lazyspec-unlock'), { cwd }).status, 0);
   });
 });
 

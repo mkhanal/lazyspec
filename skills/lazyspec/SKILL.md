@@ -59,9 +59,24 @@ the way in.
    Its filename decides which test file proves it, so if a test for this
    behaviour already exists, name the specification after that file.
 
-3. **Unlock**: `touch .lazyspec-unlock`
-   This file must be listed in `.gitignore`. If it is ever committed the
-   lock is off for good, and nobody will notice.
+3. **Open a window of your own, naming only what you are about to edit.**
+
+   ```
+   printf '%s\n' path/to/the.lazyspec.md > .lazyspec-unlock.<your id>
+   ```
+
+   Pick an `<id>` nobody else will use - your session id, or the branch
+   name. Other agents and subagents may be working in this same tree, and
+   a window of your own means finishing your work never shuts theirs.
+
+   Name every file you will touch, one per line. The window opens for
+   those and nothing else, so a slip cannot reach a neighbouring
+   specification, and a window you fail to close leaks one path instead
+   of the whole repository. An empty file opens everything; use that only
+   when you genuinely do not yet know the filename.
+
+   `.lazyspec-unlock*` must be in `.gitignore`. Committed once, the lock
+   is off for good and nobody will notice.
 
 4. **Make the change.**
 
@@ -82,8 +97,8 @@ the way in.
 6. **Check your work.** Every heading has its test, and the repository's
    own test command passes. Find that command; do not guess it.
 
-7. **Lock again**: `rm -f .lazyspec-unlock`. Always, including when you
-   give up part way.
+7. **Lock again**: `rm -f .lazyspec-unlock.<your id>`. Always, including
+   when you give up part way, and only ever your own.
 
 8. **Report**: which headings you touched, which tests now prove them,
    and what the test run did.

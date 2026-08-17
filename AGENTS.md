@@ -18,8 +18,8 @@ own get a short file that points here rather than a second copy.
 
 ## Specifications
 
-Requirements live in `*.lazyspec.md` files. `.lazyspec.yaml` narrows that
-when a repository has one; read it first.
+Requirements live in `*.lazyspec.md` files. `.lazyspec.yaml` narrows
+that when there is one; read it first.
 
 A requirement is a `## ` heading in such a file, and its text is its only
 identifier.
@@ -33,7 +33,6 @@ billing.lazyspec.md        ## Refunds Never Exceed What Was Captured
 billing.lazyspec.test.ts   describe('Refunds Never Exceed What Was Captured', ..)
 test_billing.py            """Refunds Never Exceed What Was Captured"""
 billing_test.go            t.Run("Refunds Never Exceed What Was Captured", ..)
-BillingTest.java           @DisplayName("Refunds Never Exceed What Was Captured")
 ```
 
 One specification is married to one test file. Split a specification that
@@ -42,9 +41,11 @@ tests, name the specification after the file that proves it. If a
 requirement cannot be tested, mark it `## Name <!-- no-test: why -->`.
 
 **Changing a specification means updating its tests in the same edit,
-never alongside unrelated work.** Run `/lazyspec`. If you cannot, say
-plainly that you are changing one, and write the change as a requirement
-first.
+never alongside unrelated work.** Run `/lazyspec`.
+
+**Specifications are locked.** To change one, name it in your own
+`.lazyspec-unlock.<id>` file, change it, then delete only that file -
+others may be working in this tree. If nothing refuses you, do it anyway.
 
 **Only write a requirement once you know what the code does.** The other
 direction is loose on purpose: code and tests may run ahead while you are

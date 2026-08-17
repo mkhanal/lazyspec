@@ -3,6 +3,15 @@
 Let the agent experiment. Write the requirement once you know. Then lock
 it, so nothing can quietly rewrite it.
 
+## Does this sound familiar
+
+- The agent changed a test instead of fixing the code, and the suite went
+  green.
+- A requirement was quietly reworded to match what was built.
+- Your specification describes the implementation, so it says nothing.
+- Spec-driven development felt like writing fiction, because nobody knew
+  the behaviour yet.
+
 ## Why
 
 Two failures, opposite directions:
@@ -173,31 +182,34 @@ Then, in a fresh session:
   nothing else here matters.
 - Ask for a behaviour change. It reaches for `/lazyspec`.
 
-## Migrating from spec-kit, or anything else
+## Locking other files
 
-Keep your filenames. Nothing here demands a rename.
-
-- **Finding them** is already yours: `specs:` in `.lazyspec.yaml` is a
-  glob, so `specs: specs/*/spec.md` works as well as anything.
-- **Locking them** needs one file. Write the paths as an extended regular
-  expression in `.lazyspec-locked`, at your repository root:
+`*.lazyspec.md` is locked by default. To lock anything else you treat as
+a specification — a `CONSTITUTION.md`, an architecture decision record,
+a set of documents inherited from spec-kit — put one extended regular
+expression on the first line of `.lazyspec-locked`:
 
 ```
 specs/[^/]*/spec\.md
 ```
 
-- It **adds to** the built-in pattern rather than replacing it, so
-  `*.lazyspec.md` cannot be unlocked by a typo.
+- It **adds to** the built-in pattern, so `*.lazyspec.md` cannot be
+  unlocked by a typo.
 - It lives in your repository, so updating lazyspec cannot clobber it.
-  This matters on the plugin route, where `lazyspec-guard` is not yours
+  That matters on the plugin route, where `lazyspec-guard` is not yours
   to edit.
 - Unlike `.lazyspec-unlock`, **commit it**.
 
-What does have to change is the inside of the file: a requirement is a
-`## ` heading whose words a test repeats. A spec-kit document written as
-prose has to be cut into headings before anything can prove it. Do that
-one specification at a time, as you touch them - the same way you would
-write them in the first place.
+**Migrating from another spec tool** needs nothing else from us. Point
+your agent at `/lazyspec` and the documents you already have; cutting
+prose into `## ` headings and marrying each to a test is what that skill
+describes. `specs:` in `.lazyspec.yaml` is a glob, so it finds your files
+whatever they are called.
+
+The one thing no tool can do for you is decide a requirement is true. A
+requirement converted without checking that a test proves it is exactly
+the thing this exists to prevent, so convert one specification at a time,
+as you touch them.
 
 ## Agent support
 
@@ -233,8 +245,50 @@ Nothing changes until a requirement needs to move.
 
 ## Locking
 
-`lazyspec-guard` is a hook. It refuses a write to any `*.lazyspec.md`
-unless `/lazyspec` opened the window.
+**A lock is not something you do. It is the resting state.** A file is
+locked by *being* a specification — there is no command to lock one, and
+no state stored anywhere.
+
+**Unlocking is one file, it names what it opens, and it belongs to one
+agent.** `/lazyspec` writes the specification it is about to edit into a
+window of its own, makes the change, and deletes it:
+
+```
+printf '%s\n' specs/billing.lazyspec.md > .lazyspec-unlock.<your id>
+… the edit, and its tests …
+rm -f .lazyspec-unlock.<your id>    # always, even on abort
+```
+
+- **It names what it opens.** Only calls naming a listed path get
+  through, so a window opened for one specification cannot reach its
+  neighbour, and one a crashed session left behind leaks that path rather
+  than the repository. An empty file opens everything — that is what a
+  bare `touch` means.
+- **One window per agent.** Any file starting `.lazyspec-unlock` is a
+  window. Run agents and subagents in parallel and each gets its own, so
+  one finishing never shuts another's, and one opening never widens
+  another's.
+
+Which is why `.gitignore` matters. Commit `.lazyspec-unlock` once and
+every checkout is unlocked forever, with nothing to notice.
+`/lazyspec-validate` reports a lock left open, and whether it is
+committed.
+
+**Be clear about what this is.** It is a procedural control, not a
+permission boundary:
+
+- **Not file permissions, and not encryption.** Nothing on disk changes.
+- **Not a defence against people.** You can still open the file in your
+  editor.
+- **Not proof against a determined agent.** The window is opened by the
+  same agent it restrains, and a script that writes a specification
+  without naming it is not something a pattern can see.
+
+What it does is turn a silent edit into a deliberate one that leaves
+evidence — and that is the whole of the problem, because the failure this
+exists to stop is casual, not adversarial.
+
+`lazyspec-guard` is the hook that does the refusing:
 
 - **Refused:** editing tools, and shell commands that redirect, edit in
   place or delete. An agent denied one reaches for the other.

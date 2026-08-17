@@ -64,9 +64,37 @@ WRITES='>|(^|[^[:alnum:]_])(tee|mv|cp|rm|patch|truncate|dd|install|python[0-9.]*
 # While this exists, the window is open.
 UNLOCK='.lazyspec-unlock'
 
-[ -f "$UNLOCK" ] && exit 0
-
 payload=$(cat)
+
+# An open window is a file, and what it says decides how wide it is.
+#
+# Empty - what a bare `touch` gives - opens everything, because that is
+# what an unlock meant before anything else was possible. Listing paths
+# opens only the calls that name one of them, so a window opened to edit
+# one specification cannot be used to edit its neighbour, and a window
+# left behind by a crashed session leaks that one path rather than the
+# whole repository.
+# Opening a window is never refused, or there would be no way to open a
+# narrow one: naming a specification inside a redirect is exactly what
+# the shell rule below refuses.
+printf '%s' "$payload" | grep -qE '>[[:space:]]*"?'"'"'?\.?/?\.lazyspec-unlock' && exit 0
+
+# Agents run side by side in one working tree, so one window per flow:
+# any file whose name starts .lazyspec-unlock is one. A flow removes the
+# file it made and leaves everyone else's alone, and no flow can be shut
+# by another finishing first.
+for window in "$UNLOCK" "$UNLOCK".*; do
+  [ -f "$window" ] || continue
+  if grep -q '[^[:space:]]' "$window" 2>/dev/null; then
+    while IFS= read -r allowed; do
+      case $allowed in '' | '#'*) continue ;; esac
+      printf '%s' "$payload" | grep -qF -- "$allowed" && exit 0
+    done < "$window"
+    # This window named none of them. Another one still might.
+  else
+    exit 0
+  fi
+done
 
 if printf '%s' "$payload" | grep -qE '"tool_name"[[:space:]]*:[[:space:]]*"Bash"'; then
   # A shell command cannot be reduced to a target path, so the whole

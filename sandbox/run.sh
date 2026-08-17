@@ -212,9 +212,28 @@ is "a shell call naming no spec"    "$(guard "$(shell 'rm -rf build/')")" 0
 
 sect "D. the window"
 touch "$DEMO/.lazyspec-unlock"
-is "open: a specification is writable" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 0
+is "empty window: any specification is writable" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 0
+is "empty window: a neighbour too"              "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 0
+printf 'services/api/specs/billing.lazyspec.md\n' > "$DEMO/.lazyspec-unlock"
+is "named window: the named file opens"         "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 0
+is "named window: a shell write to it opens"    "$(guard "$(shell 'sed -i s/a/b/ services/api/specs/billing.lazyspec.md')")" 0
+is "named window: a neighbour stays shut"       "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 2
+is "named window: ordinary code is unaffected"  "$(guard "$(edit services/api/src/billing.js)")" 0
 rm -f "$DEMO/.lazyspec-unlock"
 is "closed: refused again"             "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
+
+# two agents at work in one tree, each with a window of its own
+printf 'services/api/specs/billing.lazyspec.md\n' > "$DEMO/.lazyspec-unlock.alpha"
+printf 'apps/web/specs/checkout.lazyspec.md\n'    > "$DEMO/.lazyspec-unlock.beta"
+is "parallel: alpha's file opens"      "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 0
+is "parallel: beta's file opens"       "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 0
+is "parallel: a third stays shut"      "$(guard "$(edit services/ledger/specs/postings.lazyspec.md)")" 2
+rm -f "$DEMO/.lazyspec-unlock.alpha"
+is "parallel: alpha finishing leaves beta open" "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 0
+is "parallel: ...and closes alpha's"   "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
+rm -f "$DEMO/.lazyspec-unlock.beta"
+is "parallel: both shut"               "$(guard "$(edit apps/web/specs/checkout.lazyspec.md)")" 2
+is "opening a window is never refused" "$(guard "$(shell 'printf %s specs/x.lazyspec.md > .lazyspec-unlock.gamma')")" 0
 touch "$SRC/.lazyspec-unlock.notreal"
 is "the parent's window cannot open the demo's" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
 rm -f "$SRC/.lazyspec-unlock.notreal"

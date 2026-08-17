@@ -24,8 +24,20 @@ tool runs, with the call as JSON on stdin, and exit 2 refuses the call.
 
 ## The Unlock File Opens The Window
 
-- While `.lazyspec-unlock` exists in the working directory, a write
-  to a locked path is allowed.
+- While an empty `.lazyspec-unlock` exists in the working directory, a
+  write to a locked path is allowed.
+
+## The Window Can Name What It Opens
+
+- A `.lazyspec-unlock` naming paths allows only the calls naming one of
+  them.
+- A call naming none of them is refused as though the window were shut.
+
+## Each Flow Opens Its Own Window
+
+- Any file whose name begins `.lazyspec-unlock` is a window.
+- A path named by any open window is allowed.
+- A shell command that writes a window file is never refused.
 
 ## A Structured Tool Is Judged By The Path It Writes To
 
