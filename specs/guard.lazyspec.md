@@ -1,0 +1,42 @@
+# lazyspec-guard
+
+The one executable lazyspec ships. A coding agent calls it before a
+tool runs, with the call as JSON on stdin, and exit 2 refuses the call.
+
+## A Write To A Specification Is Refused Outside The Window
+
+- A writing tool aimed at a locked path exits 2.
+- The refusal names `/lazyspec` as the way in.
+
+## A Specification Is Locked Wherever It Lives
+
+- A file ending `.lazyspec.md` is locked whatever directory it sits in.
+- A file that merely ends `SPEC.md` is not locked: somebody else's
+  specification, vendored or written by hand, is not ours to defend.
+- A married test is not locked, because a test is ordinary code.
+
+## The Unlock File Opens The Window
+
+- While `.lazyspec-unlock` exists in the working directory, a write
+  to a locked path is allowed.
+
+## A Structured Tool Is Judged By The Path It Writes To
+
+- A write is refused only when the path it names is locked, whatever its
+  content says.
+- A notebook edit names its path as `notebook_path`.
+- A call naming no path at all is judged by its whole payload.
+
+## A Shell Command That Writes To A Specification Is Refused
+
+- A shell call that redirects into a locked path is refused.
+- A shell call that edits a locked path in place is refused.
+- A shell call that deletes a locked path is refused.
+
+## Reading A Specification Is Never Refused
+
+- A shell call that only reads a locked path is allowed.
+
+## A Call That Names No Locked Path Is Left Alone
+
+- The hook exits 0 and says nothing.

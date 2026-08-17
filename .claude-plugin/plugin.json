@@ -1,0 +1,34 @@
+{
+  "name": "lazyspec",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Mridul Khanal"
+  },
+  "keywords": [
+    "spec",
+    "bdd",
+    "agents",
+    "testing",
+    "requirements"
+  ],
+  "repository": "https://github.com/mkhanal/lazyspec",
+  "description": "Let the agent experiment, then write the requirement. Specifications are locked, so an agent can never rewrite your requirements to match what it built.",
+  "skills": [
+    "./skills"
+  ],
+  "//hooks": "Registered by installing the plugin, so nobody edits settings.json by hand. The guard is read from the plugin, not the project - a project needing its own LOCKED pattern copies lazyspec-guard into itself and registers it in .claude/settings.json instead.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/lazyspec-guard\""
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,77 @@
+#!/bin/sh
+# Refuse an edit to a specification unless the /lazyspec flow opened the
+# window. Claude Code calls this before a tool runs; exit 2 blocks it.
+#
+# This is the only executable in lazyspec. Everything else is text an
+# agent reads. Register it by adding this to .claude/settings.json:
+#
+#   { "hooks": { "PreToolUse": [ {
+#       "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash",
+#       "hooks": [ { "type": "command",
+#                    "command": "sh lazyspec-guard" } ] } ] } }
+#
+# The payload arrives as JSON on stdin. Nothing here parses it: a few
+# patterns answer the only question worth asking, which is whether this
+# call is aimed at writing a locked path. A parser would be a runtime
+# dependency for a yes or no.
+#
+# An editing tool names its target, so the target is what is read and
+# nothing else. Otherwise every README, test comment and instruction
+# file that mentions a specification becomes unwritable, which is a tax
+# on exactly the repositories that adopt this.
+#
+# Bash is matched because an agent told it may not use Edit will reach
+# for `sed -i` or a heredoc instead, and that is the same edit. A shell
+# command names no target it can be reduced to, so the whole command is
+# read and only a write is refused - reading a specification stays free.
+# It errs toward refusing: a pipeline that merely redirects while a
+# locked path is on the line is refused too, and the way past it is
+# /lazyspec.
+#
+# Only an agent with a pre-tool hook can refuse a write before it
+# happens. Every other one gets the instruction and may ignore it, which
+# is why /lazyspec-validate exists and why it is
+# the one that holds.
+
+# Which files only the /lazyspec flow may touch. Extended regex. A
+# specification is locked wherever it lives, so the name is the rule and
+# nothing else: billing.lazyspec.md, in any directory. Somebody else's
+# SPEC.md - vendored, or a protocol document - is not yours to lock, and
+# neither is the married test, which is ordinary code.
+#
+# Add your own here if a project has one more, a CONSTITUTION.md say.
+LOCKED='\.lazyspec\.md'
+
+# What makes a shell command a write rather than a read.
+WRITES='>|(^|[^[:alnum:]_])(tee|mv|cp|rm|patch|truncate|dd|install|python[0-9.]*|perl|ruby|node|sed[[:space:]]+-i)([^[:alnum:]_]|$)'
+
+# While this exists, the window is open.
+UNLOCK='.lazyspec-unlock'
+
+[ -f "$UNLOCK" ] && exit 0
+
+payload=$(cat)
+
+if printf '%s' "$payload" | grep -qE '"tool_name"[[:space:]]*:[[:space:]]*"Bash"'; then
+  # A shell command cannot be reduced to a target path, so the whole
+  # call is read and only a write is refused.
+  printf '%s' "$payload" | grep -qE "$LOCKED" || exit 0
+  printf '%s' "$payload" | grep -qE "$WRITES" || exit 0
+else
+  # Every other editing tool names what it writes to. Judge that, and
+  # nothing else: prose that merely mentions a specification - a README,
+  # a test's comment, this file - is not an edit to one.
+  subject=$(printf '%s' "$payload" | grep -oE '"(file_path|notebook_path|path)"[[:space:]]*:[[:space:]]*"[^"]*"')
+  # A shape we do not recognise is judged whole, which errs toward refusing.
+  [ -n "$subject" ] || subject=$payload
+  printf '%s' "$subject" | grep -qE "$LOCKED" || exit 0
+fi
+
+cat >&2 <<'REFUSE'
+BLOCKED: that file is a specification.
+
+Specifications are edited through /lazyspec, which states the change as a
+requirement, opens the window, keeps the tests married in the same
+edit, and closes it again. Run /lazyspec.
+REFUSE
+exit 2

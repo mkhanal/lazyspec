@@ -1,0 +1,323 @@
+# lazyspec
+
+Let the agent experiment. Write the requirement once you know. Then lock
+it, so nothing can quietly rewrite it.
+
+## Why
+
+Two failures, opposite directions:
+
+- **Specify first and you spend the LLM's best trait before you have
+  anything.** Agents are good at trying things: build it, run it, throw
+  it away. Behaviour written down before anyone understands it is wrong
+  by Thursday.
+- **Specify last and the agent rewrites your requirements to match its
+  code.** It edits requirements as readily as tests. The suite stays
+  green. Nothing raises a hand. The specification now describes the
+  implementation, which means it describes nothing.
+
+lazyspec takes both:
+
+- Specify **late**, once the behaviour is known.
+- **Lock** the specification, so no agent edits one in passing.
+
+## What you write
+
+A specification is markdown. Each `## ` heading is one requirement.
+
+```markdown
+# Refunds
+
+## Refunds Never Exceed What Was Captured
+
+- A refund is refused when it would take the total refunded above the
+  amount captured.
+- Refunding the exact remaining balance is allowed.
+
+## A Refund Is Recorded Against Its Capture <!-- no-test: the ledger is somebody else's system -->
+
+- Every refund names the capture it draws from.
+```
+
+The test repeats the heading as its own name. That is the **marriage**:
+
+```js
+// refunds.lazyspec.test.js
+describe('Refunds Never Exceed What Was Captured', () => {
+  it('refuses a refund beyond the captured amount', () => { ... })
+  it('allows the exact remaining balance', () => { ... })
+})
+```
+
+Both files are in `example/`. Run `node --test specs/*.test.js` inside it.
+
+## How it binds
+
+Two bindings, both made of names.
+
+- **The words** tie a requirement to its test. Reword the heading and the
+  test is orphaned at once.
+- **The filename** ties a specification to the one test file that proves
+  it — exactly one, so a directory listing tells you what proves what.
+
+Neither cares what language you write in:
+
+| specification | its test file | how the test carries the name |
+|---|---|---|
+| `billing.lazyspec.md` | `billing.lazyspec.test.ts` | `describe('…')` |
+| `billing.lazyspec.md` | `test_billing.py` | a docstring |
+| `billing.lazyspec.md` | `billing_test.go` | `t.Run("…")` |
+| `billing.lazyspec.md` | `BillingTest.java` | `@DisplayName("…")` |
+
+- A requirement's text is its only identifier.
+- Nothing here configures a language, a runner or a test folder. The
+  agent reads all three off your repository.
+- Where your runner leaves names free, use `<name>.lazyspec.test.*`.
+- `<!-- no-test: why -->` marks a requirement nothing can prove.
+
+## Install
+
+**Claude Code and Cursor** take it as a plugin. This carries the skills
+*and* the guard, and registers the hook for you:
+
+```
+/plugin marketplace add mkhanal/lazyspec
+/plugin install lazyspec@lazyspec
+```
+
+**Anything else** is a clone and a copy:
+
+```
+git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
+cp /tmp/lazyspec/lazyspec-guard .
+mkdir -p .claude/skills .agents/skills
+cp -R /tmp/lazyspec/skills/. .claude/skills/
+cp -R /tmp/lazyspec/skills/. .agents/skills/
+```
+
+Two directories cover four agents: `.claude/skills/` for Claude Code and
+opencode, `.agents/skills/` for Codex and opencode.
+
+**Or hand it over:** *"Read
+`https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
+it."*
+
+### Then two things
+
+No installer can do either one.
+
+**1. Paste `INSTRUCTION.md` where your agent reads it every task.**
+
+```
+<!-- lazyspec:begin -->
+… the body of INSTRUCTION.md …
+<!-- lazyspec:end -->
+```
+
+`AGENTS.md` is the default. Every other editor gets a short file pointing
+at it, never a second copy — see the table below.
+
+- **Claude Code never looks for `AGENTS.md`.** A repository with only an
+  `AGENTS.md` looks set up and is not. One line, `@AGENTS.md`, fixes it.
+- Paste it, do not link to it. An instruction fetched on request is one
+  that will not be followed.
+- A plugin cannot do this. Plugins carry skills and hooks, not files in
+  your repository.
+
+**2. Ignore the unlock file.**
+
+```
+echo '.lazyspec-unlock' >> .gitignore
+```
+
+Commit it once and the guard is off forever, silently.
+
+There is no third step. `.lazyspec.yaml` is optional, and `/lazyspec`
+offers to write it when you make your first specification.
+
+### Check it worked
+
+```
+echo '{"tool_name":"Edit","tool_input":{"file_path":"a.lazyspec.md"}}' \
+  | sh lazyspec-guard ; echo "exit $?"     # 2, with a message
+
+echo '{"tool_name":"Edit","tool_input":{"file_path":"a.ts"}}' \
+  | sh lazyspec-guard ; echo "exit $?"     # 0, silent
+```
+
+On the plugin route the guard lives inside the plugin, so ask your agent
+to edit a `*.lazyspec.md` and watch it be refused instead.
+
+Then, in a fresh session:
+
+- `/lazyspec` and `/lazyspec-validate` appear in its skill list.
+- Ask *"where do this repository's requirements live?"* It answers at
+  once. If it starts searching, your instruction is not loaded and
+  nothing else here matters.
+- Ask for a behaviour change. It reaches for `/lazyspec`.
+
+## Agent support
+
+Three capabilities. Every agent has the first, which is the one that does
+the work.
+
+| agent | instruction file | skills | can refuse a write |
+|---|---|---|---|
+| Claude Code | `CLAUDE.md`, holding `@AGENTS.md` | `.claude/skills/` | **yes**, the plugin wires it |
+| Cursor | `.cursor/rules/lazyspec.mdc`, `alwaysApply: true` | `.cursor/skills/` | **yes**, the plugin wires it |
+| opencode | `AGENTS.md` | `.claude/skills/`, `.agents/skills/` | **yes**, via a `tool.execute.before` plugin you write |
+| Codex | `AGENTS.md` | `.agents/skills/` | no |
+| Gemini CLI | `GEMINI.md` | no | no |
+| Copilot | `.github/copilot-instructions.md` | no | no |
+| Windsurf | `.windsurfrules` | no | no |
+| Cline, Roo | `.clinerules` | no | no |
+| Aider | `CONVENTIONS.md`, `--read CONVENTIONS.md` | no | no |
+
+Without a hook your agent is told rather than stopped, and
+`/lazyspec-validate` catches the edit afterwards.
+
+## Using it day to day
+
+Nothing changes until a requirement needs to move.
+
+- **Building something new?** Work normally. Experiment, rewrite, throw
+  it away. Requirements are written late on purpose.
+- **Behaviour is settled?** Run `/lazyspec`. It writes the requirement,
+  unlocks, updates the tests in the same window, runs your suite, locks
+  again.
+- **Finishing a task?** Run `/lazyspec-validate`.
+- **Editing a specification any other way?** The guard refuses you.
+
+## Locking
+
+`lazyspec-guard` is a hook. It refuses a write to any `*.lazyspec.md`
+unless `/lazyspec` opened the window.
+
+- **Refused:** editing tools, and shell commands that redirect, edit in
+  place or delete. An agent denied one reaches for the other.
+- **Allowed:** reading with `cat`, `grep`, `sed`.
+- **Allowed:** writing a file whose *content* merely mentions a
+  specification. A tool is judged by the path it writes to, nothing else.
+- **Refused:** any shell command running `python`, `node`, `perl` or
+  `ruby` near a specification. A script can write anything, and patterns
+  cannot tell.
+
+`/lazyspec` is the only thing that opens the window, and it always closes
+it. That is the only thing worth defending mechanically.
+
+## Checking
+
+`/lazyspec-validate` asks three things:
+
+- Is every requirement proved?
+- Does the test prove it, or only borrow its name?
+- Did this change write down what it changed?
+
+It splits on one rule:
+
+> **Finding nothing tells you something. Finding something tells you
+> almost nothing.**
+
+- **Settled by searching.** A requirement whose words appear in no file
+  is unproved, in every language. One `git grep -F` says so.
+- **Settled by reading.** A file *containing* those words may be a test,
+  a comment, a README or a mock. Only an agent reading it can tell which,
+  or whether the assertions match the bullets.
+
+Want a blocking gate? Three checks need no judgement and are a few lines
+of shell:
+
+- a requirement whose words appear nowhere,
+- one heading in two specifications,
+- a specification that changed while nothing proving it did.
+
+Keep a gate to those three. One that decides which file is a test is
+guessing at conventions it cannot see. Run it pre-push, not pre-commit:
+requirements are written late, so the commits made while finding the
+behaviour should not have to satisfy one.
+
+## What it does not do
+
+- It does not judge whether a test is any good.
+- It ships no gate and no CI workflow. Which agent, which credentials and
+  what a verdict does to a pull request are yours.
+- It is not a permission system. A human with a text editor and
+  `--no-verify` is not in scope.
+
+## Uninstall
+
+- Plugin: `/plugin uninstall lazyspec`.
+- By hand: delete `lazyspec-guard`, the skills, the hook block.
+- Either way: delete `.lazyspec.yaml`, the pasted instruction and the
+  `.gitignore` line.
+
+Your specifications stay and their tests keep passing. The marriage was
+never enforced by anything but the tests.
+
+---
+
+# Contributing
+
+This repository is the tool, pointed at itself. A specification in here
+is changed the way one in yours is, and refused the same way.
+
+```
+INSTRUCTION.md              the standing instruction. the product.
+skills/lazyspec/            the only way to change a specification
+skills/lazyspec-validate/   the check
+lazyspec-guard              the one program
+specs/                      this repository's own requirements
+example/                    a whole project in three files
+```
+
+**Tests**
+
+```
+node --test specs/*.lazyspec.test.js      # from the root
+node --test specs/*.test.js               # from inside example/
+```
+
+No gate, no build.
+
+**Changing anything here.** Run `/lazyspec`; the guard refuses you
+otherwise. Run `/lazyspec-validate` before you finish.
+
+**On Windows**, `.claude/skills/*` are symlinks into `skills/`. Git only
+recreates them with `git config --global core.symlinks true` set before
+cloning, and that needs Developer Mode or an elevated shell. Otherwise
+copy the folder instead: `cp -R skills/. .claude/skills/`. Everything
+else here is plain text and `sh`.
+
+**What is specified**, and why only these two:
+
+- `specs/guard.lazyspec.md` — what the hook refuses and lets through.
+- `specs/instruction.lazyspec.md` — the shipped writing's budget and
+  shape. "Under two thousand characters" is a requirement, not a
+  preference: `INSTRUCTION.md` is read on every task forever, and a test
+  is the only thing that holds prose to a budget.
+
+The skills and this README are ordinary writing. Change them without
+ceremony.
+
+**It is a fair test of the guard.** This README, the instruction and the
+tests are full of the words `billing.lazyspec.md`, and all of them stay
+writable. If that regresses, this repository stops being editable before
+yours does.
+
+## Why a name and not a link
+
+Anything can point at a requirement — a comment, an id, a coverage
+report — and all of them survive the requirement changing, which is the
+only moment that matters. A name does not. Reword the requirement and
+every test carrying the old words is orphaned at once, loudly.
+
+## Prior work
+
+Behaviour-driven development with the specification locked, the binding
+made from the requirement's own words, and the timing inverted. Owes Dan
+North for BDD, Gojko Adzic for Specification by Example, and Cucumber for
+binding specifications to executable steps at all.
+
+## Licence
+
+MIT.

@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "command": "sh ./lazyspec-guard",
+        "failClosed": true
+      }
+    ]
+  }
+}
