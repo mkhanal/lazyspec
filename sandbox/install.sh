@@ -157,22 +157,30 @@ sect "F. the plugin route, replayed"
 # from the manifest and not from the repository - nx ships as
 # nrwl/nx-ai-agents-config and lands in nx-claude-plugins - so the name
 # in the file is what /plugin install has to be typed against.
+# It clones rather than copies on purpose. A clone carries what was
+# committed, so this section fails if a manifest is untracked or
+# gitignored - which a copy would never notice, and which is exactly what
+# a stranger receives. It also means an uncommitted fix does not show up
+# here: everything below is read out of the clone, never out of the
+# working tree, so the section judges one artefact rather than two.
 CFG=$WORK/config
 MK=$(j "$SRC/.claude-plugin/marketplace.json" .name)
-PL=$(j "$SRC/.claude-plugin/marketplace.json" .plugins[0].name)
-VER=$(j "$SRC/.claude-plugin/plugin.json" .version)
 
 mkdir -p "$CFG/plugins/marketplaces"
 git clone -q "$SRC" "$CFG/plugins/marketplaces/$MK" 2>/dev/null \
   && ok "marketplace add clones it to plugins/marketplaces/$MK" \
   || bad "the repository does not clone"
-[ -f "$CFG/plugins/marketplaces/$MK/.claude-plugin/marketplace.json" ] \
-  && ok "and the manifest is at the path it will be read from" \
-  || bad "no marketplace.json in the clone"
+CLONE=$CFG/plugins/marketplaces/$MK
+[ -f "$CLONE/.claude-plugin/marketplace.json" ] \
+  && ok "the manifest is committed, so the clone has it" \
+  || bad "no marketplace.json in the clone - untracked or gitignored?"
+is "and the clone names the marketplace the same" "$(j "$CLONE/.claude-plugin/marketplace.json" .name)" "$MK"
+PL=$(j "$CLONE/.claude-plugin/marketplace.json" .plugins[0].name)
+VER=$(j "$CLONE/.claude-plugin/plugin.json" .version)
 
 # source "./" resolves against the marketplace clone, which is the plugin root
-SRCFIELD=$(j "$SRC/.claude-plugin/marketplace.json" .plugins[0].source)
-ROOT=$(cd "$CFG/plugins/marketplaces/$MK/$SRCFIELD" 2>/dev/null && pwd)
+SRCFIELD=$(j "$CLONE/.claude-plugin/marketplace.json" .plugins[0].source)
+ROOT=$(cd "$CLONE/$SRCFIELD" 2>/dev/null && pwd)
 [ -n "$ROOT" ] && ok "source '$SRCFIELD' resolves to a plugin root" || bad "source does not resolve"
 
 mkdir -p "$CFG/plugins/cache/$MK/$PL"
@@ -192,6 +200,9 @@ const a=fs.readFileSync('$PLUGIN_ROOT/INSTRUCTION.md','utf8');
 const b=fs.readFileSync('$SRC/INSTRUCTION.md','utf8');
 process.exit(a===b?0:1)" \
   && ok "byte for byte what this repository ships" || bad "the installed instruction differs"
+grep -q 'skills' "$PLUGIN_ROOT/.gitignore" 2>/dev/null \
+  && bad "the skills are gitignored, so no clone would carry them" \
+  || ok "and nothing the install needs is gitignored"
 
 cd "$SRC" || exit 1
 rm -rf "$WORK"
