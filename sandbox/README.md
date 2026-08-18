@@ -5,7 +5,7 @@ test lazyspec the way somebody adopting it would meet it.
 
 ```
 sh sandbox/run.sh          # rebuild sandbox/demo and run every scenario
-sh sandbox/install.sh      # the manifests, the install routes, the paste
+sh sandbox/install.sh      # the manifests, both install routes, the paste
 sh sandbox/isolation.sh    # prove the demo is sealed off from this repo
 ```
 

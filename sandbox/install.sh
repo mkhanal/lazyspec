@@ -146,6 +146,53 @@ grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
 grep -q 'lazyspec-setup' "$SRC/README.md" && ok "README sends you to /lazyspec-setup after installing" \
   || bad "README never mentions the step that does the work"
 
+# ------------------------------------------- F. the plugin route, replayed
+
+sect "F. the plugin route, replayed"
+# What /plugin marketplace add and /plugin install actually do, taken from
+# the three marketplaces installed on a real machine: clone into
+# plugins/marketplaces/<the name inside marketplace.json>, then resolve
+# <plugin>@<marketplace> and cache it at
+# plugins/cache/<marketplace>/<plugin>/<version>. The directory is named
+# from the manifest and not from the repository - nx ships as
+# nrwl/nx-ai-agents-config and lands in nx-claude-plugins - so the name
+# in the file is what /plugin install has to be typed against.
+CFG=$WORK/config
+MK=$(j "$SRC/.claude-plugin/marketplace.json" .name)
+PL=$(j "$SRC/.claude-plugin/marketplace.json" .plugins[0].name)
+VER=$(j "$SRC/.claude-plugin/plugin.json" .version)
+
+mkdir -p "$CFG/plugins/marketplaces"
+git clone -q "$SRC" "$CFG/plugins/marketplaces/$MK" 2>/dev/null \
+  && ok "marketplace add clones it to plugins/marketplaces/$MK" \
+  || bad "the repository does not clone"
+[ -f "$CFG/plugins/marketplaces/$MK/.claude-plugin/marketplace.json" ] \
+  && ok "and the manifest is at the path it will be read from" \
+  || bad "no marketplace.json in the clone"
+
+# source "./" resolves against the marketplace clone, which is the plugin root
+SRCFIELD=$(j "$SRC/.claude-plugin/marketplace.json" .plugins[0].source)
+ROOT=$(cd "$CFG/plugins/marketplaces/$MK/$SRCFIELD" 2>/dev/null && pwd)
+[ -n "$ROOT" ] && ok "source '$SRCFIELD' resolves to a plugin root" || bad "source does not resolve"
+
+mkdir -p "$CFG/plugins/cache/$MK/$PL"
+cp -R "$ROOT" "$CFG/plugins/cache/$MK/$PL/$VER"
+PLUGIN_ROOT=$CFG/plugins/cache/$MK/$PL/$VER
+is "install caches it at cache/$MK/$PL/<version>" "$(basename "$PLUGIN_ROOT")" "$VER"
+
+# everything the skills then rely on, read from where they will be read
+[ -f "$PLUGIN_ROOT/INSTRUCTION.md" ] \
+  && ok "\${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md is there, so setup needs no network" \
+  || bad "the instruction is not at the plugin root"
+is "and three skills are discoverable beside it" \
+   "$(ls -d "$PLUGIN_ROOT"/skills/*/ 2>/dev/null | wc -l | tr -d ' ')" "3"
+node -e "
+const fs=require('fs');
+const a=fs.readFileSync('$PLUGIN_ROOT/INSTRUCTION.md','utf8');
+const b=fs.readFileSync('$SRC/INSTRUCTION.md','utf8');
+process.exit(a===b?0:1)" \
+  && ok "byte for byte what this repository ships" || bad "the installed instruction differs"
+
 cd "$SRC" || exit 1
 rm -rf "$WORK"
 printf '\n%s\n' "----------------------------------------"
