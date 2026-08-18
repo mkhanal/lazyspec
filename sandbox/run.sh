@@ -292,7 +292,7 @@ covers=$(grep -c 'covers:' .lazyspec.yaml)
 is "every set says what it covers" "$covers" "4"
 api=$(sed -n '/root: services\/api/,/covers:/p' .lazyspec.yaml | tail -1)
 web=$(sed -n '/root: apps\/web/,/covers:/p' .lazyspec.yaml | tail -1)
-[ -n "$api" ] && [ -n "$web" ] && ok "frontend and backend each declare their own level" \
+[ -n "$api" ] && [ -n "$web" ] && ok "two sets each declare their own level" \
   || bad "a set is missing its level"
 mv .lazyspec.yaml .lazyspec.yaml.off
 found=$(git ls-files --cached --others --exclude-standard '*.lazyspec.md' | wc -l | tr -d ' ')

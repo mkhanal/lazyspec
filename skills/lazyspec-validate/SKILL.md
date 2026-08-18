@@ -83,11 +83,20 @@ These four need no judgement. Report them as facts.
 
   Before reporting a pile of these, check they are requirements at all. A
   heading that numbers or names a section — `## 3. API Endpoints`,
-  `## Failure Modes` — is document structure using the one mark reserved
-  for requirements. It will never have a test because it never described
-  a behaviour. Report those separately as **mis-marked**, and say they
-  want `###`, not a test. In a specification that has been doing this a
-  while they outnumber the real findings.
+  `## Failure Modes` — is document structure using the mark reserved for
+  requirements. It will never have a test because it never described a
+  behaviour. Report those separately as **mis-marked**. In a
+  specification that has been doing this a while they outnumber the real
+  findings.
+
+  When they do, look one level down before writing the report. If the
+  claims have sunk to `###` beneath those sections, this specification
+  has quietly adopted a second convention, and every check in this skill
+  has been reading its table of contents. Say so, say how many `###`
+  headings are really requirements, and say that the fix is to lift them
+  to `##` and drop the sections. `##` is the mark in every project; there
+  is no setting for it, and a repository running both conventions at once
+  is a repository where half the requirements are invisible.
 - **Written twice.** Two specifications share a `## ` heading. The words
   are the name, so two things cannot have them.
 - **Moved alone.** A specification changed and no file containing its
