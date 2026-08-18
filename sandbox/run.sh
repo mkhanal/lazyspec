@@ -219,6 +219,26 @@ is "Java, @DisplayName"     "$(find_proof 'A Cart Holds At Most Fifty Lines')" \
    "apps/web/CheckoutTest.java "
 is "an unmarried requirement finds nothing" "$(find_proof 'Chargebacks Are Held For Review')" ""
 
+# The words say a file is the proof. The name says it is the right one:
+# it carries the specification's stem, capitals and separators aside.
+carries() {
+  stem=$(basename "$1" | sed 's/\.lazyspec\.md$//' | tr 'A-Z' 'a-z' | tr -d '_-')
+  file=$(basename "$2" | tr 'A-Z' 'a-z' | tr -d '_-')
+  case $file in *"$stem"*) return 0 ;; *) return 1 ;; esac
+}
+for pair in \
+  "services/api/specs/billing.lazyspec.md|services/api/specs/billing.lazyspec.test.js" \
+  "services/ledger/specs/postings.lazyspec.md|services/ledger/tests/test_postings.py" \
+  "services/router/specs/routing.lazyspec.md|services/router/routing_test.go" \
+  "apps/web/specs/checkout.lazyspec.md|apps/web/CheckoutTest.java"; do
+  carries "${pair%%|*}" "${pair##*|}" \
+    || bad "$(basename "${pair##*|}") does not carry its specification's stem"
+done
+ok "each proof file carries the stem, whatever the language calls it"
+carries "services/api/specs/billing.lazyspec.md" "services/ledger/tests/test_postings.py" \
+  && bad "a foreign test file matched the stem" \
+  || ok "a test file for another specification does not"
+
 n=$(grep -c '^## ' services/api/specs/billing.lazyspec.md)
 m=$(grep '^## ' services/api/specs/billing.lazyspec.md | grep -vc 'no-test')
 is "no-test requirements are skipped" "$n/$m" "3/2"
