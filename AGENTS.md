@@ -42,9 +42,8 @@ Mark it `## Name <!-- no-test: why -->`.
 `/lazyspec` to change one, with its tests in the same edit, never beside
 unrelated work, and say that you did.
 
-**Write a requirement when the behaviour has settled enough to state.**
-Code and tests may run ahead; the requirement catches up. Then leave it
-alone.
+**Write each requirement as soon as you know it** - before the code,
+during it, or after. Then leave it alone.
 
 **Before finishing any task, check and report both.** `/lazyspec-validate`
 does it for you.
