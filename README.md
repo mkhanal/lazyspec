@@ -145,9 +145,18 @@ How money goes back to a customer. Not how it arrives.
 `covers` keeps a set from quietly widening until nobody can say what
 belongs in it. `/lazyspec` reads it before adding a requirement and stops
 if the requirement is the wrong kind; `/lazyspec-validate` reports one
-that slipped in below the declared level. Neither invents the answer —
-`/lazyspec` asks you for it the first time, and leaves it alone
-afterwards.
+that slipped in below the declared level.
+
+**`/lazyspec-setup` drafts the whole file for you.** It reads the
+repository — package manifests, workspace globs, service folders — works
+out the boundaries, proposes a `covers` for each, marks what it inferred,
+and asks only what the repository cannot answer. The level a set works at
+is usually the one real question, and it asks that one with its best
+guess already in it.
+
+Writing down where specifications will live is not specifying. The shape
+of a repository is knowable on day one; what its code does is not, which
+is why one is settled at install and the other waits.
 
 ## Install
 
@@ -231,7 +240,7 @@ In a fresh session:
 
 | skill | when it runs |
 |---|---|
-| `/lazyspec-setup` | once, after installing |
+| `/lazyspec-setup` | once, after installing: the instruction, and where specs live |
 | `/lazyspec` | the only way to add, reword or remove a requirement |
 | `/lazyspec-validate` | before you finish, and on a pull request |
 

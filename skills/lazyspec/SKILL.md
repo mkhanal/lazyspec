@@ -10,9 +10,9 @@ through these steps. This is them.
 
 ## Steps
 
-0. **If there is no `.lazyspec.yaml`, offer to write one now** - and only
-   now, because until a repository has its first specification, nobody
-   knows where they belong. Skip this whenever the file already exists.
+0. **If there is no `.lazyspec.yaml`, offer to write one now.** Skip this
+   whenever the file exists - `/lazyspec-setup` usually wrote it at
+   install time, and this is only the second chance.
 
    Read the repository, then propose it and wait for a yes:
 
