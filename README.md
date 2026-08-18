@@ -11,6 +11,10 @@ Each one works twice. Written, it is the **input** — hand it to the agent
 as the thing to satisfy. Kept, it is a **harness** — the thing already
 settled cannot drift without somebody deciding it should.
 
+Nothing else about how you work changes. There is no workflow here to
+adopt: plan how you already plan, and lazyspec only ensures the
+requirement is written when it is known, and changed safely after.
+
 ## In short
 
 - A requirement is a `## ` heading in a `*.lazyspec.md` file. Its text is
@@ -24,6 +28,8 @@ settled cannot drift without somebody deciding it should.
   through the build rather than at either end. Then keep it still.
 - A specification is changed only through `/lazyspec`.
 - Nothing to run: no program, no gate, no build.
+- Nothing to change about how you work. Keep your planning, your tickets,
+  your branching, your tests.
 
 ## Why not one of the others
 
@@ -42,15 +48,26 @@ the code and nothing tells anybody the specification stopped being true.
 | drift detection | none. the specification is an input, never checked again | a reworded requirement orphans its test immediately |
 | being wrong early | a specification written before anyone understood the problem, then quietly abandoned | costs nothing, you had not written it yet |
 | what it produces | plans, tasks, sometimes code | nothing. it only checks |
+| how you work | its workflow: specify, plan, tasks, implement | unchanged. it has no workflow |
+
+**It does not replace how you work.** Spec-kit and its like come with a
+method: specify, then plan, then tasks, then implement, in that order,
+through their commands. Adopt one and you have adopted a process.
+
+lazyspec has no process to adopt. Plan however you already plan — a
+ticket, a design doc, a conversation, a whiteboard, nothing at all. Use
+your branching model, your test runner, your review habits. Two things
+are added and nothing is taken away:
+
+- a requirement gets written down **at the moment it becomes known**, and
+- there is one **safe way to change it** afterwards.
 
 Behaviour-driven development got the binding right and paid for it in
-glue nobody wanted to maintain. Spec-first agent tools got the
-generation right and stopped checking the specification the moment it
-produced code.
+glue nobody wanted to maintain. Spec-first agent tools got the generation
+right and stopped checking the specification the moment it produced code.
 
-This takes the binding, drops the glue, and moves the writing to after
-you know the answer. It does less than any of them, and it keeps working
-longer.
+This takes the binding, drops the glue, and writes each requirement when
+it is known. It does less than any of them, and it keeps working longer.
 
 ## Why
 
