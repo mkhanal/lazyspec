@@ -20,24 +20,42 @@ through these steps. This is them.
    sets:
      - root: .
        specs: specs/*.lazyspec.md
+       covers: |
+         What one requirement here describes, and at what level.
    ```
 
    `root` is the folder a specification's name has to be unique inside,
    because two packages each holding `billing.lazyspec.md` would both
    claim the same test file. In one project that is `.`. In a monorepo it
-   is each package or service, so there is one entry per boundary:
+   is each package or service, so there is one entry per boundary - and
+   each may work at a different level, because a browser and a wire
+   contract are not the same kind of promise:
 
    ```yaml
    sets:
      - root: services/api
        specs: specs/*.lazyspec.md
+       covers: |
+         The HTTP contract. One requirement per behaviour a caller can
+         observe: status codes, error shapes, idempotency, ordering.
+         Not internal helpers - those are somebody else's business.
 
      - root: apps/web
        specs: specs/*.lazyspec.md
-
-     - root: packages
-       specs: "*/specs/*.lazyspec.md"
+       covers: |
+         What a person can see and do in the browser. One requirement
+         per user-visible rule, proved end to end. Not component
+         internals, and never a CSS class.
    ```
+
+   **`covers` is the project's decision and yours to ask about, not to
+   assume.** It is free text, read by whoever writes the next
+   requirement, and it is the difference between a set that stays
+   coherent and one that fills up with whatever anybody felt like
+   writing down. A team using consumer-driven contracts might say a
+   requirement here is a pact; a team without them might say it is an
+   endpoint's observable behaviour. Both are right; only the project
+   knows which.
 
    Choose the level where a specification earns its keep here: per
    module, at the API surface, or end to end. Separate frontend and API
@@ -54,10 +72,21 @@ through these steps. This is them.
    adding, what you are rewording, what you are removing, and why. If the
    user did not ask for a change in what the software does, stop and ask.
 
-2. **Choose the file.** A new requirement joins the specification it
-   belongs to. Only start a new `*.lazyspec.md` when none of them fits.
-   Its filename decides which test file proves it, so if a test for this
-   behaviour already exists, name the specification after that file.
+2. **Choose the file.** First read the `covers` of the set it would
+   belong to. If what you are about to write is not what that set is for
+   — an internal helper where the set covers a wire contract, a CSS
+   detail where it covers what a person can see — say so and stop. The
+   requirement may belong in another set, at another level, or nowhere.
+   A set that quietly widens is a set nobody trusts.
+
+   Then: a new requirement joins the specification it belongs to. Only
+   start a new `*.lazyspec.md` when none of them fits. Its filename
+   decides which test file proves it, so if a test for this behaviour
+   already exists, name the specification after that file.
+
+   Give a new specification a title and a sentence saying what it is
+   about, the way the others do. `covers` says what a set is for; the
+   file's own opening says what this one is for.
 
    Every specification opens with a notice. Copy the one the others use;
    if you are writing the first, it reads:

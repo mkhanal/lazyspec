@@ -1,7 +1,8 @@
 ## Specifications
 
-Requirements live in `*.lazyspec.md` files. `.lazyspec.yaml` narrows
-that when there is one; read it first.
+Requirements live in `*.lazyspec.md` files. Read `.lazyspec.yaml` first
+if there is one: it says which files count, and what a requirement in
+each set is for.
 
 A requirement is a `## ` heading in such a file, and its text is its only
 identifier.

@@ -32,7 +32,8 @@ somewhere.
 **Every specification.** `*.lazyspec.md` is the default. If
 `.lazyspec.yaml` exists, its `specs:` globs are the answer instead — a
 repository that arrived from another tool keeps its own filenames, so do
-not assume the default.
+not assume the default. Read each set's `covers` while you are there; it
+says what a requirement in that set is for, and you will need it.
 
 ```
 git ls-files --cached --others --exclude-standard '*.lazyspec.md'
@@ -113,6 +114,13 @@ unrelated, or checking nothing, is the failure this exists to find. Quote
 the bullet and the assertion side by side when they do not match.
 
 **Is every bullet point proved?** Name any the tests do not cover.
+
+**Is it the kind of requirement this set is for?** If `.lazyspec.yaml`
+gives the set a `covers`, read it. A requirement below the level it
+declares — an internal helper where the set covers a wire contract, a
+component detail where it covers what a person can see — is drift of a
+slower kind: the set widens until nobody can say what belongs in it.
+Name it, quote the `covers`, and say where it belongs instead.
 
 **Did this change write down what it changed?** For each changed file
 containing no requirement's words: did it change what the software does?

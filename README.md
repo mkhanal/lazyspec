@@ -103,6 +103,52 @@ Nesting is free and costs nothing to an agent. A single flat directory is
 what gets expensive: every requirement in it is a candidate every time
 somebody asks "which one covers this?"
 
+## What a specification is about
+
+Two questions, two homes. Both are the project's to answer, and lazyspec
+answers neither for you.
+
+**What is this set for?** `covers` in `.lazyspec.yaml`, free text, read
+by whoever writes the next requirement:
+
+```yaml
+sets:
+  - root: services/api
+    specs: specs/*.lazyspec.md
+    covers: |
+      The HTTP contract. One requirement per behaviour a caller can
+      observe: status codes, error shapes, idempotency, ordering.
+      Not internal helpers.
+
+  - root: apps/web
+    specs: specs/*.lazyspec.md
+    covers: |
+      What a person can see and do in the browser. One requirement per
+      user-visible rule, proved end to end. Not component internals.
+```
+
+A browser and a wire contract are not the same kind of promise, so a
+frontend set and a backend set will rarely say the same thing here. A
+team using consumer-driven contracts might say a requirement is a pact; a
+team without them might say it is an endpoint's observable behaviour.
+Both are right, and only the project knows which.
+
+**What is this file about?** The specification's own title and opening
+sentence, the way any document says what it is:
+
+```markdown
+# Refunds
+
+How money goes back to a customer. Not how it arrives.
+```
+
+`covers` keeps a set from quietly widening until nobody can say what
+belongs in it. `/lazyspec` reads it before adding a requirement and stops
+if the requirement is the wrong kind; `/lazyspec-validate` reports one
+that slipped in below the declared level. Neither invents the answer —
+`/lazyspec` asks you for it the first time, and leaves it alone
+afterwards.
+
 ## Install
 
 **The instruction is the install.** Paste `INSTRUCTION.md` where your

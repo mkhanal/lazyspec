@@ -52,12 +52,21 @@ cat > .lazyspec.yaml <<'YAML'
 sets:
   - root: services/api
     specs: specs/*.lazyspec.md
+    covers: |
+      The HTTP contract a caller can observe. Not internal helpers.
   - root: services/ledger
     specs: specs/*.lazyspec.md
+    covers: |
+      Double-entry invariants that must hold after any posting.
   - root: services/router
     specs: specs/*.lazyspec.md
+    covers: |
+      How a request is matched to a handler, and what happens when none is.
   - root: apps/web
     specs: specs/*.lazyspec.md
+    covers: |
+      What a person can see and do in the browser, proved end to end.
+      Not component internals, and never a CSS class.
 YAML
 
 # --- a JavaScript service
@@ -235,6 +244,12 @@ git checkout -q -- .
 sect "E. configuration"
 sets=$(grep -c 'root:' .lazyspec.yaml)
 is ".lazyspec.yaml declares one set per package" "$sets" "4"
+covers=$(grep -c 'covers:' .lazyspec.yaml)
+is "every set says what it covers" "$covers" "4"
+api=$(sed -n '/root: services\/api/,/covers:/p' .lazyspec.yaml | tail -1)
+web=$(sed -n '/root: apps\/web/,/covers:/p' .lazyspec.yaml | tail -1)
+[ -n "$api" ] && [ -n "$web" ] && ok "frontend and backend each declare their own level" \
+  || bad "a set is missing its level"
 mv .lazyspec.yaml .lazyspec.yaml.off
 found=$(git ls-files --cached --others --exclude-standard '*.lazyspec.md' | wc -l | tr -d ' ')
 is "with no config, every specification still counts" "$found" "4"
