@@ -218,11 +218,11 @@ a guess anybody has to make.
 - A requirement's text is its only identifier.
 - Nothing here configures a language, a runner or a test folder. The
   agent reads all three off your repository.
-- **Spell `lazyspec` the way the language allows, never as a literal
-  `.lazyspec.`.** A dot is fine in a path and illegal in a name: Java
-  cannot put one in a class name, and `test_billing.lazyspec.py` makes
-  pytest fail to import and `unittest` skip the file without a word. The
-  token survives every ecosystem; the punctuation does not.
+- **Join the words however the language joins them, and never require a
+  dot.** One is fine in a path and illegal in a name: Java cannot put one
+  in a class name, and `test_billing.lazyspec.py` makes pytest fail to
+  import and `unittest` skip the file without a word. The token survives
+  every ecosystem; the punctuation does not.
 - `<!-- no-test: why -->` marks a requirement nothing can prove.
 
 ## Where specifications live

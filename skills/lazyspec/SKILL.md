@@ -111,10 +111,10 @@ specification says so on its first line.
    guesses which file proves what and a test outliving its specification
    can be spotted by name alone: `billing.lazyspec.test.ts`,
    `test_billing_lazyspec.py`, `billing_lazyspec_test.go`,
-   `BillingLazyspecTest.java`. Spell `lazyspec` however the language
-   spells a name, never as a literal `.lazyspec.` - Java cannot put a dot
-   in a class name, pytest fails to import it, `unittest` skips the file
-   in silence.
+   `BillingLazyspecTest.java`. Join the words however the
+   language joins them, and never require a dot: Java cannot put one in
+   a class name, pytest fails to import it, `unittest` skips the file in
+   silence.
 
    Fit that to how this repository already names and runs its tests. The
    file has to be one the runner picks up, and the words can sit wherever

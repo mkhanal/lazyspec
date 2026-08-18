@@ -177,8 +177,8 @@ each spelled the way that language spells names:
 | suffix is fixed | `billing_lazyspec_test.go` |
 | name is the class | `BillingLazyspecTest.java` |
 
-Match the token with capitals and separators removed, never the literal
-`.lazyspec.`: a dot is legal in a path and illegal in a name, so Java
+Match on the token with capitals and separators removed, never on the
+punctuation: a dot is legal in a path and illegal in a name, so Java
 refuses it in a class name, pytest fails to import
 `test_billing.lazyspec.py`, and `unittest` skips it in silence.
 
