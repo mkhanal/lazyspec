@@ -3,12 +3,14 @@
 Write each requirement the moment it is known — and you will know them
 one at a time, as the build goes.
 
-Not up front, where you would be guessing. Not all at the end, where you
-would be transcribing. A specification accretes: something settles, you
+Not up front, where you would be guessing. Rare cases as all at the end, but mostly as you build.  A specification accretes: something settles, you
 write it down, it stops moving.
 
-Each one works twice. Written, it is the **input** — hand it to the agent
-as the thing to satisfy. Kept, it is a **harness** — the thing already
+Specs are outcomes of your discussion with the LLM. your existing workflows for analysis and research should guide this (or eg: superpowers:brainstorm).
+
+Each spec works twice. 
+- Written, it is the **input** — hand it to the agent as the thing to satisfy. 
+- Kept, it is a **harness** — the thing already
 settled cannot drift without somebody deciding it should.
 
 Nothing else about how you work changes. There is no workflow here to
@@ -21,8 +23,11 @@ requirement is written when it is known, and changed safely after.
   its identifier.
 - Its test declares itself by that text, word for word, in the file
   sharing the specification's stem.
-- `billing.lazyspec.md` is married by `billing.lazyspec.test.ts`. The
-  name marries them, so either file can live anywhere.
+- `billing.lazyspec.md` is married by the one test file carrying
+  `billing`, named however your language names tests —
+  `billing.lazyspec.test.ts`, `test_billing.py`, `billing_test.go`,
+  `BillingTest.java`. The name marries them, so either file can live
+  anywhere.
 - Reword the requirement and its test is orphaned at once, loudly.
 - Write each requirement once it is known, which is usually partway
   through the build rather than at either end. Then keep it still.
@@ -146,8 +151,27 @@ describe('Refunds Never Exceed What Was Captured', () => {
 })
 ```
 
-`sh sandbox/run.sh` builds a whole repository like this - in four
-languages - and checks every claim on this page against it.
+Nothing about that is JavaScript. The words go wherever your language
+puts a test's name, and the file goes wherever your runner already looks:
+
+```py
+# test_refunds.py
+def test_beyond_captured():
+    """Refunds Never Exceed What Was Captured"""
+```
+
+```go
+// refunds_test.go
+t.Run("Refunds Never Exceed What Was Captured", func(t *testing.T) { ... })
+```
+
+```java
+// RefundsTest.java
+@DisplayName("Refunds Never Exceed What Was Captured")
+```
+
+`sh sandbox/run.sh` builds a whole repository like this — in those four
+languages — and checks every claim on this page against it.
 
 ### The header does the work
 
