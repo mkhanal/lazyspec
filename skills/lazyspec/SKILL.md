@@ -123,6 +123,29 @@ through these steps. This is them.
    run did. Nothing enforces this but you, which is exactly why saying it
    matters.
 
+## What does not become a requirement
+
+Most of a test suite marries nothing, and that is the design. Requirements
+sit at the level `covers` declares - often acceptance, contract or
+end-to-end. Everything below that keeps working as it always did.
+
+- **Unit tests, integration tests, database tests, fixtures, property
+  tests, benchmarks.** No requirement, no heading, no marriage. Write
+  them, change them, delete them freely.
+- **Never write a requirement to justify a test that already exists.**
+  That is the tail wagging the dog: it fills the set with implementation
+  detail and makes the specification a second, worse copy of the suite.
+- **A specification does not replace those tests.** A requirement says
+  what the software promises; a unit test says a function works. Both are
+  worth having, and only one is a promise to anybody outside the code.
+- **Other test files may share a specification's name.** `billing.md` is
+  married to whichever file repeats its headings; `billing.unit.test.ts`
+  sitting beside it is ordinary and unrelated.
+
+If a requirement only makes sense to somebody reading the implementation,
+it is a unit test wearing a heading. Delete the heading and keep the
+test.
+
 ## Writing a requirement
 
 - One `## ` heading is one requirement, and its words are its name.

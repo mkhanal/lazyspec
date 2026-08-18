@@ -93,6 +93,18 @@ describe('Refunds Never Exceed What Was Captured', () => {
 });
 EOF
 echo 'module.exports = {};' > services/api/src/billing.js
+# the rest of a real suite: married to nothing, and correctly so
+cat > services/api/src/billing.unit.test.js <<'EOF'
+describe('roundHalfEven', () => {
+  it('rounds .5 to the nearest even minor unit', () => {});
+});
+EOF
+mkdir -p services/api/tests
+cat > services/api/tests/billing.db.test.js <<'EOF'
+describe('captures table', () => {
+  it('rolls back a partial write', () => {});
+});
+EOF
 
 # --- a Python service
 mkdir -p services/ledger/tests services/ledger/src
@@ -224,6 +236,16 @@ else bad "monorepo"; fi
 rm services/ledger/specs/billing.lazyspec.md
 
 # --------------------------------------------------- D. judging a change
+
+sect "C1. the rest of the suite marries nothing"
+is "a unit test states no requirement" \
+   "$(git grep --untracked -l -F -e 'Refunds Never Exceed What Was Captured' -- services/api/src/billing.unit.test.js | wc -l | tr -d ' ')" "0"
+is "a database test states no requirement" \
+   "$(git grep --untracked -l -F -e 'Refunds Never Exceed What Was Captured' -- services/api/tests/billing.db.test.js | wc -l | tr -d ' ')" "0"
+is "the married test is still the only proof" "$(find_proof 'Refunds Never Exceed What Was Captured')" \
+   "services/api/specs/billing.lazyspec.test.js "
+extra=$(ls services/api/src/billing.unit.test.js services/api/tests/billing.db.test.js 2>/dev/null | wc -l | tr -d ' ')
+is "they sit beside it, sharing its name, unbothered" "$extra" "2"
 
 sect "D. judging a change"
 printf -- '- A second bullet.\n' >> services/api/specs/billing.lazyspec.md

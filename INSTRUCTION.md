@@ -1,8 +1,7 @@
 ## Specifications
 
 Requirements live in `*.lazyspec.md` files. Read `.lazyspec.yaml` first
-if there is one: it says which files count, and what a requirement in
-each set is for.
+if there is one: which files count, and what each set is for.
 
 A requirement is a `## ` heading in such a file, and its text is its only
 identifier.
@@ -18,7 +17,8 @@ test_billing.py            """Refunds Never Exceed What Was Captured"""
 billing_test.go            t.Run("Refunds Never Exceed What Was Captured", ..)
 ```
 
-One specification is married to one test file. Split one that grows too
+Most tests marry nothing, and should not: unit and integration tests sit
+below the requirements. One specification is married to one test file. Split one that grows too
 large, and split its test file with it. If the code already has tests,
 name the specification after the file that proves it. If a requirement
 cannot be tested, mark it `## Name <!-- no-test: why -->`.

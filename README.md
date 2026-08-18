@@ -103,6 +103,37 @@ Nesting is free and costs nothing to an agent. A single flat directory is
 what gets expensive: every requirement in it is a candidate every time
 somebody asks "which one covers this?"
 
+## What it does not replace
+
+A married test is one kind of test among many. Most of your suite marries
+nothing, and that is the design.
+
+| | married to a requirement? |
+|---|---|
+| acceptance, end-to-end, contract tests | usually — this is the level requirements live at |
+| unit tests | no |
+| integration and database tests | no |
+| fixtures, property tests, benchmarks | no |
+
+Requirements sit at whatever level `covers` declares. Everything below
+that keeps working exactly as it did: write it, change it, delete it,
+without touching a specification.
+
+- **The check runs one way only** — from requirements to tests, never
+  back. A test with no requirement is not a finding, and never will be.
+- **Never write a requirement to justify a test you already have.** That
+  is the tail wagging the dog: the set fills with implementation detail
+  and the specification becomes a second, worse copy of the suite.
+- **A requirement is a promise; a unit test is a check.** A requirement
+  says what the software promises somebody outside the code. A unit test
+  says a function works. Both worth having, only one worth locking.
+- **Other test files may share a specification's name.**
+  `billing.lazyspec.md` is married to whichever file repeats its
+  headings; `billing.unit.test.ts` beside it is ordinary and unrelated.
+
+If a requirement only makes sense to somebody reading the
+implementation, it is a unit test wearing a heading.
+
 ## What a specification is about
 
 Two questions, two homes. Both are the project's to answer, and lazyspec

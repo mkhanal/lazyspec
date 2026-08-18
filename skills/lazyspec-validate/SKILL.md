@@ -68,6 +68,12 @@ vendored or a submodule.
 
 ## What searching settles
 
+This runs one way only: **from requirements to tests, never back.** A test
+with no requirement is not a finding and never will be. Most of a suite -
+unit tests, integration tests, database tests - marries nothing by design,
+and a check that complained about them would be asking a project to
+specify its own implementation.
+
 Report these as they stand. They need no judgement.
 
 - **Unmarried.** No file anywhere contains the requirement's words.
