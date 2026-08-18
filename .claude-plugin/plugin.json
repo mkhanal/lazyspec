@@ -14,7 +14,5 @@
   ],
   "repository": "https://github.com/mkhanal/lazyspec",
   "description": "Let the agent experiment, then write the requirement. Specifications are locked, so an agent can never rewrite your requirements to match what it built.",
-  "skills": [
-    "./skills"
-  ]
+  "homepage": "https://github.com/mkhanal/lazyspec"
 }

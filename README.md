@@ -371,12 +371,15 @@ is why one is settled at install and the other waits.
 **The instruction is the install.** Paste `INSTRUCTION.md` where your
 agent reads it every task and you are done. That works on every agent.
 
-**Claude Code and Cursor** take the skills as a plugin:
+**Claude Code** takes the skills as a plugin:
 
 ```
 /plugin marketplace add mkhanal/lazyspec
 /plugin install lazyspec@lazyspec
 ```
+
+**Cursor and Codex** each read their own plugin directory, and both ship
+here: add this repository through that editor's own plugin interface.
 
 **Anything else** is a clone and a copy:
 
