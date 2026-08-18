@@ -1,7 +1,7 @@
 # lazyspec
 
-Let the agent experiment. Write the requirement once you know. Then say,
-in the file itself, that it is not to be rewritten in passing.
+Let the agent experiment. Write the requirement once you know. Then make
+it the one file your agents do not rewrite in passing.
 
 ## Does this sound familiar
 
@@ -28,8 +28,9 @@ Two failures, opposite directions:
 lazyspec takes both:
 
 - Specify **late**, once the behaviour is known.
-- **Mark** every specification as changed only through `/lazyspec`, so no
-  agent rewords one to match its code.
+- **Lock** the specification: say so in the file, say so in the standing
+  rules your agents load, and check it afterwards. Three places, one
+  rule, so no agent rewords a requirement to match its code.
 
 ## What you write
 
@@ -130,11 +131,12 @@ opencode, `.agents/skills/` for Codex and opencode.
 `https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
 it."*
 
-### Then one thing
+### Then the one thing that matters
 
-No installer can do it.
-
-**Paste `INSTRUCTION.md` where your agent reads it every task.**
+**Put `INSTRUCTION.md` into the standing rules your agents already
+load.** If you keep a `CONSTITUTION.md`, engineering principles, or house
+rules, that is the right home — paste it there and point `AGENTS.md` at
+it. If you keep nothing of the kind, `AGENTS.md` is the default.
 
 ```
 <!-- lazyspec:begin -->
@@ -142,18 +144,22 @@ No installer can do it.
 <!-- lazyspec:end -->
 ```
 
-`AGENTS.md` is the default. Every other editor gets a short file pointing
-at it, never a second copy — see the table below.
+This is the step that makes the tool work, and no installer can do it.
+Everything else here is copying files around.
 
+- **Paste it, do not link to it.** An instruction fetched on request is
+  one that will not be followed. It has to arrive in context before the
+  agent starts, every task, without being asked for.
 - **Claude Code never looks for `AGENTS.md`.** A repository with only an
   `AGENTS.md` looks set up and is not. One line, `@AGENTS.md`, fixes it.
-- Paste it, do not link to it. An instruction fetched on request is one
-  that will not be followed.
-- A plugin cannot do this. Plugins carry skills, not files in your
+- **Every other editor gets a short file pointing at `AGENTS.md`**, never
+  a second copy — see the table below.
+- **A plugin cannot do this.** Plugins carry skills, not files in your
   repository.
-- **Already keep a `CONSTITUTION.md`, engineering principles, or house
-  rules your agents load?** That is the right home. Paste it there and
-  point `AGENTS.md` at it.
+
+Put it beside your existing rules rather than in a file of its own. An
+agent that already respects your constitution will respect one more line
+in it; a rule filed somewhere separate is a rule competing for attention.
 
 ### Check it worked
 
@@ -188,31 +194,35 @@ still two documents you can point an agent at by path.
 ## Why there is no hook
 
 There was one: a pre-tool hook that refused writes to a specification. It
-is gone, and the reason is worth stating, because it is the same reason
-this tool exists at all.
+is gone, and the reason is worth stating.
 
-- It ran on **three agents out of nine**. On the rest it was never
-  invoked, so a repository could carry the whole apparatus and be
-  protected by nothing.
+**No mechanism guarantees what an agent does.** A hook is a tool call
+away from being disabled, worked around with a script, or simply
+prompted past. That is true of every guardrail anyone ships for an LLM,
+and it was true of this one: the agent it restrained could write its own
+unlock file whenever it liked.
+
+Given that the ceiling is the same either way, the hook was paying for
+nothing:
+
+- It ran on **three agents out of nine**. On the rest a repository could
+  carry the whole apparatus and be defended by nothing.
 - It was **tested on one**. Cursor's payload shape came from
   documentation, never from a running Cursor; opencode needed a shim
   nobody had written.
 - It **refused honest work**. Matching patterns rather than parsing, it
-  blocked writing a README that quoted a requirement, a commit message
-  that named one, a script whose argument happened to be a specification.
-  Building lazyspec, it refused legitimate work six times in one session.
-- It could be **opened by the agent it restrained**, which could create
-  its own unlock file and carry on.
+  blocked a README that quoted a requirement, a commit message that named
+  one, a script whose argument happened to be a specification. Building
+  lazyspec, it refused legitimate work six times in one session.
 
-None of that is flakiness. It did exactly what it was written to do. The
-problem is that it could not be *guaranteed*, and a check that looks like
-protection while providing none is worse than no check: it is a false
-indicator that people build habits on.
+So it cost friction on every agent, worked on one, and moved the ceiling
+nowhere. Worse, it *looked* like protection — and a false indicator is
+worse than none, because people build habits on it.
 
-So what is left is honest about what it is. A notice every agent reads,
-an instruction every agent loads, and a check that finds what went wrong
-afterwards. None of them stops a determined agent. All of them work
-everywhere, and none of them claims more than it does.
+What actually changes an agent's behaviour is the rule being unavoidable
+and repeated: in the file it is about to edit, in the standing rules it
+loads every task, and in the check that reads the diff afterwards. That
+is the honest maximum, and it is what is left.
 
 ## Using it day to day
 
