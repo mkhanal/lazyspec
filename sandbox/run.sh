@@ -247,6 +247,22 @@ is "the married test is still the only proof" "$(find_proof 'Refunds Never Excee
 extra=$(ls services/api/src/billing.unit.test.js services/api/tests/billing.db.test.js 2>/dev/null | wc -l | tr -d ' ')
 is "they sit beside it, sharing its name, unbothered" "$extra" "2"
 
+sect "C2. an orphaned specification test"
+# the convention makes the name a claim, so it can be checked backwards
+orphans() {
+  for t in $(find . -name '*.lazyspec.test.*'); do
+    stem=$(basename "$t" | sed 's/\.lazyspec\.test\..*$//')
+    [ -f "$(dirname "$t")/$stem.lazyspec.md" ] || echo "$t"
+  done
+}
+is "no orphans while the specification is there" "$(orphans | wc -l | tr -d ' ')" "0"
+mv services/api/specs/billing.lazyspec.md services/api/specs/payments.lazyspec.md
+is "renaming the specification orphans its test" "$(orphans | tr -d ' ')" "./services/api/specs/billing.lazyspec.test.js"
+mv services/api/specs/payments.lazyspec.md services/api/specs/billing.lazyspec.md
+is "and putting it back clears the orphan" "$(orphans | wc -l | tr -d ' ')" "0"
+unit=$(orphans | grep -c 'unit.test' || true)
+is "an ordinary test is never an orphan" "$unit" "0"
+
 sect "D. judging a change"
 printf -- '- A second bullet.\n' >> services/api/specs/billing.lazyspec.md
 changed=$(git diff --name-only HEAD | tr '\n' ' ')

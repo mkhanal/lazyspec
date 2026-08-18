@@ -118,6 +118,11 @@ through these steps. This is them.
 5. **Check your work.** Every heading has its test, and the repository's
    own test command passes. Find that command; do not guess it.
 
+   If you renamed or deleted a specification, its test file follows -
+   same name, same moment. A `<name>.lazyspec.test.*` left behind with no
+   specification is an orphan that still passes, proving a requirement
+   nobody has any more.
+
 6. **Report**, and say plainly that you changed a specification: which
    headings you touched, which tests now prove them, and what the test
    run did. Nothing enforces this but you, which is exactly why saying it
@@ -141,6 +146,10 @@ end-to-end. Everything below that keeps working as it always did.
 - **Other test files may share a specification's name.** `billing.md` is
   married to whichever file repeats its headings; `billing.unit.test.ts`
   sitting beside it is ordinary and unrelated.
+- **`<name>.lazyspec.test.*` is a claim, so only use it for the married
+  file.** Where your runner lets you choose the name, that one carries
+  the requirements and its neighbours do not. A file named that way with
+  no specification beside it is reported as an orphan.
 
 If a requirement only makes sense to somebody reading the implementation,
 it is a unit test wearing a heading. Delete the heading and keep the

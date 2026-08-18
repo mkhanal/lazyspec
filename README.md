@@ -84,7 +84,10 @@ Neither cares what language you write in:
 - A requirement's text is its only identifier.
 - Nothing here configures a language, a runner or a test folder. The
   agent reads all three off your repository.
-- Where your runner leaves names free, use `<name>.lazyspec.test.*`.
+- Where your runner leaves names free, use `<name>.lazyspec.test.*`. It
+  is not decoration: a file with that name claims to prove a
+  specification, which is what lets `/lazyspec-validate` spot one left
+  behind after its specification was deleted or renamed.
 - `<!-- no-test: why -->` marks a requirement nothing can prove.
 
 ## Where specifications live
@@ -119,8 +122,15 @@ Requirements sit at whatever level `covers` declares. Everything below
 that keeps working exactly as it did: write it, change it, delete it,
 without touching a specification.
 
-- **The check runs one way only** — from requirements to tests, never
-  back. A test with no requirement is not a finding, and never will be.
+- **The check runs from requirements to tests.** An ordinary test with no
+  requirement is not a finding, and never will be.
+- **Except for a test that named itself one.** A
+  `billing.lazyspec.test.js` with no `billing.lazyspec.md` is an orphan:
+  the specification was deleted or renamed and its test was left behind,
+  still passing, proving a requirement nobody has. The name made a claim,
+  so the name can be checked. Where your runner forces a name —
+  `test_billing.py`, `billing_test.go` — nothing claims a marriage and
+  nothing can be checked backwards.
 - **Never write a requirement to justify a test you already have.** That
   is the tail wagging the dog: the set fills with implementation detail
   and the specification becomes a second, worse copy of the suite.
