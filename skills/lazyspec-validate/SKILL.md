@@ -9,16 +9,14 @@ One question: is every requirement still married to a test that proves
 it, and did this change write down what it changed.
 
 Scope is every `*.lazyspec.md`, unless `.lazyspec.yaml` narrows it — its
-`specs:` globs win, because a repository that arrived from another tool
-keeps its own filenames. Read each set's `covers` while you are there.
+`specs:` globs win. Read each set's `covers` while you are there.
 
 ## The one thing to get right
 
 **Finding nothing tells you something. Finding something tells you almost
 nothing.**
 
-- No file holds a requirement's words, so nothing proves it. True in Go,
-  in Django and in Gradle alike.
+- No file holds a requirement's words, so nothing proves it.
 - A file that does hold them may be the test - or a comment, a README, a
   changelog, a fixture, a mock, another specification. Only reading says.
 
@@ -53,7 +51,7 @@ specify its own implementation. The one exception is a test that **named
 itself** one - `lazyspec` in a test file's name is a claim, and a claim
 reads backwards.
 
-Five findings, no judgement needed. Report them as facts.
+These need no judgement. Report them as facts.
 
 - **Unmarried.** No file holds the requirement's words.
 
@@ -68,8 +66,7 @@ Five findings, no judgement needed. Report them as facts.
   contents. Say how many `###` headings are really requirements, and say
   the fix: lift them to `##`, drop the sections. `##` is the mark in
   every project and there is no setting for it.
-- **Written twice.** Two specifications share a `## ` heading. The words
-  are the name, so two things cannot have them.
+- **Written twice.** Two specifications share a `## ` heading.
 - **Moved alone.** A specification changed and no file holding its
   requirements changed with it. A specification takes its tests with it.
 - **Orphaned.** A test file naming `lazyspec` and a specification's stem,
@@ -77,9 +74,7 @@ Five findings, no judgement needed. Report them as facts.
   still passing, proving a requirement nobody has. Say which way it goes:
   the specification back, or the test out.
 - **Unmarked.** A specification whose first line is not the lazyspec
-  header. It is the only part of lazyspec needing no install, so a
-  specification without it is unmarked everywhere. Restore it through
-  `/lazyspec`.
+  header. Restore it through `/lazyspec`.
 
 ## Found by reading
 
@@ -215,8 +210,7 @@ TESTS     the command you ran, and what it did
 ```
 
 - Name every finding, with a file and a line.
-- **Raise an orphan every time.** A test still sitting there after its
-  specification went is the one failure a green suite cannot show you.
+- **Raise an orphan every time.** A green suite cannot show you one.
 - Fail when anything is unmarried, written twice, moved alone, orphaned
   or unmarked, when a requirement is not proved by the test file named
   after its specification, or when the change did not write down what it
@@ -224,17 +218,17 @@ TESTS     the command you ran, and what it did
 
 ## On a pull request
 
-Two things change in CI. How you wire it up - which agent, which
+How you wire CI up - which agent, which
 credentials, blocking or advisory - is not this skill's business.
 
-- **Run the five settled checks in shell, before the agent.** A few lines
+- **Run the settled checks in shell, before the agent.** A few lines
   around the searches above, and they cost nothing. No model should be
   paid to notice them or able to talk you out of them. Keep any blocking
-  gate to exactly those five: a gate deciding which file is a test is
+  gate to exactly those: a gate deciding which file is a test is
   guessing at conventions it cannot see.
-- **Raise an orphan in the review, every time.** It is invisible in a
-  green build and nearly invisible in a diff, because the deletion and
-  the leftover sit in different files and often different commits.
+- **Raise an orphan in the review, every time.** It is nearly invisible
+  in a diff too, because the deletion and the leftover sit in different
+  files and often different commits.
 - **Give the agent requirements, not patches.** Work out which
   requirements the change touches - headings altered, plus requirements
   whose tests were altered - and give it each one in full, with the whole

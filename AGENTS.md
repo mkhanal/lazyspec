@@ -38,19 +38,18 @@ grows too large and split its tests with it. If the code already has
 tests, name the specification after the file that proves it. Untestable?
 Mark it `## Name <!-- no-test: why -->`.
 
-**Specifications are locked unless you are in `/lazyspec`.** Every one
-says so on its first line. Change one only there, with its tests in the
+**Specifications are locked unless you are in `/lazyspec`.** Change one
+only there, with its tests in the
 same edit, never beside unrelated work, and say that you did.
 
 **Write each requirement once it is known**, usually partway through
 rather than at either end. Code and tests may run ahead; the requirement
-catches up. Write it then and leave it alone.
+catches up. Then leave it alone.
 
 **Before finishing any task, check and report both.** `/lazyspec-validate`
 does it for you.
 
-1. Every heading you touched is married - repeated word for word by a
-   test, in the file named after its specification. Say which are not.
+1. Every heading you touched is married. Say which are not.
 2. If you changed what the software does, say whether a requirement
    covers it yet. "Not yet" is fair while experimenting, not in a pull
    request.

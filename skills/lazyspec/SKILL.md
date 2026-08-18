@@ -14,8 +14,7 @@ specification says so on its first line.
 
 0. **If there is no `.lazyspec.yaml`, offer to write one now.** Skip this
    whenever the file exists - `/lazyspec-setup` usually wrote it at
-   install time, and this is only the second chance. Read the
-   repository, propose it, wait for a yes:
+   install time. Read the repository, propose it, wait for a yes:
 
    ```yaml
    sets:
@@ -39,9 +38,8 @@ specification says so on its first line.
    - Each set works at whatever level suits it. The promises are
      different kinds of thing, as those two `covers` show.
    - **`covers` is the project's decision, yours to ask about and not to
-     assume.** Free text, read by whoever writes the next requirement. It
-     is the difference between a set that stays coherent and one that
-     silts up with every stray thought anybody had. A team using
+     assume.** Free text, read by whoever writes the next requirement. A
+     team using
      consumer-driven contracts might call a requirement here a consumer
      contract; a team without them might call it whatever a caller can
      observe. Both are right, and only the project knows which.
@@ -68,12 +66,9 @@ specification says so on its first line.
 
    **Then look for a conflict, before writing anything.** This is the
    cheapest moment there will be: nothing exists yet, so reconciling
-   costs a sentence. Once the requirement and its test are written, the
-   same conflict costs an argument about which one was right.
+   costs a sentence. Written, it costs an argument instead.
 
-   Do not read every specification - in a real repository that is
-   hundreds of requirements and you will stop doing it by Thursday. Go
-   where an overlap is likely:
+   Do not read every specification. Go where an overlap is likely:
 
    - **The counterpart set.** Most behaviours are described twice, from
      two sides - producer and consumer, writer and reader, scheduler and
@@ -86,8 +81,7 @@ specification says so on its first line.
 
    Two requirements covering one behaviour from opposite sides are fine
    and often necessary: each is proved by its own test and breaks on its
-   own. Two that cannot both be true are not - say so and stop. Never
-   write the second and leave somebody else to find they disagree.
+   own. Two that cannot both be true are not - say so and stop.
 
    A new requirement joins the specification it belongs to. Start a new
    `*.lazyspec.md` only when none fits. Its filename decides which test
@@ -106,10 +100,6 @@ specification says so on its first line.
    > Each `##` heading is one requirement. Its test repeats that heading
    > as its own name — to find it, search the tests for that text.
    ```
-
-   It teaches as well as forbids, and it travels inside the file rather
-   than in anybody's configuration - which is what makes it reach every
-   agent on every tool, including one that never loaded your instruction.
 
 3. **Make the change.**
 
@@ -156,8 +146,7 @@ contract or end to end. Everything below that keeps working as it did.
   tests, benchmarks.** No requirement, no heading, no marriage. Write,
   change and delete them freely.
 - **Never write a requirement to justify a test that already exists.**
-  That is the tail wagging the dog: it fills the set with implementation
-  detail and makes the specification a second, worse copy of the suite.
+  It fills the set with implementation detail and makes the specification a second, worse copy of the suite.
 - **A specification does not replace those tests.** A requirement says
   what the software promises; a unit test says a function works. Both
   worth having, only one a promise to anybody outside the code.
@@ -190,9 +179,8 @@ and keep the test.
 - Split a specification while it is still short enough to read at a
   glance. Nobody should read the whole set to find one thing.
 
-Every word here is read again by every agent, on every task, for as long
-as the file exists. It is the most expensive writing in the repository.
-Write less.
+Every word here is read again by every agent, on every task. Write
+less.
 
 ## Rules
 
