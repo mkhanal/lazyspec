@@ -83,6 +83,12 @@ These are the steps.
    requirement may belong in another set, at another level, or nowhere.
    A set that quietly widens is a set nobody trusts.
 
+   Then look for what already says something about this, in **every** set,
+   not only the one you are writing in. A frontend requirement and an API
+   requirement may cover the same behaviour from their own sides, which
+   is fine. Two that cannot both be true is not. If you find one, say so
+   and stop rather than adding the second.
+
    Then: a new requirement joins the specification it belongs to. Only
    start a new `*.lazyspec.md` when none of them fits. Its filename
    decides which test file proves it, so if a test for this behaviour

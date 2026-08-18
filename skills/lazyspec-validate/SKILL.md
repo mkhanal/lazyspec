@@ -135,6 +135,22 @@ the bullet and the assertion side by side when they do not match.
 
 **Is every bullet point proved?** Name any the tests do not cover.
 
+**Does it contradict another requirement?** Requirements may cover the
+same ground from different sides — an API set saying what a call refuses,
+a frontend set saying the button is disabled before the call is made.
+That repetition is fine and often necessary; each side owns its half.
+
+What is not fine is the two drifting apart. Read across the sets, not
+just within one, and flag any pair that cannot both be true: two
+different limits, two different error messages, one side saying a value
+is optional and the other requiring it. Quote both, name both files, and
+say which you believe.
+
+Look hardest where one side was written long before the other. A
+behaviour specified in an API set because there was nowhere else to put
+it — a button, a modal, a page — will be restated when the frontend set
+finally exists, and the copy left behind is the one that goes stale.
+
 **Is it the kind of requirement this set is for?** If `.lazyspec.yaml`
 gives the set a `covers`, read it. A requirement below the level it
 declares — an internal helper where the set covers a wire contract, a

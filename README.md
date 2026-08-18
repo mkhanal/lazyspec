@@ -263,6 +263,23 @@ sentence, the way any document says what it is:
 How money goes back to a customer. Not how it arrives.
 ```
 
+### Two sets may cover the same ground
+
+An API set says what a call refuses. A frontend set says the button is
+disabled before the call is made. That is the same rule from two sides,
+and both are worth writing: each is proved by a different test, and each
+can break on its own.
+
+What must not happen is the two drifting apart — two different limits,
+two different messages, one side optional and the other required. Keeping
+them aligned is the agent's job, and `/lazyspec-validate` reads across
+sets rather than within one to find pairs that cannot both be true.
+
+Watch the seam where one side was specified long before the other. A
+button or a modal written into an API specification because there was
+nowhere else to put it will be restated once the frontend set exists, and
+the copy left behind is the one that goes stale.
+
 `covers` keeps a set from quietly widening until nobody can say what
 belongs in it. `/lazyspec` reads it before adding a requirement and stops
 if the requirement is the wrong kind; `/lazyspec-validate` reports one
