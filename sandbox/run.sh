@@ -143,13 +143,14 @@ sect "A. install"
 for d in .claude/skills .agents/skills; do
   [ -f "$DEMO/$d/lazyspec/SKILL.md" ] && ok "skills in $d" || bad "skills in $d"
 done
-for s in lazyspec lazyspec-validate; do
+for s in lazyspec lazyspec-setup lazyspec-validate; do
   n=$(sed -n 's/^name: *//p' "$DEMO/.claude/skills/$s/SKILL.md" | head -1)
   is "skill frontmatter name matches folder: $s" "$n" "$s"
 done
 grep -q 'lazyspec:begin' AGENTS.md && ok "instruction pasted between markers" || bad "markers"
 is "CLAUDE.md is a one-line shim" "$(cat CLAUDE.md)" "@AGENTS.md"
 grep -q 'lazyspec-validate' AGENTS.md && ok "the instruction names the check" || bad "instruction"
+[ -f "$SRC/INSTRUCTION.md" ] && ok "the instruction ships beside the skills, for /lazyspec-setup" || bad "instruction not shipped"
 if [ -e "$DEMO/lazyspec-guard" ]; then bad "something executable was installed"
 else ok "nothing executable is installed"; fi
 

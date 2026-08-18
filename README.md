@@ -133,10 +133,19 @@ it."*
 
 ### Then the one thing that matters
 
-**Put `INSTRUCTION.md` into the standing rules your agents already
-load.** If you keep a `CONSTITUTION.md`, engineering principles, or house
-rules, that is the right home — paste it there and point `AGENTS.md` at
-it. If you keep nothing of the kind, `AGENTS.md` is the default.
+**Run `/lazyspec-setup`.** It reads your repository, proposes where the
+instruction should go, waits for you to agree, and pastes it.
+
+It asks first on purpose. Writing into a team's standing rules unasked is
+precisely what lazyspec exists to stop an agent doing, and a tool that
+did it in order to install itself would not deserve the benefit of the
+doubt.
+
+By hand it is the same two minutes: **put `INSTRUCTION.md` into the
+standing rules your agents already load.** If you keep a
+`CONSTITUTION.md`, engineering principles, or house rules, that is the
+right home — paste it there and point `AGENTS.md` at it. If you keep
+nothing of the kind, `AGENTS.md` is the default.
 
 ```
 <!-- lazyspec:begin -->
@@ -165,11 +174,28 @@ in it; a rule filed somewhere separate is a rule competing for attention.
 
 In a fresh session:
 
-- `/lazyspec` and `/lazyspec-validate` appear in its skill list.
+- `/lazyspec`, `/lazyspec-setup` and `/lazyspec-validate` appear in its
+  skill list.
 - Ask *"where do this repository's requirements live?"* It answers at
   once. If it starts searching, your instruction is not loaded and
   nothing else here matters.
 - Ask for a behaviour change. It reaches for `/lazyspec`.
+
+## The three skills
+
+| skill | when it runs |
+|---|---|
+| `/lazyspec-setup` | once, after installing |
+| `/lazyspec` | the only way to add, reword or remove a requirement |
+| `/lazyspec-validate` | before you finish, and on a pull request |
+
+`/lazyspec-setup` is not an installer — it runs *after* you have the
+skills and does the one thing a plugin cannot, which is write a file into
+your repository. Getting the skills is the two commands above.
+
+`INSTRUCTION.md` ships beside the skills, so once the plugin is installed
+the text is already on your machine and `/lazyspec-setup` knows where to
+find it.
 
 ## Agent support
 
@@ -290,10 +316,11 @@ never enforced by anything but the tests.
 # Contributing
 
 This repository is the tool, pointed at itself. A specification in here
-is changed the way one in yours is, and refused the same way.
+is changed the way one in yours is.
 
 ```
 INSTRUCTION.md              the standing instruction. the product.
+skills/lazyspec-setup/      puts that instruction where agents read it
 skills/lazyspec/            the only way to change a specification
 skills/lazyspec-validate/   the check
 specs/                      this repository's own requirements
