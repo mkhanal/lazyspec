@@ -66,7 +66,8 @@ specification says so on its first line.
 
    **Then look for a conflict, before writing anything.** This is the
    cheapest moment there will be: nothing exists yet, so reconciling
-   costs a sentence. Written, it costs an argument instead.
+   costs a sentence. Once both are written, the same conflict costs an
+   argument about which was right.
 
    Do not read every specification. Go where an overlap is likely:
 

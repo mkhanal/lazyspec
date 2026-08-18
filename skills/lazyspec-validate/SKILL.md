@@ -16,9 +16,9 @@ Scope is every `*.lazyspec.md`, unless `.lazyspec.yaml` narrows it — its
 **Finding nothing tells you something. Finding something tells you almost
 nothing.**
 
-- No file holds a requirement's words, so nothing proves it.
+- If no file holds a requirement's words, nothing proves it.
 - A file that does hold them may be the test - or a comment, a README, a
-  changelog, a fixture, a mock, another specification. Only reading says.
+  changelog, a fixture, a mock, another specification. Only reading it tells you which.
 
 Searching settles what is missing. You settle the rest, and never call a
 requirement proved because a search found its words somewhere.
@@ -46,10 +46,10 @@ git ls-files --others --exclude-standard  # merge into, HEAD if uncommitted
 
 This runs **from requirements to tests**. An ordinary test with no
 requirement is never a finding: unit, integration and database tests
-marry nothing by design, and complaining would be demanding a project
-specify its own implementation. The one exception is a test that **named
-itself** one - `lazyspec` in a test file's name is a claim, and a claim
-reads backwards.
+marry nothing by design, and complaining about them would demand that a
+project specify its own implementation. The one exception is a test that **named
+itself** one - `lazyspec` in a test file's name is a claim, and a claim can
+be checked backwards.
 
 These need no judgement. Report them as facts.
 
@@ -57,7 +57,7 @@ These need no judgement. Report them as facts.
 
   First check it is a requirement. A heading that numbers or names a
   section - `## 3. API Endpoints`, `## Failure Modes` - never described a
-  behaviour, so no test will ever exist. Report those separately as
+  behaviour, so no test was ever owed. Report those separately as
   **mis-marked**; in a specification that has been doing it a while they
   outnumber the real findings.
 
@@ -69,10 +69,10 @@ These need no judgement. Report them as facts.
 - **Written twice.** Two specifications share a `## ` heading.
 - **Moved alone.** A specification changed and no file holding its
   requirements changed with it. A specification takes its tests with it.
-- **Orphaned.** A test file naming `lazyspec` and a specification's stem,
-  with no such specification - deleted or renamed, its test left behind,
-  still passing, proving a requirement nobody has. Say which way it goes:
-  the specification back, or the test out.
+- **Orphaned.** A test file naming `lazyspec` and a specification's
+  stem, with no such specification. It was deleted or renamed and its
+  test was left behind, still passing, proving a requirement nobody has.
+  Say which way it goes: the specification back, or the test out.
 - **Unmarked.** A specification whose first line is not the lazyspec
   header. Restore it through `/lazyspec`.
 
@@ -87,7 +87,7 @@ lands, "the test may not fully exercise the requirement" does not.
 
 **Named, not proved.** The words sit in a file the runner never collects
 - a comment, a README, a mock, a changelog. Say which file holds the real
-proof and what the other matches were. Two never count:
+proof and what the other matches were. Two matches never count:
 
 - **The pasted instruction.** `AGENTS.md` and its like carry an example
   requirement. Anything between `<!-- lazyspec:begin -->` and
@@ -130,7 +130,8 @@ trusts.
 
 **Unspecified change.** A changed file changes what the software does and
 no requirement changed with it. Name the missing requirement. A rename, a
-tidy-up, a comment or a docs edit changes nothing - say so and move on.
+tidy-up, a comment or a docs edit changes nothing the software does -
+say so and move on.
 
 - This is the one finding whose weight depends on where you are. Work in
   progress runs ahead of its requirements by design: "not written yet" is
@@ -214,21 +215,22 @@ TESTS     the command you ran, and what it did
 - Fail when anything is unmarried, written twice, moved alone, orphaned
   or unmarked, when a requirement is not proved by the test file named
   after its specification, or when the change did not write down what it
-  changed.
+  changed. Mis-marked headings are reported, not failed - they are a
+  document to tidy, not a broken marriage.
 
 ## On a pull request
 
-How you wire CI up - which agent, which
-credentials, blocking or advisory - is not this skill's business.
+How you wire CI up - which agent, which credentials, blocking or
+advisory - is not this skill's business.
 
 - **Run the settled checks in shell, before the agent.** A few lines
   around the searches above, and they cost nothing. No model should be
   paid to notice them or able to talk you out of them. Keep any blocking
   gate to exactly those: a gate deciding which file is a test is
   guessing at conventions it cannot see.
-- **Raise an orphan in the review, every time.** It is nearly invisible
-  in a diff too, because the deletion and the leftover sit in different
-  files and often different commits.
+- **Raise an orphan in the review, every time.** The deletion and the
+  leftover sit in different files and often different commits, so a diff
+  hides it as easily as a green suite does.
 - **Give the agent requirements, not patches.** Work out which
   requirements the change touches - headings altered, plus requirements
   whose tests were altered - and give it each one in full, with the whole
