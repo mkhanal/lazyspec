@@ -432,11 +432,24 @@ Nothing changes until a requirement needs to move.
 - **Building something new?** Work normally. Experiment, rewrite, throw
   it away. A requirement is written when it settles, not before.
 - **Behaviour is settled?** Run `/lazyspec`. It writes the requirement,
-  unlocks, updates the tests in the same window, runs your suite, locks
-  again.
+  updates its test in the same edit, and runs your suite.
 - **Finishing a task?** Run `/lazyspec-validate`.
 - **Editing a specification any other way?** The notice on its first line
   says not to, and `/lazyspec-validate` will find it if you do.
+
+### Work in bigger pieces
+
+Story-sized slices exist because a person can hold only so much at once.
+An agent has the opposite problem: attention to spare, context to lack.
+
+Give it a whole capability and it sees the shape — the edge cases, the
+interactions, the requirement nobody thought to ask for. It is also when
+the conversation about the specification is worth having, because there
+is finally something to disagree about.
+
+Cut the same work into fragments and each gets designed alone. The
+specification comes out fragmented too, because that is how it was
+written.
 
 ## Checking
 
