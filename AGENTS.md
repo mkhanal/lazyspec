@@ -48,7 +48,7 @@ during it, or after. Then leave it alone.
 **Before finishing any task, check and report both.** `/lazyspec-validate`
 does it for you.
 
-1. Every heading you touched is married. Say which are not.
-2. If you changed what the software does, say whether a requirement
-   covers it yet. "Not yet" is fair while experimenting, not in a pull
-   request.
+- Every heading you touched is married. Say which are not.
+- If you changed what the software does, say whether a requirement
+  covers it yet. "Not yet" is fair while experimenting, not in a pull
+  request.

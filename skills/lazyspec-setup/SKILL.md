@@ -21,8 +21,10 @@ It ships beside these skills. Look, in order:
 - `${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md` — the plugin route.
 - `INSTRUCTION.md` next to the skills folder you copied from, if you
   cloned instead.
-- `https://github.com/mkhanal/lazyspec/blob/main/INSTRUCTION.md` — last
-  resort, and only if you can fetch it.
+- `https://raw.githubusercontent.com/mkhanal/lazyspec/main/INSTRUCTION.md`
+  — last resort, and only if you can fetch it. Take the raw file, never
+  the `blob/` page: that one is HTML, and you are about to paste this
+  verbatim.
 
 Read it whole. You are about to paste it verbatim, so if you cannot find
 it, stop and say so rather than writing it from memory. An instruction
@@ -139,25 +141,24 @@ stale instruction is worse than none.
 - Which editors were pointed at it.
 - Anything you could not verify — an editor whose standing-context file
   you could not identify, or a store outside the repository you have no
-  way to write to. Say so plainly. Guessing a filename is worse than
-  admitting it: an instruction in a file nothing reads looks installed
-  and does nothing.
+  way to write to. Say so plainly; guessing a filename is worse than
+  admitting it.
 
 Then tell them what is left, because none of it is yours to do:
 
-- Requirements are written by `/lazyspec`, once behaviour is known. Not
-  now: there is no behaviour you have watched yet.
+- Requirements are written by `/lazyspec`, as soon as somebody knows
+  one. Not now: installing is not knowing.
 - `/lazyspec-validate` checks them before finishing, and on a pull
   request.
 
-Writing down where specifications will live is not specifying. The shape
-of a repository is knowable today; what its code does is not, which is
-why one is safe to settle now and the other waits.
+Writing down where specifications will live is not specifying. You can
+read a repository's shape off its files today. What it promises is a
+decision somebody makes, and nobody has made it in front of you.
 
 ## Rules
 
 - Change nothing but the instruction files and `.lazyspec.yaml`. No
   specifications, no code, no other configuration.
-- Never write a specification here. There is no behaviour you have
-  watched yet, and a requirement guessed from reading code is the exact
-  failure this tool exists to prevent.
+- Never write a specification here. A requirement reverse-engineered
+  from code is a description of the implementation wearing a promise's
+  clothes, which is the exact failure this tool exists to prevent.
