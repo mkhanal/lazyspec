@@ -208,26 +208,38 @@ Run this repository's own test command first. Find it; do not guess it.
 ```
 VERDICT: pass | fail
 
-SETTLED   what the searches decided
+SETTLED   unmarried, written twice, moved alone, orphaned
 JUDGED    what you decided, what convinced you, what you could not tell
 TESTS     the command you ran, and what it did
 ```
 
-Pass when nothing is unmarried, every requirement is proved by the test
-file named after its specification, and the change wrote down what it
-changed.
+List every settled finding by name, even the ones that look like
+housekeeping. **An orphan especially**: a specification's test still
+sitting there after its specification went is the one failure the suite
+cannot show you, because it passes. Say which file, and say whether the
+specification should come back or the test should go.
+
+Fail when anything is unmarried, written twice, moved alone or orphaned,
+when a requirement is not proved by the test file named after its
+specification, or when the change did not write down what it changed.
 
 ## On a pull request
 
 Two things change in CI. How you wire it up - which agent, which
 credentials, blocking or advisory - is not this skill's business.
 
-**Run the three settled checks separately, before the agent.** They are a
+**Run the four settled checks separately, before the agent.** They are a
 few lines of shell around the searches above and they cost nothing.
 Report them as facts: no model should be paid to notice them, and none
 should be able to talk you out of them. Keep any blocking gate to exactly
-those three, because a gate deciding which file is a test is guessing at
+those four, because a gate deciding which file is a test is guessing at
 conventions it cannot see.
+
+**Raise an orphan in the review, every time.** A `<name>.lazyspec.test.*`
+whose `<name>.lazyspec.md` is gone is invisible in a green build and
+easily invisible in a diff too, because the deletion and the leftover are
+in different files and often different commits. It is a test proving a
+requirement nobody has. Name the file and ask which way it should go.
 
 **Give the agent requirements, not patches.** Work out which requirements
 the change touches - headings altered, plus requirements whose tests were

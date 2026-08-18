@@ -378,14 +378,19 @@ It splits on one rule:
   a comment, a README or a mock. Only an agent reading it can tell which,
   or whether the assertions match the bullets.
 
-Want a blocking gate? Three checks need no judgement and are a few lines
+Want a blocking gate? Four checks need no judgement and are a few lines
 of shell:
 
 - a requirement whose words appear nowhere,
 - one heading in two specifications,
-- a specification that changed while nothing proving it did.
+- a specification that changed while nothing proving it did,
+- a `*.lazyspec.test.*` whose specification is gone.
 
-Keep a gate to those three. One that decides which file is a test is
+The last is the one a green build hides, so a reviewing agent should
+raise it every time: the deletion and the leftover sit in different
+files, often different commits, and the suite passes either way.
+
+Keep a gate to those four. One that decides which file is a test is
 guessing at conventions it cannot see. Run it pre-push, not pre-commit:
 requirements are written late, so the commits made while finding the
 behaviour should not have to satisfy one.
