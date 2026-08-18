@@ -10,30 +10,12 @@ which is where an agent spends almost all of its time; inside it, and
 only inside it, a requirement is written, reworded or removed. Every
 specification says so on its first line.
 
-These are the steps.
-
 ## Steps
 
 0. **If there is no `.lazyspec.yaml`, offer to write one now.** Skip this
    whenever the file exists - `/lazyspec-setup` usually wrote it at
-   install time, and this is only the second chance.
-
-   Read the repository, then propose it and wait for a yes:
-
-   ```yaml
-   sets:
-     - root: .
-       specs: specs/*.lazyspec.md
-       covers: |
-         What one requirement here describes, and at what level.
-   ```
-
-   `root` is the folder a specification's name has to be unique inside,
-   because two packages each holding `billing.lazyspec.md` would both
-   claim the same test file. In one project that is `.`. In a monorepo it
-   is each package, service or job, so there is one entry per boundary -
-   and each works at whatever level suits it, because the promises are
-   different kinds of thing:
+   install time, and this is only the second chance. Read the
+   repository, propose it, wait for a yes:
 
    ```yaml
    sets:
@@ -43,12 +25,6 @@ These are the steps.
          What a caller observes at the interface: what is accepted,
          what is refused, what comes back. Not internal helpers.
 
-     - root: pipelines/nightly
-       specs: specs/*.lazyspec.md
-       covers: |
-         What must hold of the data after a run, and what happens to a
-         run that fails halfway. Not the shape of any one query.
-
      - root: workers/settlement
        specs: specs/*.lazyspec.md
        covers: |
@@ -56,74 +32,72 @@ These are the steps.
          ordering. Not the queue library's own behaviour.
    ```
 
-   **`covers` is the project's decision and yours to ask about, not to
-   assume.** It is free text, read by whoever writes the next
-   requirement, and it is the difference between a set that stays
-   coherent and one that silts up with every stray thought anybody had. A team using consumer-driven contracts might say a
-   requirement here is a consumer contract; a team without them might say
-   it is whatever a caller can observe. Both are right; only the project
-   knows which.
-
-   Choose the level where a specification earns its keep here: per
-   module, at the boundary others depend on, or end to end. One set per
-   deployable is common, and a single end-to-end set is a fair answer.
-
-   There is no setting for the language, the test runner or where tests
-   live, and you are not to add one. You read all three off the
-   repository, and a written-down answer only goes stale.
-
-   The file is optional. Without it every `*.lazyspec.md` counts, which
-   is right for a small repository. Do not write one just to have it.
+   - `root` is the folder a specification's name must be unique inside,
+     because two packages each holding `billing.lazyspec.md` would claim
+     the same test file. One project makes that `.`; a monorepo makes it
+     one entry per package, service or job.
+   - Each set works at whatever level suits it. The promises are
+     different kinds of thing, as those two `covers` show.
+   - **`covers` is the project's decision, yours to ask about and not to
+     assume.** Free text, read by whoever writes the next requirement. It
+     is the difference between a set that stays coherent and one that
+     silts up with every stray thought anybody had. A team using
+     consumer-driven contracts might call a requirement here a consumer
+     contract; a team without them might call it whatever a caller can
+     observe. Both are right, and only the project knows which.
+   - Choose the level where a specification earns its keep: per module,
+     at the boundary others depend on, or end to end. One set per
+     deployable is common; a single end-to-end set is a fair answer.
+   - **No setting for the language, the test runner or where tests live,
+     and you are not to add one.** You read all three off the repository,
+     and a written-down answer only goes stale.
+   - The file is optional - without it every `*.lazyspec.md` counts,
+     which is right for a small repository. Do not write one just to have
+     it.
 
 1. **Write down the change as requirements**, one line each: what you are
-   adding, what you are rewording, what you are removing, and why. If the
-   user did not ask for a change in what the software does, stop and ask.
+   adding, rewording, removing, and why. If the user did not ask for a
+   change in what the software does, stop and ask.
 
-2. **Choose the file.** First read the `covers` of the set it would
-   belong to. If what you are about to write is not what that set is for
-   — an internal helper where the set covers a boundary others depend on,
-   a rendering detail where it covers what the data must satisfy — say so and stop. The
-   requirement may belong in another set, at another level, or nowhere.
+2. **Choose the file.** Read the `covers` of the set it would belong to.
+   If what you are about to write is not what that set is for - an
+   internal helper where the set covers a boundary others depend on, a
+   rendering detail where it covers what the data must satisfy - say so
+   and stop. It may belong in another set, at another level, or nowhere.
    A set that quietly widens is a set nobody trusts.
 
-   **Then look for a conflict, before you write anything.** This is the
-   cheapest moment there will ever be: nothing exists yet, so reconciling
-   costs a sentence. After the requirement and its test are written, the
+   **Then look for a conflict, before writing anything.** This is the
+   cheapest moment there will be: nothing exists yet, so reconciling
+   costs a sentence. Once the requirement and its test are written, the
    same conflict costs an argument about which one was right.
 
-   Do not read every specification — in a real repository that is
+   Do not read every specification - in a real repository that is
    hundreds of requirements and you will stop doing it by Thursday. Go
    where an overlap is likely:
 
    - **The counterpart set.** Most behaviours are described twice, from
-     two sides - whoever produces and whoever consumes, whoever writes
-     and whoever reads, whoever schedules and whoever runs. Find the
-     other side and read it. That is where disagreements live.
-   - **The same nouns.** Search the specifications for the domain words
-     in your heading, not the heading itself:
-     `git grep -il "refund" -- '*.lazyspec.md'`
+     two sides - producer and consumer, writer and reader, scheduler and
+     runner. Find the other side. That is where disagreements live.
+   - **The same nouns.** Search for the domain words in your heading, not
+     the heading: `git grep -il "refund" -- '*.lazyspec.md'`
    - **The same named thing** - a table, a queue, a contract address, a
      file format, a route - if your requirement names one.
-   - **Sets whose `covers` mentions your area**, which is what `covers`
-     is there for.
+   - **Sets whose `covers` mentions your area.**
 
    Two requirements covering one behaviour from opposite sides are fine
-   and often necessary — each is proved by its own test and breaks on its
-   own. Two that cannot both be true are not. Found one? Say so and stop.
-   Do not write the second and leave somebody else to discover they
-   disagree.
+   and often necessary: each is proved by its own test and breaks on its
+   own. Two that cannot both be true are not - say so and stop. Never
+   write the second and leave somebody else to find they disagree.
 
-   Then: a new requirement joins the specification it belongs to. Only
-   start a new `*.lazyspec.md` when none of them fits. Its filename
-   decides which test file proves it, so if a test for this behaviour
-   already exists, name the specification after that file.
-
-   Give a new specification a title and a sentence saying what it is
-   about, the way the others do. `covers` says what a set is for; the
+   A new requirement joins the specification it belongs to. Start a new
+   `*.lazyspec.md` only when none fits. Its filename decides which test
+   file proves it, so if a test for this behaviour already exists, name
+   the specification after that file. Give a new one a title and a
+   sentence saying what it is about: `covers` says what a set is for, the
    file's own opening says what this one is for.
 
-   Every specification opens with a header. Copy the one the others use;
-   if you are writing the first, it reads:
+   Every specification opens with this header. Never remove it, and never
+   write a specification without it:
 
    ```markdown
    > **lazyspec.** Humans edit freely. Agents change this only through
@@ -133,96 +107,88 @@ These are the steps.
    > as its own name — to find it, search the tests for that text.
    ```
 
-   It teaches as well as forbids, which is the point: an agent that never
-   loaded your instruction still learns from the file what a requirement
-   is and how to find its proof.
-
-   It travels inside the file rather than in anybody's configuration,
-   which is what makes it reach every agent on every tool. Never remove
-   it, and never write a specification without it.
+   It teaches as well as forbids, and it travels inside the file rather
+   than in anybody's configuration - which is what makes it reach every
+   agent on every tool, including one that never loaded your instruction.
 
 3. **Make the change.**
 
 4. **Marry the tests, in the same edit.** Every heading needs a test
-   whose name repeats its words exactly, in the one file named after this
-   specification - one file, so a specification being changed never has
-   to guess which tests change with it.
+   repeating its words exactly, in one file - so a specification being
+   changed never has to guess which tests change with it.
 
-   **Name that file for the specification and for `lazyspec`**, so
-   nobody has to guess which file proves what, and so a test outliving
-   its specification can be spotted by its name alone:
-   `billing.lazyspec.test.ts`, `test_billing_lazyspec.py`,
-   `billing_lazyspec_test.go`, `BillingLazyspecTest.java`. Spell
-   `lazyspec` however the language spells a name - never as a literal
-   `.lazyspec.`, which Java cannot put in a class name and which makes
-   pytest fail to import and `unittest` skip the file in silence.
+   **Name that file for the specification and for `lazyspec`**, so nobody
+   guesses which file proves what and a test outliving its specification
+   can be spotted by name alone: `billing.lazyspec.test.ts`,
+   `test_billing_lazyspec.py`, `billing_lazyspec_test.go`,
+   `BillingLazyspecTest.java`. Spell `lazyspec` however the language
+   spells a name, never as a literal `.lazyspec.` - Java cannot put a dot
+   in a class name, pytest fails to import it, `unittest` skips the file
+   in silence.
 
-   Look at how this repository already names and runs its tests, and fit
-   that in. The test file has to be one the test runner picks up, and
-   the words can sit wherever the language puts a test's name: a string,
-   a docstring, an annotation, a comment. Do not invent a test runner, a
-   folder layout or a naming style the repository does not already use.
+   Fit that to how this repository already names and runs its tests. The
+   file has to be one the runner picks up, and the words can sit wherever
+   the language puts a test's name: a string, a docstring, an annotation,
+   a comment. Do not invent a runner, a layout or a naming style the
+   repository does not already use.
 
    Reword a heading and you reword its test. If a test fails, fix the
    code - never the requirement.
 
 5. **Check your work.** Every heading has its test, and the repository's
-   own test command passes. Find that command; do not guess it.
-
-   If you renamed or deleted a specification, its test file follows -
-   same name, same moment. A test file carrying `lazyspec` left behind
-   with no specification is an orphan that still passes, proving a
-   requirement nobody has any more.
+   own test command passes. Find that command; do not guess it. If you
+   renamed or deleted a specification, its test file follows - same name,
+   same moment. A test file naming `lazyspec` left behind with no
+   specification is an orphan that still passes, proving a requirement
+   nobody has any more.
 
 6. **Report**, and say plainly that you changed a specification: which
-   headings you touched, which tests now prove them, and what the test
-   run did. Nothing enforces this but you, which is exactly why saying it
-   matters.
+   headings you touched, which tests now prove them, what the test run
+   did. Nothing enforces this but you, which is why saying it matters.
 
 ## What does not become a requirement
 
-Most of a test suite marries nothing, and that is the design. Requirements
-sit at the level `covers` declares - often acceptance, contract or
-end-to-end. Everything below that keeps working as it always did.
+Most of a test suite marries nothing, and that is the design.
+Requirements sit at the level `covers` declares - often acceptance,
+contract or end to end. Everything below that keeps working as it did.
 
 - **Unit tests, integration tests, database tests, fixtures, property
-  tests, benchmarks.** No requirement, no heading, no marriage. Write
-  them, change them, delete them freely.
+  tests, benchmarks.** No requirement, no heading, no marriage. Write,
+  change and delete them freely.
 - **Never write a requirement to justify a test that already exists.**
   That is the tail wagging the dog: it fills the set with implementation
   detail and makes the specification a second, worse copy of the suite.
 - **A specification does not replace those tests.** A requirement says
-  what the software promises; a unit test says a function works. Both are
-  worth having, and only one is a promise to anybody outside the code.
+  what the software promises; a unit test says a function works. Both
+  worth having, only one a promise to anybody outside the code.
 - **Other test files may share a specification's name.** `billing.md` is
   married to whichever file repeats its headings; `billing.unit.test.ts`
-  sitting beside it is ordinary and unrelated.
-- **`lazyspec` in a test file's name is a claim, so only the married
-  file makes it.** Its neighbours do not, however closely related. A file
-  claiming it with no specification beside it is reported as an orphan.
+  beside it is ordinary and unrelated.
+- **`lazyspec` in a test file's name is a claim, so only the married file
+  makes it.** Its neighbours do not, however closely related. A file
+  claiming it with no specification beside it is an orphan.
 
-If a requirement only makes sense to somebody reading the implementation,
-it is a unit test wearing a heading. Delete the heading and keep the
-test.
+If a requirement only makes sense to somebody reading the
+implementation, it is a unit test wearing a heading. Delete the heading
+and keep the test.
 
 ## Writing a requirement
 
 - One `## ` heading is one requirement, and its words are its name.
-- **`##` is reserved.** Never use it to group or number sections of a
-  document — `## 3. API Endpoints`, `## Failure Modes`, `## Frontend`.
-  Every one becomes a requirement nothing can prove, and a real
-  specification accumulates dozens. Use `#` for the title and `###` or
-  deeper for structure inside a requirement.
-- A heading that names a topic rather than making a claim is a section
-  wearing a requirement's clothes. `## Retention` is a topic;
-  `## Records Are Kept For Seven Years` is a requirement.
+- **`##` is reserved.** Never use it to group or number sections -
+  `## 3. API Endpoints`, `## Failure Modes`. Every one becomes a
+  requirement nothing can prove, and a real specification accumulates
+  dozens. Use `#` for the title, `###` or deeper inside a requirement.
+- A heading naming a topic rather than making a claim is a section in a
+  requirement's clothes. `## Retention` is a topic; `## Records Are Kept
+  For Seven Years` is a requirement.
 - Say what the software does now. Never what it used to do, never what
-  changed, and never the date.
-- One claim per bullet point. No reasoning, no preamble, and no
-  restating the heading.
+  changed, never the date.
+- One claim per bullet. No reasoning, no preamble, no restating the
+  heading.
 - If it cannot be tested, write `## Its Name <!-- no-test: why not -->`.
 - Split a specification while it is still short enough to read at a
-  glance. Nobody should have to read the whole set to find one thing.
+  glance. Nobody should read the whole set to find one thing.
 
 Every word here is read again by every agent, on every task, for as long
 as the file exists. It is the most expensive writing in the repository.
