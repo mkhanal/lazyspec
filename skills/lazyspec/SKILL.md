@@ -200,6 +200,14 @@ test.
 ## Writing a requirement
 
 - One `## ` heading is one requirement, and its words are its name.
+- **`##` is reserved.** Never use it to group or number sections of a
+  document — `## 3. API Endpoints`, `## Failure Modes`, `## Frontend`.
+  Every one becomes a requirement nothing can prove, and a real
+  specification accumulates dozens. Use `#` for the title and `###` or
+  deeper for structure inside a requirement.
+- A heading that names a topic rather than making a claim is a section
+  wearing a requirement's clothes. `## Retention` is a topic;
+  `## Records Are Kept For Seven Years` is a requirement.
 - Say what the software does now. Never what it used to do, never what
   changed, and never the date.
 - One claim per bullet point. No reasoning, no preamble, and no

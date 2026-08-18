@@ -80,6 +80,14 @@ claim can be checked backwards.
 These four need no judgement. Report them as facts.
 
 - **Unmarried.** No file anywhere contains the requirement's words.
+
+  Before reporting a pile of these, check they are requirements at all. A
+  heading that numbers or names a section — `## 3. API Endpoints`,
+  `## Failure Modes` — is document structure using the one mark reserved
+  for requirements. It will never have a test because it never described
+  a behaviour. Report those separately as **mis-marked**, and say they
+  want `###`, not a test. In a specification that has been doing this a
+  while they outnumber the real findings.
 - **Written twice.** Two specifications share a `## ` heading. The words
   are the name, so two things cannot have them.
 - **Moved alone.** A specification changed and no file containing its
