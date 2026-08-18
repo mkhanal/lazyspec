@@ -59,7 +59,13 @@ git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
 mkdir -p .claude/skills .agents/skills
 cp -R /tmp/lazyspec/skills/. .claude/skills/
 cp -R /tmp/lazyspec/skills/. .agents/skills/
+cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/
+cp /tmp/lazyspec/INSTRUCTION.md .agents/skills/
 ```
+
+The last two lines matter. `INSTRUCTION.md` is the product; the skills
+only put it somewhere. Copy it in and `/lazyspec-setup` finds it on your
+disk, at the version the skills beside it were written for.
 
 Two directories cover three agents: `.claude/skills/` for Claude Code
 and opencode, `.agents/skills/` for OpenAI's Codex and opencode.

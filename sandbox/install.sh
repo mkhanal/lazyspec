@@ -86,6 +86,15 @@ cp -R "$SRC"/skills/. .claude/skills/
 cp -R "$SRC"/skills/. .agents/skills/
 is "Claude Code and opencode find three skills" "$(ls .claude/skills | wc -l | tr -d ' ')" "3"
 is "Codex and opencode find three skills"       "$(ls .agents/skills | wc -l | tr -d ' ')" "3"
+
+# the product itself, not just the skills that place it
+cp "$SRC/INSTRUCTION.md" .claude/skills/
+cp "$SRC/INSTRUCTION.md" .agents/skills/
+[ -f .claude/skills/INSTRUCTION.md ] && [ -f .agents/skills/INSTRUCTION.md ] \
+  && ok "the instruction lands beside them, so setup needs no network" \
+  || bad "the instruction is not on disk after a copy install"
+grep -q 'cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/' "$SRC/README.md" \
+  && ok "README prints that copy too" || bad "README's copy route drops the instruction"
 grep -q 'cp -R /tmp/lazyspec/skills/\. \.claude/skills/' "$SRC/README.md" \
   && ok "README prints the command that does this" || bad "README's copy command differs"
 
@@ -129,10 +138,11 @@ process.exit(dup.length?1:0)" \
 # ------------------------------------------------- E. what the README claims
 
 sect "E. what the README claims"
-grep -q 'raw.githubusercontent.com' "$SRC/skills/lazyspec-setup/SKILL.md" \
-  && ok "the fallback fetch is the raw file" || bad "fallback is not a raw URL"
-grep -q 'github.com/mkhanal/lazyspec/blob/main/INSTRUCTION.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
-  && bad "fallback still points at the HTML page" || ok "not the HTML page, which would paste a web page"
+grep -qE 'https?://[^ ]*INSTRUCTION\.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && bad "setup would fetch the instruction over the network" \
+  || ok "setup never fetches the instruction, so it cannot paste a stranger's"
+grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "it stops and asks when the file is missing" || bad "no answer when it is missing"
 grep -q 'lazyspec-setup' "$SRC/README.md" && ok "README sends you to /lazyspec-setup after installing" \
   || bad "README never mentions the step that does the work"
 

@@ -19,16 +19,17 @@ this waits to be invoked, does its two jobs, and shows its work.
 It ships beside these skills. Look, in order:
 
 - `${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md` — the plugin route.
-- `INSTRUCTION.md` next to the skills folder you copied from, if you
-  cloned instead.
-- `https://raw.githubusercontent.com/mkhanal/lazyspec/main/INSTRUCTION.md`
-  — last resort, and only if you can fetch it. Take the raw file, never
-  the `blob/` page: that one is HTML, and you are about to paste this
-  verbatim.
+- `INSTRUCTION.md` in or beside the skills folder, if it was copied in.
 
-Read it whole. You are about to paste it verbatim, so if you cannot find
-it, stop and say so rather than writing it from memory. An instruction
-you reconstructed is not the instruction.
+Read it whole, and paste only what you read.
+
+**If it is not on disk, stop and ask for it.** Do not fetch it, and do
+not write it from memory. A copy pulled from the network is whatever the
+project's default branch says today, which is not necessarily what the
+skills sitting next to you were written for - and you are about to paste
+it, unread by anybody, into the standing rules of a team that has not
+seen it. An instruction you reconstructed is not the instruction, and one
+you downloaded is not the one they installed.
 
 ## 2. Find where the standing rules live
 
