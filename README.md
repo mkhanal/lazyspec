@@ -234,25 +234,31 @@ by whoever writes the next requirement:
 
 ```yaml
 sets:
-  - root: services/api
+  - root: services/ingest
     specs: specs/*.lazyspec.md
     covers: |
-      The HTTP contract. One requirement per behaviour a caller can
-      observe: status codes, error shapes, idempotency, ordering.
-      Not internal helpers.
+      What a caller observes at the boundary: what is accepted, what
+      is refused, what comes back. Not internal helpers.
 
-  - root: apps/web
+  - root: pipelines/nightly
     specs: specs/*.lazyspec.md
     covers: |
-      What a person can see and do in the browser. One requirement per
-      user-visible rule, proved end to end. Not component internals.
+      What must hold of the data after a run, and what happens when a
+      run fails halfway. Not the shape of any one query.
+
+  - root: workers/settlement
+    specs: specs/*.lazyspec.md
+    covers: |
+      What happens for each job, including retries, duplicates and
+      ordering. Not the queue library's own behaviour.
 ```
 
-A browser and a wire contract are not the same kind of promise, so a
-frontend set and a backend set will rarely say the same thing here. A
-team using consumer-driven contracts might say a requirement is a pact; a
-team without them might say it is an endpoint's observable behaviour.
-Both are right, and only the project knows which.
+These are different kinds of promise, so two sets rarely say the same
+thing here. A team using consumer contracts might say a requirement is
+one of those; a team without them might say it is whatever a caller can
+observe. Both are right, and only the project knows which. A scanner, an
+on-chain contract, a scheduled job and a library each want their own
+answer, and none of them is the answer in this example.
 
 **What is this file about?** The specification's own title and opening
 sentence, the way any document says what it is:
@@ -265,10 +271,11 @@ How money goes back to a customer. Not how it arrives.
 
 ### Two sets may cover the same ground
 
-An API set says what a call refuses. A frontend set says the button is
-disabled before the call is made. That is the same rule from two sides,
-and both are worth writing: each is proved by a different test, and each
-can break on its own.
+Most behaviours are described twice, from two sides. Whoever produces and
+whoever consumes. Whoever schedules and whoever runs. One set says a
+value is refused at the boundary; another says the caller never sends it
+in the first place. That is one rule from two angles, and both are worth
+writing: each is proved by a different test, and each breaks on its own.
 
 What must not happen is the two drifting apart — two different limits,
 two different messages, one side optional and the other required.
@@ -280,13 +287,14 @@ Afterwards the same conflict costs an argument about which one was right.
 
 It does not read every specification — a real repository has hundreds of
 requirements and nobody sustains that. It goes where an overlap is
-likely: the counterpart set, the same domain nouns, the same endpoint.
+likely: the counterpart set, the same domain nouns, the same named thing
+— a table, a queue, a contract address, a file format.
 `/lazyspec-validate` is only the backstop, and checks narrowly.
 
 Watch the seam where one side was specified long before the other. A
-button or a modal written into an API specification because there was
-nowhere else to put it will be restated once the frontend set exists, and
-the copy left behind is the one that goes stale.
+behaviour written into whichever specification existed at the time,
+because there was nowhere else to put it, gets restated once the set that
+owns it exists — and the copy left behind is the one that goes stale.
 
 `covers` keeps a set from quietly widening until nobody can say what
 belongs in it. `/lazyspec` reads it before adding a requirement and stops

@@ -144,15 +144,16 @@ and you check narrowly: only the requirements **this change touched**,
 against their counterparts. Do not sweep every set.
 
 For each one, ask where its counterpart would live — the other side of
-the same behaviour, the same nouns, the same endpoint — and read that.
+the same behaviour, the same nouns, the same named thing — and read that.
 Requirements covering one behaviour from opposite sides are fine; each is
 proved by its own test and breaks on its own. Quote both files when they
 disagree.
 
-The seam worth your attention is where one side was specified years
-before the other. A button or a modal written into an API specification
-because there was nowhere else to put it gets restated when the frontend
-specification arrives, and the copy left behind is the one that rots.
+The seam worth your attention is where one side was specified long before
+the other. A behaviour written into whichever specification existed at
+the time, because there was nowhere else to put it, gets restated when
+the set that owns it finally exists — and the copy left behind is the one
+that rots.
 
 **Wrong level.** The requirement is not the kind this set is for. Read
 the set's `covers`: an internal helper where the set covers a wire

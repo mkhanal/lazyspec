@@ -31,38 +31,42 @@ These are the steps.
    `root` is the folder a specification's name has to be unique inside,
    because two packages each holding `billing.lazyspec.md` would both
    claim the same test file. In one project that is `.`. In a monorepo it
-   is each package or service, so there is one entry per boundary - and
-   each may work at a different level, because a browser and a wire
-   contract are different kinds of promise:
+   is each package, service or job, so there is one entry per boundary -
+   and each works at whatever level suits it, because the promises are
+   different kinds of thing:
 
    ```yaml
    sets:
-     - root: services/api
+     - root: services/ingest
        specs: specs/*.lazyspec.md
        covers: |
-         The HTTP contract. One requirement per behaviour a caller can
-         observe: status codes, error shapes, idempotency, ordering.
-         Not internal helpers - those are somebody else's business.
+         What a caller observes at the interface: what is accepted,
+         what is refused, what comes back. Not internal helpers.
 
-     - root: apps/web
+     - root: pipelines/nightly
        specs: specs/*.lazyspec.md
        covers: |
-         What a person can see and do in the browser. One requirement
-         per user-visible rule, proved end to end. Not component
-         internals, and never a CSS class.
+         What must hold of the data after a run, and what happens to a
+         run that fails halfway. Not the shape of any one query.
+
+     - root: workers/settlement
+       specs: specs/*.lazyspec.md
+       covers: |
+         What happens for each job, including retries, duplicates and
+         ordering. Not the queue library's own behaviour.
    ```
 
    **`covers` is the project's decision and yours to ask about, not to
    assume.** It is free text, read by whoever writes the next
    requirement, and it is the difference between a set that stays
    coherent and one that silts up with every stray thought anybody had. A team using consumer-driven contracts might say a
-   requirement here is a pact; a team without them might say it is an
-   endpoint's observable behaviour. Both are right; only the project
+   requirement here is a consumer contract; a team without them might say
+   it is whatever a caller can observe. Both are right; only the project
    knows which.
 
    Choose the level where a specification earns its keep here: per
-   module, at the API surface, or end to end. Separate frontend and API
-   sets are common, and one end-to-end set is a fair answer.
+   module, at the boundary others depend on, or end to end. One set per
+   deployable is common, and a single end-to-end set is a fair answer.
 
    There is no setting for the language, the test runner or where tests
    live, and you are not to add one. You read all three off the
@@ -77,8 +81,8 @@ These are the steps.
 
 2. **Choose the file.** First read the `covers` of the set it would
    belong to. If what you are about to write is not what that set is for
-   — an internal helper where the set covers a wire contract, a CSS
-   detail where it covers what a person can see — say so and stop. The
+   — an internal helper where the set covers a boundary others depend on,
+   a rendering detail where it covers what the data must satisfy — say so and stop. The
    requirement may belong in another set, at another level, or nowhere.
    A set that quietly widens is a set nobody trusts.
 
@@ -91,14 +95,15 @@ These are the steps.
    hundreds of requirements and you will stop doing it by Thursday. Go
    where an overlap is likely:
 
-   - **The counterpart set.** Writing a frontend requirement? Read the
-     API set covering the same feature, and the reverse. One behaviour
-     seen from two sides is where disagreements live.
+   - **The counterpart set.** Most behaviours are described twice, from
+     two sides - whoever produces and whoever consumes, whoever writes
+     and whoever reads, whoever schedules and whoever runs. Find the
+     other side and read it. That is where disagreements live.
    - **The same nouns.** Search the specifications for the domain words
      in your heading, not the heading itself:
      `git grep -il "refund" -- '*.lazyspec.md'`
-   - **The same route, table or endpoint**, if your requirement names
-     one.
+   - **The same named thing** - a table, a queue, a contract address, a
+     file format, a route - if your requirement names one.
    - **Sets whose `covers` mentions your area**, which is what `covers`
      is there for.
 

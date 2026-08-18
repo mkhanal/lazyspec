@@ -77,36 +77,36 @@ cannot see.** You have the repository in front of you. Read it.
   with `root: .`.
 - **Where specifications will sit.** Next to the code they describe, in
   the folder that package already uses for tests or docs.
-- **What each set is likely to cover.** An Express service under
-  `services/` is a wire contract. A React app under `apps/` is what a
-  person can see in a browser. A library is its public API. Say so, and
-  say what it excludes.
+- **What each set is likely to cover.** A service is what a caller
+  observes at its boundary. A pipeline is what holds of the data after a
+  run. A worker is what happens per job. A library is its public surface.
+  Read the code and say which this is, then say what it excludes.
 
 Then put the whole thing in front of them, filled in, and **mark what you
 inferred**:
 
 ```yaml
 sets:
-  - root: services/api          # found: express, routes/, supertest
+  - root: services/ingest       # found: a server, routes, contract tests
     specs: specs/*.lazyspec.md
     covers: |
-      The HTTP contract a caller can observe: status codes, error
-      shapes, idempotency. Not internal helpers.   # inferred - check me
+      What a caller observes at the boundary: what is accepted, what
+      is refused, what comes back.               # inferred - check me
 
-  - root: apps/web              # found: react, vite, playwright
+  - root: pipelines/nightly     # found: a scheduler, fixtures, dbt tests
     specs: specs/*.lazyspec.md
     covers: |
-      What a person can see and do in the browser, proved end to end.
-      Not component internals.                     # inferred - check me
+      What must hold of the data after a run, and what happens when a
+      run fails halfway.                          # inferred - check me
 ```
 
 Ask only the questions the repository does not answer, and ask them as
 questions with your best answer already in them:
 
-- **The level, when the code is ambiguous.** "This service has pact
-  files as well as unit tests. Should a requirement here be a pact, or
-  an endpoint's observable behaviour?" That one is a genuine choice and
-  the repository cannot settle it.
+- **The level, when the code is ambiguous.** "This service has consumer
+  contract files as well as unit tests. Should a requirement here be one
+  of those contracts, or whatever a caller can observe?" That is a
+  genuine choice and the repository cannot settle it.
 - **A boundary you cannot place.** A package that could be its own set
   or part of a larger one.
 - **Nothing else.** Do not ask what you can read. A question whose answer
