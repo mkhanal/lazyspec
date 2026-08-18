@@ -7,14 +7,14 @@ A requirement is a `## ` heading in such a file, and its text is its only
 identifier.
 
 **A requirement is married to a test: one whose name repeats that text
-word for word, in a file named after the specification.** Name the file
-and write the test the way this repository does:
+word for word, in the one file naming the specification and `lazyspec`.**
+Spell both the way this repository spells test names:
 
 ```
 billing.lazyspec.md        ## Refunds Never Exceed What Was Captured
 billing.lazyspec.test.ts   describe('Refunds Never Exceed What Was Captured', ..)
-test_billing.py            """Refunds Never Exceed What Was Captured"""
-billing_test.go            t.Run("Refunds Never Exceed What Was Captured", ..)
+test_billing_lazyspec.py   """Refunds Never Exceed What Was Captured"""
+billing_lazyspec_test.go   t.Run("Refunds Never Exceed What Was Captured", ..)
 ```
 
 Most tests marry nothing, and should not: unit and integration tests sit

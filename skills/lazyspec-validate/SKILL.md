@@ -73,9 +73,9 @@ requirement is never a finding: unit, integration and database tests
 marry nothing by design, and complaining about them would be demanding a
 project specify its own implementation.
 
-One exception: a file that **named itself** a specification's test. Where
-a repository uses `<name>.lazyspec.test.*`, that name is a claim, and a
-claim can be checked backwards.
+One exception: a file that **named itself** a specification's test. A
+test file carrying `lazyspec` in its name is making a claim, and a claim
+can be checked backwards.
 
 These four need no judgement. Report them as facts.
 
@@ -101,8 +101,8 @@ These four need no judgement. Report them as facts.
   are the name, so two things cannot have them.
 - **Moved alone.** A specification changed and no file containing its
   requirements changed with it. A specification takes its tests with it.
-- **Orphaned.** A `<name>.lazyspec.test.*` file with no
-  `<name>.lazyspec.md` beside it. The specification was deleted or
+- **Orphaned.** A test file carrying `lazyspec` and a specification's
+  stem, with no such specification. It was deleted or
   renamed and its test was left behind, still passing, proving a
   requirement nobody has. Say whether the specification should come back
   or the test should go.
@@ -218,9 +218,22 @@ than finding nothing. This is for when there is nothing yet to read.
 | Shell | `*.bats` | `@test "…"` |
 | Gherkin | `*.feature` | `Scenario: …` |
 
-Where the runner lets you name the file freely, `<name>.lazyspec.test.*`
-is the convention - still ending `.test.*` so it is picked up with
-everything else.
+A married test file names two things: the specification's stem, and
+`lazyspec`. Spell them the way the language spells names, and let the
+runner's own suffix stay where it belongs:
+
+| | married test file |
+|---|---|
+| free to name | `billing.lazyspec.test.ts` |
+| module must import | `test_billing_lazyspec.py` |
+| suffix is fixed | `billing_lazyspec_test.go` |
+| name is the class | `BillingLazyspecTest.java` |
+
+Never require the literal `.lazyspec.`. A dot is legal in a path and
+illegal in a name: Java cannot put one in a class name, pytest fails to
+import `test_billing.lazyspec.py`, and `unittest` skips it in silence.
+Match on the token with capitals and separators removed, not on
+punctuation.
 
 ## Rules
 
@@ -274,8 +287,8 @@ should be able to talk you out of them. Keep any blocking gate to exactly
 those four, because a gate deciding which file is a test is guessing at
 conventions it cannot see.
 
-**Raise an orphan in the review, every time.** A `<name>.lazyspec.test.*`
-whose `<name>.lazyspec.md` is gone is invisible in a green build and
+**Raise an orphan in the review, every time.** A test file carrying
+`lazyspec` whose specification is gone is invisible in a green build and
 easily invisible in a diff too, because the deletion and the leftover are
 in different files and often different commits. It is a test proving a
 requirement nobody has. Name the file and ask which way it should go.

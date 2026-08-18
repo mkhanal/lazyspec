@@ -148,8 +148,17 @@ These are the steps.
    specification - one file, so a specification being changed never has
    to guess which tests change with it.
 
-   Look at how this repository already names and runs its tests, and do
-   the same. The test file has to be one the test runner picks up, and
+   **Name that file for the specification and for `lazyspec`**, so
+   nobody has to guess which file proves what, and so a test outliving
+   its specification can be spotted by its name alone:
+   `billing.lazyspec.test.ts`, `test_billing_lazyspec.py`,
+   `billing_lazyspec_test.go`, `BillingLazyspecTest.java`. Spell
+   `lazyspec` however the language spells a name - never as a literal
+   `.lazyspec.`, which Java cannot put in a class name and which makes
+   pytest fail to import and `unittest` skip the file in silence.
+
+   Look at how this repository already names and runs its tests, and fit
+   that in. The test file has to be one the test runner picks up, and
    the words can sit wherever the language puts a test's name: a string,
    a docstring, an annotation, a comment. Do not invent a test runner, a
    folder layout or a naming style the repository does not already use.
@@ -161,9 +170,9 @@ These are the steps.
    own test command passes. Find that command; do not guess it.
 
    If you renamed or deleted a specification, its test file follows -
-   same name, same moment. A `<name>.lazyspec.test.*` left behind with no
-   specification is an orphan that still passes, proving a requirement
-   nobody has any more.
+   same name, same moment. A test file carrying `lazyspec` left behind
+   with no specification is an orphan that still passes, proving a
+   requirement nobody has any more.
 
 6. **Report**, and say plainly that you changed a specification: which
    headings you touched, which tests now prove them, and what the test
@@ -188,10 +197,9 @@ end-to-end. Everything below that keeps working as it always did.
 - **Other test files may share a specification's name.** `billing.md` is
   married to whichever file repeats its headings; `billing.unit.test.ts`
   sitting beside it is ordinary and unrelated.
-- **`<name>.lazyspec.test.*` is a claim, so only use it for the married
-  file.** Where your runner lets you choose the name, that one carries
-  the requirements and its neighbours do not. A file named that way with
-  no specification beside it is reported as an orphan.
+- **`lazyspec` in a test file's name is a claim, so only the married
+  file makes it.** Its neighbours do not, however closely related. A file
+  claiming it with no specification beside it is reported as an orphan.
 
 If a requirement only makes sense to somebody reading the implementation,
 it is a unit test wearing a heading. Delete the heading and keep the

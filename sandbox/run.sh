@@ -119,7 +119,7 @@ spec services/ledger/specs/postings.lazyspec.md <<'EOF'
 
 - A posting whose legs do not sum to zero is refused.
 EOF
-cat > services/ledger/tests/test_postings.py <<'EOF'
+cat > services/ledger/tests/test_postings_lazyspec.py <<'EOF'
 def test_balances():
     """Every Posting Balances To Zero"""
     assert True
@@ -134,7 +134,7 @@ spec services/router/specs/routing.lazyspec.md <<'EOF'
 
 - A request for an unregistered path is answered with 404.
 EOF
-cat > services/router/routing_test.go <<'EOF'
+cat > services/router/routing_lazyspec_test.go <<'EOF'
 func TestRouting(t *testing.T) {
     t.Run("Unknown Routes Return Not Found", func(t *testing.T) {})
 }
@@ -148,9 +148,9 @@ spec apps/web/specs/checkout.lazyspec.md <<'EOF'
 
 - Adding a fifty-first line is refused.
 EOF
-cat > apps/web/CheckoutTest.java <<'EOF'
+cat > apps/web/CheckoutLazyspecTest.java <<'EOF'
 @DisplayName("A Cart Holds At Most Fifty Lines")
-class CheckoutTest {}
+class CheckoutLazyspecTest {}
 EOF
 
 # --- somebody else's specification, vendored
@@ -212,11 +212,11 @@ find_proof() {
 is "JavaScript, describe()" "$(find_proof 'Refunds Never Exceed What Was Captured')" \
    "services/api/specs/billing.lazyspec.test.js "
 is "Python, a docstring"    "$(find_proof 'Every Posting Balances To Zero')" \
-   "services/ledger/tests/test_postings.py "
+   "services/ledger/tests/test_postings_lazyspec.py "
 is "Go, t.Run"              "$(find_proof 'Unknown Routes Return Not Found')" \
-   "services/router/routing_test.go "
+   "services/router/routing_lazyspec_test.go "
 is "Java, @DisplayName"     "$(find_proof 'A Cart Holds At Most Fifty Lines')" \
-   "apps/web/CheckoutTest.java "
+   "apps/web/CheckoutLazyspecTest.java "
 is "an unmarried requirement finds nothing" "$(find_proof 'Chargebacks Are Held For Review')" ""
 
 # The words say a file is the proof. The name says it is the right one:
@@ -228,16 +228,50 @@ carries() {
 }
 for pair in \
   "services/api/specs/billing.lazyspec.md|services/api/specs/billing.lazyspec.test.js" \
-  "services/ledger/specs/postings.lazyspec.md|services/ledger/tests/test_postings.py" \
-  "services/router/specs/routing.lazyspec.md|services/router/routing_test.go" \
-  "apps/web/specs/checkout.lazyspec.md|apps/web/CheckoutTest.java"; do
+  "services/ledger/specs/postings.lazyspec.md|services/ledger/tests/test_postings_lazyspec.py" \
+  "services/router/specs/routing.lazyspec.md|services/router/routing_lazyspec_test.go" \
+  "apps/web/specs/checkout.lazyspec.md|apps/web/CheckoutLazyspecTest.java"; do
   carries "${pair%%|*}" "${pair##*|}" \
     || bad "$(basename "${pair##*|}") does not carry its specification's stem"
 done
 ok "each proof file carries the stem, whatever the language calls it"
-carries "services/api/specs/billing.lazyspec.md" "services/ledger/tests/test_postings.py" \
+carries "services/api/specs/billing.lazyspec.md" "services/ledger/tests/test_postings_lazyspec.py" \
   && bad "a foreign test file matched the stem" \
   || ok "a test file for another specification does not"
+
+# ...and every one of them says lazyspec, so the name can be read the
+# other way: from a test back to the specification it claims to prove.
+claims() {
+  basename "$1" | tr 'A-Z' 'a-z' | tr -d '_-.' | grep -q lazyspec
+}
+for t in services/api/specs/billing.lazyspec.test.js \
+         services/ledger/tests/test_postings_lazyspec.py \
+         services/router/routing_lazyspec_test.go \
+         apps/web/CheckoutLazyspecTest.java; do
+  claims "$t" || bad "$(basename "$t") does not claim to prove a specification"
+done
+ok "each married test claims it, in a spelling its language allows"
+claims services/api/src/billing.unit.test.js \
+  && bad "an ordinary test claimed a marriage" \
+  || ok "an ordinary test beside it claims nothing"
+
+# An orphan is that claim with nothing behind it, and the check has to
+# reach the languages that cannot spell the name our way.
+mkdir -p orphans
+: > orphans/settlement.lazyspec.test.js
+: > orphans/test_settlement_lazyspec.py
+: > orphans/settlement_lazyspec_test.go
+: > orphans/SettlementLazyspecTest.java
+found=0
+for t in orphans/*; do
+  claims "$t" || continue
+  stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_-.' \
+    | sed 's/lazyspec.*//; s/^test//; s/test$//')
+  [ -n "$stem" ] || continue
+  ls -- *"$stem"*.lazyspec.md >/dev/null 2>&1 || found=$((found + 1))
+done
+is "an orphan is found in all four languages, not just one" "$found" "4"
+rm -rf orphans
 
 n=$(grep -c '^## ' services/api/specs/billing.lazyspec.md)
 m=$(grep '^## ' services/api/specs/billing.lazyspec.md | grep -vc 'no-test')
@@ -274,11 +308,16 @@ extra=$(ls services/api/src/billing.unit.test.js services/api/tests/billing.db.t
 is "they sit beside it, sharing its name, unbothered" "$extra" "2"
 
 sect "C2. an orphaned specification test"
-# the convention makes the name a claim, so it can be checked backwards
+# The name is a claim, so it can be read backwards - in every language,
+# because the claim is the token and not the punctuation around it.
 orphans() {
-  for t in $(find . -name '*.lazyspec.test.*'); do
-    stem=$(basename "$t" | sed 's/\.lazyspec\.test\..*$//')
-    [ -f "$(dirname "$t")/$stem.lazyspec.md" ] || echo "$t"
+  find . -type f -not -path './.git/*' -not -name '*.lazyspec.md' | while read -r t; do
+    claims "$t" || continue
+    stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_-.' \
+      | sed 's/lazyspec.*//; s/^test//; s/test$//')
+    [ -n "$stem" ] || continue
+    find . -name '*.lazyspec.md' | tr -d '_-' | grep -qi "/$stem.lazyspec.md$" \
+      || echo "$t"
   done
 }
 is "no orphans while the specification is there" "$(orphans | wc -l | tr -d ' ')" "0"

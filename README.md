@@ -23,11 +23,11 @@ requirement is written when it is known, and changed safely after.
   its identifier.
 - Its test declares itself by that text, word for word, in the file
   sharing the specification's stem.
-- `billing.lazyspec.md` is married by the one test file carrying
-  `billing`, named however your language names tests —
-  `billing.lazyspec.test.ts`, `test_billing.py`, `billing_test.go`,
-  `BillingTest.java`. The name marries them, so either file can live
-  anywhere.
+- `billing.lazyspec.md` is married by the one test file naming both
+  `billing` and `lazyspec`, spelled however your language spells names —
+  `billing.lazyspec.test.ts`, `test_billing_lazyspec.py`,
+  `billing_lazyspec_test.go`, `BillingLazyspecTest.java`. The name
+  marries them, so either file can live anywhere.
 - Reword the requirement and its test is orphaned at once, loudly.
 - Write each requirement once it is known, which is usually partway
   through the build rather than at either end. Then keep it still.
@@ -155,18 +155,18 @@ Nothing about that is JavaScript. The words go wherever your language
 puts a test's name, and the file goes wherever your runner already looks:
 
 ```py
-# test_refunds.py
+# test_refunds_lazyspec.py
 def test_beyond_captured():
     """Refunds Never Exceed What Was Captured"""
 ```
 
 ```go
-// refunds_test.go
+// refunds_lazyspec_test.go
 t.Run("Refunds Never Exceed What Was Captured", func(t *testing.T) { ... })
 ```
 
 ```java
-// RefundsTest.java
+// RefundsLazyspecTest.java
 @DisplayName("Refunds Never Exceed What Was Captured")
 ```
 
@@ -207,17 +207,22 @@ Neither cares what language you write in:
 | specification | its test file | how the test carries the name |
 |---|---|---|
 | `billing.lazyspec.md` | `billing.lazyspec.test.ts` | `describe('…')` |
-| `billing.lazyspec.md` | `test_billing.py` | a docstring |
-| `billing.lazyspec.md` | `billing_test.go` | `t.Run("…")` |
-| `billing.lazyspec.md` | `BillingTest.java` | `@DisplayName("…")` |
+| `billing.lazyspec.md` | `test_billing_lazyspec.py` | a docstring |
+| `billing.lazyspec.md` | `billing_lazyspec_test.go` | `t.Run("…")` |
+| `billing.lazyspec.md` | `BillingLazyspecTest.java` | `@DisplayName("…")` |
+
+Both halves of that name are load-bearing. `billing` says which
+specification it proves; `lazyspec` says it proves one at all. Neither is
+a guess anybody has to make.
 
 - A requirement's text is its only identifier.
 - Nothing here configures a language, a runner or a test folder. The
   agent reads all three off your repository.
-- Where your runner leaves names free, use `<name>.lazyspec.test.*`. It
-  is not decoration: a file with that name claims to prove a
-  specification, which is what lets `/lazyspec-validate` spot one left
-  behind after its specification was deleted or renamed.
+- **Spell `lazyspec` the way the language allows, never as a literal
+  `.lazyspec.`.** A dot is fine in a path and illegal in a name: Java
+  cannot put one in a class name, and `test_billing.lazyspec.py` makes
+  pytest fail to import and `unittest` skip the file without a word. The
+  token survives every ecosystem; the punctuation does not.
 - `<!-- no-test: why -->` marks a requirement nothing can prove.
 
 ## Where specifications live
@@ -254,13 +259,12 @@ without touching a specification.
 
 - **The check runs from requirements to tests.** An ordinary test with no
   requirement is not a finding, and never will be.
-- **Except for a test that named itself one.** A
-  `billing.lazyspec.test.js` with no `billing.lazyspec.md` is an orphan:
-  the specification was deleted or renamed and its test was left behind,
+- **Except for a test that named itself one.** A test file carrying
+  `lazyspec` with no matching specification is an orphan: the
+  specification was deleted or renamed and its test was left behind,
   still passing, proving a requirement nobody has. The name made a claim,
-  so the name can be checked. Where your runner forces a name —
-  `test_billing.py`, `billing_test.go` — nothing claims a marriage and
-  nothing can be checked backwards.
+  so the name can be checked — and because the token fits every naming
+  scheme, that check works in Java and Python as well as it does here.
 - **Never write a requirement to justify a test you already have.** That
   is the tail wagging the dog: the set fills with implementation detail
   and the specification becomes a second, worse copy of the suite.
@@ -582,7 +586,7 @@ of shell:
 - a requirement whose words appear nowhere,
 - one heading in two specifications,
 - a specification that changed while nothing proving it did,
-- a `*.lazyspec.test.*` whose specification is gone.
+- a test file carrying `lazyspec` whose specification is gone.
 
 The last is the one a green build hides, so a reviewing agent should
 raise it every time: the deletion and the leftover sit in different
