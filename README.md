@@ -26,7 +26,8 @@ requirement is written when it is known, and changed safely after.
 - Reword the requirement and its test is orphaned at once, loudly.
 - Write each requirement once it is known, which is usually partway
   through the build rather than at either end. Then keep it still.
-- A specification is changed only through `/lazyspec`.
+- A specification is locked unless you are in `/lazyspec`. That is a mode
+  the agent is in or is not, and it is almost never in it.
 - Nothing to run: no program, no gate, no build.
 - Nothing to change about how you work. Keep your planning, your tickets,
   your branching, your tests.
@@ -434,8 +435,9 @@ Nothing changes until a requirement needs to move.
 - **Behaviour is settled?** Run `/lazyspec`. It writes the requirement,
   updates its test in the same edit, and runs your suite.
 - **Finishing a task?** Run `/lazyspec-validate`.
-- **Editing a specification any other way?** The notice on its first line
-  says not to, and `/lazyspec-validate` will find it if you do.
+- **Editing a specification any other way?** It is locked: you are not in
+  spec mode, so it is not yours to touch. `/lazyspec-validate` finds it
+  if you do.
 
 ### Work in bigger pieces
 
@@ -450,6 +452,27 @@ is finally something to disagree about.
 Cut the same work into fragments and each gets designed alone. The
 specification comes out fragmented too, because that is how it was
 written.
+
+## Locking
+
+A specification is locked. Not by file permissions, not by a hook — by
+the agent knowing it is **not in spec mode**.
+
+- **Outside `/lazyspec`**, every specification is read-only. That is the
+  default, and where an agent spends essentially all of its time.
+- **`/lazyspec` is spec mode.** The one place a requirement is written,
+  reworded or removed, always with its test in the same edit.
+- **Three things say so**: the notice on the file's first line, the
+  standing rules your agents load every task, and `/lazyspec-validate`
+  afterwards.
+
+That is the whole of it, and it is enough because the failure it prevents
+is casual rather than adversarial. An agent does not set out to rewrite
+your requirements; it reaches for the nearest thing that makes a test
+pass. Locked means it knows the specification is not that thing.
+
+People are not locked out of anything. Edit your own requirements in your
+own editor whenever you like.
 
 ## Checking
 

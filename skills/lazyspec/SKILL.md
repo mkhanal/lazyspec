@@ -5,8 +5,12 @@ description: The only way to change a specification. Keeps a requirement and its
 
 # /lazyspec
 
-Every specification says, on its first line, that it is changed only
-through these steps. This is them.
+**Running this is spec mode.** Outside it every specification is locked,
+which is where an agent spends almost all of its time; inside it, and
+only inside it, a requirement is written, reworded or removed. Every
+specification says so on its first line.
+
+These are the steps.
 
 ## Steps
 

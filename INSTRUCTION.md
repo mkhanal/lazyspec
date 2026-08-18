@@ -23,9 +23,9 @@ large, and split its test file with it. If the code already has tests,
 name the specification after the file that proves it. If a requirement
 cannot be tested, mark it `## Name <!-- no-test: why -->`.
 
-**Every specification opens with a notice saying so. Respect it.** Change
-one only through `/lazyspec`, which updates its tests in the same edit,
-and never alongside unrelated work. Say when you have changed one.
+**Specifications are locked unless you are in `/lazyspec`.** Every one
+says so on its first line. Change one only there, with its tests in the
+same edit, never beside unrelated work, and say that you did.
 
 **Write each requirement once it is known**, which is usually partway
 through rather than at either end. Code and tests may run ahead; the
