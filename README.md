@@ -258,10 +258,13 @@ others.
 
 - Works on every agent and every model. Nothing to install, no state, no
   cleanup, no hook to keep current.
-- Reported to work well in practice: agents follow a clear standing
-  instruction most of the time.
-- Fails quietly when it fails. A cheap model, a compacted context, or a
-  subagent that never loaded your instruction has nothing stopping it.
+- Reaches further than you would think. Subagents inherit the whole
+  `CLAUDE.md` hierarchy, and a project `CLAUDE.md` is re-read from disk
+  after a compaction — so neither subagents nor a long session lose it.
+- Reported to work well in practice, and the mechanism explains why: an
+  instruction loaded on every task is what makes an agent write the test.
+- Fails quietly when it fails, and it fails as a probability rather than
+  a category: a model that reads the rule and does not follow it.
 
 **Instruction plus the check.** Add `/lazyspec-validate` before you
 finish, and the three settled searches to CI.
@@ -275,8 +278,14 @@ finish, and the three settled searches to CI.
 **Instruction plus the guard.** Add the hook as well.
 
 - Only Claude Code, Cursor and opencode.
-- Refuses in the moment, deterministically, including from a subagent
-  that never read a word of your instruction. That is its real value.
+- Refuses in the moment, deterministically. An instruction is followed
+  most of the time; a hook is followed every time. That difference is the
+  whole of its value, and it is a smaller difference than it sounds.
+- Its reach is narrower than you might expect, because the instruction
+  already covers subagents and compaction. What is left is a model that
+  reads the rule and ignores it, and agents nobody configured — a
+  teammate's unconfigured editor, an automation started with a bare
+  prompt, a tool with nowhere to paste an instruction.
 - Costs friction. It matches on patterns rather than parsing, so it
   refuses honest work that merely *mentions* a specification in a shell
   command: writing this README, a commit message quoting a requirement, a
@@ -287,9 +296,9 @@ finish, and the three settled searches to CI.
   guard itself needs.
 
 **Start with the instruction.** Add the check when you have a pull
-request worth gating. Add the guard when you are running agents you did
-not personally prompt — fleets, subagents, scheduled jobs — or when a
-silent requirement edit would genuinely hurt.
+request worth gating. Add the guard when you want a mechanism instead of
+a probability: many contributors, mixed models and editors, or a
+repository where one silently reworded requirement would genuinely hurt.
 
 The order matters: the instruction is what makes an agent *write the
 test*. The guard only stops a write. No amount of guard produces a
