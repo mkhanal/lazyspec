@@ -25,3 +25,11 @@ to make the change.
   instruction, and the header every specification carries.
 - A specification uses `##` for nothing else, so every one of its
   headings is repeated by a test.
+
+## Every Married Test Names Its Specification And lazyspec
+
+- The married test file's name carries the specification's stem and the
+  word `lazyspec`.
+- The word is matched with capitals and separators removed, so a language
+  that forbids a dot in a name can still spell it.
+- A test file carrying the word with no such specification is an orphan.

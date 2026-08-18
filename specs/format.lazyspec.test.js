@@ -89,3 +89,42 @@ describe('A Requirement Is A Level Two Heading', () => {
     assert.deepEqual(unmarried, []);
   });
 });
+
+// The name, reduced to what the match actually looks at. Java cannot put
+// a dot in a class name and Python cannot import one, so the token is
+// what travels — never the punctuation around it.
+const plain = (name) => name.toLowerCase().replace(/[._-]/g, '');
+
+describe('Every Married Test Names Its Specification And lazyspec', () => {
+  it("carries the specification's stem and the word lazyspec", () => {
+    const wrong = specs().filter((rel) => {
+      const stem = path.basename(rel).replace(/\.lazyspec\.md$/, '');
+      const name = plain(path.basename(rel).replace(/\.md$/, '.test.js'));
+      return !name.includes(plain(stem)) || !name.includes('lazyspec');
+    });
+    assert.deepEqual(wrong, []);
+  });
+
+  it('is matched with capitals and separators removed', () => {
+    const spellings = [
+      'billing.lazyspec.test.ts',
+      'test_billing_lazyspec.py',
+      'billing_lazyspec_test.go',
+      'BillingLazyspecTest.java',
+    ];
+    const unreadable = spellings.filter(
+      (n) => !plain(n).includes('lazyspec') || !plain(n).includes('billing'),
+    );
+    assert.deepEqual(unreadable, []);
+    const shown = read('README.md');
+    assert.deepEqual(spellings.filter((n) => !shown.includes(n)), []);
+  });
+
+  it('leaves an orphan where the specification is gone', () => {
+    const orphans = fs
+      .readdirSync(path.join(ROOT, 'specs'))
+      .filter((f) => plain(f).includes('lazyspec') && !f.endsWith('.lazyspec.md'))
+      .filter((f) => !fs.existsSync(path.join(ROOT, 'specs', f.replace(/\.test\.js$/, '.md'))));
+    assert.deepEqual(orphans, []);
+  });
+});
