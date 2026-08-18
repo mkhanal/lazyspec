@@ -33,7 +33,7 @@ These are the steps.
    claim the same test file. In one project that is `.`. In a monorepo it
    is each package or service, so there is one entry per boundary - and
    each may work at a different level, because a browser and a wire
-   contract are not the same kind of promise:
+   contract are different kinds of promise:
 
    ```yaml
    sets:
@@ -55,8 +55,7 @@ These are the steps.
    **`covers` is the project's decision and yours to ask about, not to
    assume.** It is free text, read by whoever writes the next
    requirement, and it is the difference between a set that stays
-   coherent and one that fills up with whatever anybody felt like
-   writing down. A team using consumer-driven contracts might say a
+   coherent and one that silts up with every stray thought anybody had. A team using consumer-driven contracts might say a
    requirement here is a pact; a team without them might say it is an
    endpoint's observable behaviour. Both are right; only the project
    knows which.
@@ -83,11 +82,31 @@ These are the steps.
    requirement may belong in another set, at another level, or nowhere.
    A set that quietly widens is a set nobody trusts.
 
-   Then look for what already says something about this, in **every** set,
-   not only the one you are writing in. A frontend requirement and an API
-   requirement may cover the same behaviour from their own sides, which
-   is fine. Two that cannot both be true is not. If you find one, say so
-   and stop rather than adding the second.
+   **Then look for a conflict, before you write anything.** This is the
+   cheapest moment there will ever be: nothing exists yet, so reconciling
+   costs a sentence. After the requirement and its test are written, the
+   same conflict costs an argument about which one was right.
+
+   Do not read every specification — in a real repository that is
+   hundreds of requirements and you will stop doing it by Thursday. Go
+   where an overlap is likely:
+
+   - **The counterpart set.** Writing a frontend requirement? Read the
+     API set covering the same feature, and the reverse. One behaviour
+     seen from two sides is where disagreements live.
+   - **The same nouns.** Search the specifications for the domain words
+     in your heading, not the heading itself:
+     `git grep -il "refund" -- '*.lazyspec.md'`
+   - **The same route, table or endpoint**, if your requirement names
+     one.
+   - **Sets whose `covers` mentions your area**, which is what `covers`
+     is there for.
+
+   Two requirements covering one behaviour from opposite sides are fine
+   and often necessary — each is proved by its own test and breaks on its
+   own. Two that cannot both be true are not. Found one? Say so and stop.
+   Do not write the second and leave somebody else to discover they
+   disagree.
 
    Then: a new requirement joins the specification it belongs to. Only
    start a new `*.lazyspec.md` when none of them fits. Its filename

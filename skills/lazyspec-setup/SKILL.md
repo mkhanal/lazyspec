@@ -5,15 +5,14 @@ description: Set lazyspec up in this repository - put the instruction where agen
 
 # /lazyspec-setup
 
-Two things, once: get `INSTRUCTION.md` into whatever this repository's
-agents read on every task, and work out where specifications will live.
-Nothing else.
+Two jobs, once. Put `INSTRUCTION.md` where this repository's agents read
+it on every task, and settle where specifications will live. Nothing
+else.
 
 A plugin carries skills. It cannot write files into somebody's
 repository, and it should not: putting text into a team's standing rules
-without being asked is exactly the thing lazyspec exists to stop an agent
-doing. So this waits to be invoked, does the one step, and shows its
-work.
+without being asked is the precise act lazyspec exists to prevent. So
+this waits to be invoked, does its two jobs, and shows its work.
 
 ## 1. Find the instruction
 
@@ -39,7 +38,7 @@ Read the repository before deciding. In order of preference:
    people already respect is followed; a rule in a file of its own
    competes for attention.
 2. **`AGENTS.md`** — the default when there is no such document.
-3. **Whatever else this repository already has**: `.cursor/rules/`,
+3. **Any other file this repository already keeps**: `.cursor/rules/`,
    `.github/copilot-instructions.md`, `GEMINI.md`, `.clinerules`,
    `CONVENTIONS.md`.
 
@@ -160,5 +159,5 @@ why one is safe to settle now and the other waits.
 - Change nothing but the instruction files and `.lazyspec.yaml`. No
   specifications, no code, no other configuration.
 - Never write a specification here. There is no behaviour you have
-  watched yet, and a requirement guessed from reading code is the thing
-  this tool exists to prevent.
+  watched yet, and a requirement guessed from reading code is the exact
+  failure this tool exists to prevent.

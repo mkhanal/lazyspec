@@ -66,19 +66,18 @@ Outside git, `grep -rlF` over the tree does the same job. Do not write
 your own list of folders to skip; git already knows what is ignored,
 vendored or a submodule.
 
-## What searching settles
+## Found by searching
 
-Mostly this runs **from requirements to tests**. An ordinary test with no
-requirement is not a finding and never will be: unit tests, integration
-tests and database tests marry nothing by design, and a check that
-complained about them would be asking a project to specify its own
-implementation.
+This runs **from requirements to tests**. An ordinary test with no
+requirement is never a finding: unit, integration and database tests
+marry nothing by design, and complaining about them would be demanding a
+project specify its own implementation.
 
-The exception is a file that **named itself** a specification's test.
-Where a repository uses the `<name>.lazyspec.test.*` convention, that
-name is a claim, and a claim can be checked backwards.
+One exception: a file that **named itself** a specification's test. Where
+a repository uses `<name>.lazyspec.test.*`, that name is a claim, and a
+claim can be checked backwards.
 
-Report these as they stand. They need no judgement.
+These four need no judgement. Report them as facts.
 
 - **Unmarried.** No file anywhere contains the requirement's words.
 - **Written twice.** Two specifications share a `## ` heading. The words
@@ -101,80 +100,82 @@ Report these as they stand. They need no judgement.
   specification without it is unmarked everywhere. Say which, and put the
   notice back through `/lazyspec`.
 
-## What you settle
+## Found by reading
 
-First open two or three tests this repository already has. How are the
-files named? What does the test runner pick up? Where does a test's name
-go? Answer everything below against that, not against what you expect.
+Open two or three of this repository's tests first. How are the files
+named? What does the runner collect? Where does a test's name go? Judge
+against that, not against habit.
 
-**Is that file the proof, or does it only say the words?** It is the
-proof when a test the runner picks up carries those words as its name.
-Say which file is the proof and what the other matches are. A comment
-quoting a requirement looks exactly like a real test to anything that is
-not reading it.
+Each finding below has a name. Use it. "Borrowed name, billing.test.js:12"
+lands; "the test may not fully exercise the requirement" does not.
 
-Two matches are never proof, and both are common:
+**Named, not proved.** The words are in a file, but that file is not a
+test the runner collects — a comment, a README, a mock, a changelog. Say
+which file holds the real proof and what the other matches are.
 
-- **The pasted instruction.** `AGENTS.md`, `CLAUDE.md` and their like
-  carry an example requirement, so they hit for anything named like it.
-  Anything between `<!-- lazyspec:begin -->` and `<!-- lazyspec:end -->`
-  is the instruction, not a test.
+Two matches never count, and both are common:
+
+- **The pasted instruction.** `AGENTS.md` and its like carry an example
+  requirement, so they hit anything named similarly. Anything between
+  `<!-- lazyspec:begin -->` and `<!-- lazyspec:end -->` is instruction.
 - **The specification itself**, and any other specification quoting it.
 
-**Is it in the file named after the specification?**
-`billing.lazyspec.md` is proved in the one file whose name contains
-`billing`, spelled however this repository spells it. Capitals and
-separators do not matter. Two files proving one specification means it
-should have been split, or a test belongs elsewhere.
+**Proved elsewhere.** The proof is real but sits outside the file named
+after the specification. `billing.lazyspec.md` is proved in the one file
+whose name carries `billing`, spelled however this repository spells it —
+capitals and separators do not count. Two files proving one specification
+means it outgrew one file: split the specification and split its tests,
+or move the stray test home.
 
-**Does the test prove the claim, or only borrow its name?** The one worth
-your attention, because nothing else can catch it. Read the assertions
-against the bullet points. A test with the right name checking something
-unrelated, or checking nothing, is the failure this exists to find. Quote
-the bullet and the assertion side by side when they do not match.
+**Borrowed name.** The test carries the requirement's words and checks
+something else, or checks nothing. This is the finding nothing else can
+catch and the reason a human is reading at all. Quote the bullet and the
+assertion side by side.
 
-**Is every bullet point proved?** Name any the tests do not cover.
+**Half proved.** The requirement claims more than its test checks. Name
+the bullets nothing covers.
 
-**Does it contradict another requirement?** Requirements may cover the
-same ground from different sides — an API set saying what a call refuses,
-a frontend set saying the button is disabled before the call is made.
-That repetition is fine and often necessary; each side owns its half.
+**Contradiction.** Two requirements that cannot both be true — two
+limits, two error messages, one side optional and the other required.
 
-What is not fine is the two drifting apart. Read across the sets, not
-just within one, and flag any pair that cannot both be true: two
-different limits, two different error messages, one side saying a value
-is optional and the other requiring it. Quote both, name both files, and
-say which you believe.
+`/lazyspec` is where this is caught, before the second one is written.
+By the time you are here it is already expensive, so you are the backstop
+and you check narrowly: only the requirements **this change touched**,
+against their counterparts. Do not sweep every set.
 
-Look hardest where one side was written long before the other. A
-behaviour specified in an API set because there was nowhere else to put
-it — a button, a modal, a page — will be restated when the frontend set
-finally exists, and the copy left behind is the one that goes stale.
+For each one, ask where its counterpart would live — the other side of
+the same behaviour, the same nouns, the same endpoint — and read that.
+Requirements covering one behaviour from opposite sides are fine; each is
+proved by its own test and breaks on its own. Quote both files when they
+disagree.
 
-**Is it the kind of requirement this set is for?** If `.lazyspec.yaml`
-gives the set a `covers`, read it. A requirement below the level it
-declares — an internal helper where the set covers a wire contract, a
-component detail where it covers what a person can see — is drift of a
-slower kind: the set widens until nobody can say what belongs in it.
-Name it, quote the `covers`, and say where it belongs instead.
+The seam worth your attention is where one side was specified years
+before the other. A button or a modal written into an API specification
+because there was nowhere else to put it gets restated when the frontend
+specification arrives, and the copy left behind is the one that rots.
 
-**Did this change write down what it changed?** For each changed file
-containing no requirement's words: did it change what the software does?
-If so, say which requirement is missing. A rename, a tidy-up, a comment
-or a documentation edit changes nothing the software does - say so and
-move on.
+**Wrong level.** The requirement is not the kind this set is for. Read
+the set's `covers`: an internal helper where the set covers a wire
+contract, a component detail where it covers what a person sees. Quote
+the `covers` and say where the requirement belongs instead. A set that
+widens quietly is a set nobody can trust.
 
-Where you are matters here, and only here. Work in progress is allowed to
-run ahead of its requirements, because each one is written when it
-becomes known and not before, so "not specified yet" is worth reporting but is not a failure.
-On a pull request it is a failure: the behaviour is known by then, so the
-requirement is owed.
+**Unspecified change.** A changed file changes what the software does and
+no requirement changed with it. Name the requirement that is missing. A
+rename, a tidy-up, a comment or a docs edit changes nothing the software
+does — say so and move on.
 
-**Did a requirement change with nothing to show for it?** A specification
-edited while no test and no code moved is a requirement nobody built.
+Where you are decides how hard this bites, and only this one. Work in
+progress runs ahead of its requirements by design, so "not written yet"
+is worth reporting and is not a failure. On a pull request it is a
+failure: the behaviour is known by then, so the requirement is owed.
 
-**Does the specification describe today?** Bullet points say what the
-software does now. What it used to do belongs in the commit history.
+**Nothing to show.** A specification changed while no test and no code
+moved. Somebody wrote a requirement nobody built.
+
+**Narrating history.** The specification says what it used to do, when it
+changed, or which release it landed in. Bullets state what the software
+does today. The rest is what git is for.
 
 ## How different languages name these things
 
@@ -230,11 +231,14 @@ JUDGED    what you decided, what convinced you, what you could not tell
 TESTS     the command you ran, and what it did
 ```
 
-List every settled finding by name, even the ones that look like
-housekeeping. **An orphan especially**: a specification's test still
-sitting there after its specification went is the one failure the suite
-cannot show you, because it passes. Say which file, and say whether the
-specification should come back or the test should go.
+Name every finding, using the names above, with a file and a line. Never
+"the test may not fully exercise this" — say **borrowed name**, quote the
+bullet, quote the assertion.
+
+**Raise an orphan every time.** A specification's test still sitting
+there after its specification went is the one failure a green suite
+cannot show you. Say which file, and say which way it should go: the
+specification back, or the test out.
 
 Fail when anything is unmarried, written twice, moved alone or orphaned,
 when a requirement is not proved by the test file named after its

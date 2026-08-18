@@ -271,9 +271,17 @@ and both are worth writing: each is proved by a different test, and each
 can break on its own.
 
 What must not happen is the two drifting apart — two different limits,
-two different messages, one side optional and the other required. Keeping
-them aligned is the agent's job, and `/lazyspec-validate` reads across
-sets rather than within one to find pairs that cannot both be true.
+two different messages, one side optional and the other required.
+
+**That is caught when the requirement is written, not later.** `/lazyspec`
+looks for a conflict before adding anything, which is the cheapest moment
+there will ever be: nothing exists yet, so reconciling costs a sentence.
+Afterwards the same conflict costs an argument about which one was right.
+
+It does not read every specification — a real repository has hundreds of
+requirements and nobody sustains that. It goes where an overlap is
+likely: the counterpart set, the same domain nouns, the same endpoint.
+`/lazyspec-validate` is only the backstop, and checks narrowly.
 
 Watch the seam where one side was specified long before the other. A
 button or a modal written into an API specification because there was
