@@ -25,22 +25,24 @@ requirement proved because a search found its words somewhere.
 
 ## Gather
 
-```
-git ls-files --cached --others --exclude-standard '*.lazyspec.md'
-grep -n '^## ' <specification>
-git grep --untracked -l -F -e "<the heading, exactly>"
-git diff --name-only <base>               # <base>: the branch you would
-git ls-files --others --exclude-standard  # merge into, HEAD if uncommitted
-```
+You know how to search a repository. Four things to collect, and the
+parts that are not obvious:
 
-- Skip headings marked `<!-- no-test: … -->`, and trim the trailing
-  comment off the ones you keep.
-- Search the literal words, never a pattern. They are the requirement's
-  name, so nothing needs escaping and nothing needs to guess what a test
-  looks like.
-- Outside git, `grep -rlF` over the tree does the same. Never write your
-  own list of folders to skip - git knows what is ignored, vendored or a
-  submodule.
+- **Every specification.** `*.lazyspec.md`, or what `.lazyspec.yaml`
+  narrows that to. Count untracked files: one written this session is
+  still a specification.
+- **Every requirement.** Each `## ` heading. Skip the ones marked
+  `<!-- no-test: … -->` and trim the trailing comment off the rest.
+- **Every file holding a requirement's words.** Search the literal words,
+  never a pattern - they are the requirement's name, so nothing needs
+  escaping and nothing needs to guess what a test looks like.
+- **What changed, and against what.** Uncommitted work is against `HEAD`.
+  A branch or a pull request is against its merge base with the branch it
+  targets, which covers every commit on it however many there are. Say
+  which base you used; a reader cannot judge your findings without it.
+
+Let git decide what to skip. Never hand-roll a list of folders - it
+already knows what is ignored, vendored or a submodule.
 
 ## Found by searching
 
@@ -66,7 +68,10 @@ These need no judgement. Report them as facts.
   contents. Say how many `###` headings are really requirements, and say
   the fix: lift them to `##`, drop the sections. `##` is the mark in
   every project and there is no setting for it.
-- **Written twice.** Two specifications share a `## ` heading.
+- **Written twice.** Two specifications in one set share a `## `
+  heading. Across sets it is not this finding: two roots may word the
+  same promise the same way, each proved by its own test. Check they are
+  not one requirement wearing two roots before reporting it.
 - **Moved alone.** A specification changed and no file holding its
   requirements changed with it. A specification takes its tests with it.
 - **Orphaned.** A test file naming `lazyspec` and a specification's
@@ -95,7 +100,8 @@ proof and what the other matches were. Two matches never count:
 - **The specification itself**, and any other quoting it.
 
 **Proved elsewhere.** Real proof, wrong file. `billing.lazyspec.md` is
-proved in the one file naming `billing`, capitals and separators aside.
+proved in the one file naming `billing` and `lazyspec`, capitals and
+separators aside.
 Two files proving one specification means it outgrew one file: split
 both, or move the stray test home.
 
@@ -138,8 +144,19 @@ say so and move on.
   worth reporting and is not a failure. On a pull request the behaviour
   is known, so the requirement is owed and its absence fails.
 
+**Left behind.** A heading this change removed whose words are still in
+the test file. It passes, so nothing else will tell you. Every other
+check here runs from requirements to tests and cannot see a test the
+requirements no longer claim.
+
 **Nothing to show.** A specification changed while no test and no code
 moved. Somebody wrote a requirement nobody built.
+
+**Excused.** A `no-test` reason naming nothing outside the project's
+reach. "The ledger is somebody else's system" is a reason; "hard to
+automate" is a requirement somebody stopped checking. It is the one mark
+that silences a finding, so read every one this change touched and quote
+the reason.
 
 **Narrating history.** The specification says what it used to do, when it
 changed, or which release it landed in. Bullets state what the software
@@ -157,8 +174,8 @@ than finding nothing. This is for when there is nothing yet to read.
 | Python | `test_*.py`, `*_test.py` | a docstring, or the test's name |
 | Go | `*_test.go` | `t.Run("…")` |
 | Java, Kotlin | `*Test.java`, `*Tests.kt` | `@DisplayName("…")` |
-| Ruby | `*_spec.rb`, `test_*.rb` | `describe '…'`, `it '…'` |
-| Rust | `tests/*.rs`, `#[cfg(test)]` | `#[test] fn …` |
+| Ruby | `*_spec.rb`, `*_test.rb` | `describe '…'`, `it '…'` |
+| Rust | `tests/*.rs`, `#[cfg(test)]` | a `///` line on `#[test] fn …` |
 | C#, .NET | `*Tests.cs` | `[Fact(DisplayName = "…")]` |
 | PHP | `*Test.php`, Pest `*.php` | `#[TestDox('…')]`, `it('…')` |
 | Swift | `*Tests.swift` | `@Test("…")` |
@@ -201,6 +218,8 @@ refuses it in a class name, pytest fails to import
 ## Report
 
 Run this repository's own test command first. Find it; do not guess it.
+Where packages have their own runners, run one per package a touched
+specification or test lives in, not one for the tree.
 
 ```
 VERDICT: pass | fail

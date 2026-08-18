@@ -123,8 +123,10 @@ specification says so on its first line.
    a comment. Do not invent a runner, a layout or a naming style the
    repository does not already use.
 
-   Reword a heading and you reword its test. If a test fails, fix the
-   code - never the requirement.
+   Reword a heading and you reword its test. Remove one and you remove
+   its test in the same edit: a test whose requirement is gone still
+   passes, and nothing downstream can tell it apart from a real one. If
+   a test fails, fix the code - never the requirement.
 
 5. **Check your work.** Every heading has its test, and the repository's
    own test command passes. Find that command; do not guess it. If you
@@ -151,7 +153,8 @@ contract or end to end. Everything below that keeps working as it did.
 - **A specification does not replace those tests.** A requirement says
   what the software promises; a unit test says a function works. Both
   worth having, only one a promise to anybody outside the code.
-- **Other test files may share a specification's name.** `billing.md` is
+- **Other test files may share a specification's name.**
+  `billing.lazyspec.md` is
   married to whichever file repeats its headings; `billing.unit.test.ts`
   beside it is ordinary and unrelated.
 - **`lazyspec` in a test file's name is a claim, so only the married file

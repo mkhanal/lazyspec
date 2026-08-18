@@ -387,8 +387,8 @@ cp -R /tmp/lazyspec/skills/. .claude/skills/
 cp -R /tmp/lazyspec/skills/. .agents/skills/
 ```
 
-Two directories cover four agents: `.claude/skills/` for Claude Code and
-opencode, `.agents/skills/` for Codex and opencode.
+Two directories cover three agents: `.claude/skills/` for Claude Code
+and opencode, `.agents/skills/` for OpenAI's Codex and opencode.
 
 **Or hand it over:** *"Read
 `https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
@@ -470,7 +470,7 @@ instruction reaches every agent, because you paste it. Skills reach four.
 | Claude Code | `CLAUDE.md`, holding `@AGENTS.md` | `.claude/skills/` |
 | Cursor | `.cursor/rules/lazyspec.mdc`, `alwaysApply: true` | `.cursor/skills/` |
 | opencode | `AGENTS.md` | `.claude/skills/`, `.agents/skills/` |
-| Codex | `AGENTS.md` | `.agents/skills/` |
+| Codex (OpenAI) | `AGENTS.md` | `.agents/skills/` |
 | Gemini CLI | `GEMINI.md` | no |
 | Copilot | `.github/copilot-instructions.md` | no |
 | Windsurf | `.windsurfrules` | no |
@@ -580,7 +580,7 @@ It splits on one rule:
   a comment, a README or a mock. Only an agent reading it can tell which,
   or whether the assertions match the bullets.
 
-Want a blocking gate? Four checks need no judgement and are a few lines
+Want a blocking gate? Six checks need no judgement and are a few lines
 of shell:
 
 - a requirement whose words appear nowhere,

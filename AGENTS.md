@@ -7,7 +7,7 @@ in here.
 Tests: `node --test specs/*.lazyspec.test.js`. `sh sandbox/run.sh`
 builds a throwaway consumer repository and exercises every scenario
 against it. There is no gate and no build.
-Nothing here is a program. It is two skills, one standing instruction,
+Nothing here is a program. It is three skills, one standing instruction,
 and a notice every specification carries.
 
 This is the file every agent reads. Editors that look for a name of their
