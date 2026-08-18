@@ -23,7 +23,8 @@ is one: which files count, and what each set is for. A requirement is a
 
 **It is married to a test repeating that text word for word, in the one
 file naming the specification and `lazyspec`.** Spell both the way this
-repository spells test names:
+repository spells test names, never as a literal `.lazyspec.` - some
+languages cannot put a dot in a name:
 
 ```
 billing.lazyspec.md        ## Refunds Never Exceed What Was Captured
