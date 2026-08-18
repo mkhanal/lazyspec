@@ -149,8 +149,8 @@ or a documentation edit changes nothing the software does - say so and
 move on.
 
 Where you are matters here, and only here. Work in progress is allowed to
-run ahead of its requirements, because requirements are written late on
-purpose, so "not specified yet" is worth reporting but is not a failure.
+run ahead of its requirements, because each one is written when it
+becomes known and not before, so "not specified yet" is worth reporting but is not a failure.
 On a pull request it is a failure: the behaviour is known by then, so the
 requirement is owed.
 

@@ -44,10 +44,9 @@ cannot be tested, mark it `## Name <!-- no-test: why -->`.
 one only through `/lazyspec`, which updates its tests in the same edit,
 and never alongside unrelated work. Say when you have changed one.
 
-**Only write a requirement once you know what the code does.** The other
-direction is loose on purpose: code and tests may run ahead while you are
-still working that out. The requirement catches up once you know. Write
-it then, and leave it alone.
+**Write each requirement once it is known**, which is usually partway
+through rather than at either end. Code and tests may run ahead; the
+requirement catches up. Write it then, and leave it alone.
 
 **Before finishing any task, check and report both.**
 `/lazyspec-validate` does it for you.

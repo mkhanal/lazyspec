@@ -1,9 +1,60 @@
 # lazyspec
 
-Let the agent experiment. Write the requirement once you know. Then make
-it the one file your agents do not rewrite in passing.
+Write each requirement the moment it is known — and you will know them
+one at a time, as the build goes.
 
-## Does this sound familiar
+Not up front, where you would be guessing. Not all at the end, where you
+would be transcribing. A specification accretes: something settles, you
+write it down, it stops moving.
+
+Each one works twice. Written, it is the **input** — hand it to the agent
+as the thing to satisfy. Kept, it is a **harness** — the thing already
+settled cannot drift without somebody deciding it should.
+
+## In short
+
+- A requirement is a `## ` heading in a `*.lazyspec.md` file. Its text is
+  its identifier.
+- Its test declares itself by that text, word for word, in the file
+  sharing the specification's stem.
+- `billing.lazyspec.md` is married by `billing.lazyspec.test.ts`. The
+  name marries them, so either file can live anywhere.
+- Reword the requirement and its test is orphaned at once, loudly.
+- Write each requirement once it is known, which is usually partway
+  through the build rather than at either end. Then keep it still.
+- A specification is changed only through `/lazyspec`.
+- Nothing to run: no program, no gate, no build.
+
+## Why not one of the others
+
+Most spec-driven tooling aims at the hour you start something: specify,
+plan, tasks, code. That is the build phase, and it is the easy half.
+Everyone is paying attention and the specification is fresh, because it
+was written twenty minutes ago.
+
+The hard half is the eighteen months afterwards, when an agent changes
+the code and nothing tells anybody the specification stopped being true.
+
+| | spec-first tools | lazyspec |
+|---|---|---|
+| when you write it | before the code | once the behaviour is known |
+| what it optimises | generating the first version | noticing the hundredth has drifted |
+| drift detection | none. the specification is an input, never checked again | a reworded requirement orphans its test immediately |
+| being wrong early | a specification written before anyone understood the problem, then quietly abandoned | costs nothing, you had not written it yet |
+| what it produces | plans, tasks, sometimes code | nothing. it only checks |
+
+Behaviour-driven development got the binding right and paid for it in
+glue nobody wanted to maintain. Spec-first agent tools got the
+generation right and stopped checking the specification the moment it
+produced code.
+
+This takes the binding, drops the glue, and moves the writing to after
+you know the answer. It does less than any of them, and it keeps working
+longer.
+
+## Why
+
+Sound familiar?
 
 - The agent changed a test instead of fixing the code, and the suite went
   green.
@@ -12,25 +63,36 @@ it the one file your agents do not rewrite in passing.
 - Spec-driven development felt like writing fiction, because nobody knew
   the behaviour yet.
 
-## Why
-
 Two failures, opposite directions:
 
-- **Specify first and you spend the LLM's best trait before you have
-  anything.** Agents are good at trying things: build it, run it, throw
-  it away. Behaviour written down before anyone understands it is wrong
-  by Thursday.
-- **Specify last and the agent rewrites your requirements to match its
+- **Specify everything first and you spend the LLM's best trait before
+  you have anything.** Agents are good at trying things: build it, run
+  it, throw it away. Behaviour written down before anyone understands it
+  is wrong by Thursday.
+- **Leave it to the agent and it rewrites requirements to match its
   code.** It edits requirements as readily as tests. The suite stays
   green. Nothing raises a hand. The specification now describes the
   implementation, which means it describes nothing.
 
-lazyspec takes both:
+The way out is neither end of that. **Write each requirement when it is
+known, and most become known while you build.** Some are settled before a
+line of code — you had the conversation, the shape was obvious. Most
+firm up three commits in. A few never do, and never get written.
 
-- Specify **late**, once the behaviour is known.
-- **Lock** the specification: say so in the file, say so in the standing
-  rules your agents load, and check it afterwards. Three places, one
-  rule, so no agent rewords a requirement to match its code.
+So:
+
+- **Write it when it is known**, one requirement at a time.
+- **Marry it to a test by name**, so a requirement and its proof cannot
+  drift apart quietly.
+- **Keep it**: say so in the file, say so in the standing rules your
+  agents load, and check it afterwards. Three places, one rule, so no
+  agent rewords a requirement to make its path work.
+
+And then the payoff, which is the point of the rest: **people read the
+specification instead of the logic.** That is where the promise lives, so
+that is where attention belongs — and it stays worth reading, because a
+requirement cannot quietly become a description of whatever was built.
+Ordinary code review still applies, for everything it is actually for.
 
 ## What you write
 
@@ -351,7 +413,7 @@ is the honest maximum, and it is what is left.
 Nothing changes until a requirement needs to move.
 
 - **Building something new?** Work normally. Experiment, rewrite, throw
-  it away. Requirements are written late on purpose.
+  it away. A requirement is written when it settles, not before.
 - **Behaviour is settled?** Run `/lazyspec`. It writes the requirement,
   unlocks, updates the tests in the same window, runs your suite, locks
   again.
@@ -392,8 +454,8 @@ files, often different commits, and the suite passes either way.
 
 Keep a gate to those four. One that decides which file is a test is
 guessing at conventions it cannot see. Run it pre-push, not pre-commit:
-requirements are written late, so the commits made while finding the
-behaviour should not have to satisfy one.
+a requirement is written when it settles, so the commits made while
+finding that out should not have to satisfy one.
 
 ## What it does not do
 
