@@ -103,8 +103,16 @@ somebody asks "which one covers this?"
 
 ## Install
 
-**Claude Code and Cursor** take it as a plugin. This carries the skills
-*and* the guard, and registers the hook for you:
+**The instruction is the install.** Paste `INSTRUCTION.md` where your
+agent reads it every task, ignore the unlock file, and you are done — see
+**Then two things** below. That much works on every agent, and for many
+teams it is the whole of it.
+
+Everything after that is optional hardening. Read **Instruction, guard,
+or both** before deciding you want it.
+
+**Claude Code and Cursor** take the lot as a plugin — both skills, the
+guard, and the hook registered for you:
 
 ```
 /plugin marketplace add mkhanal/lazyspec
@@ -240,6 +248,53 @@ the work.
 
 Without a hook your agent is told rather than stopped, and
 `/lazyspec-validate` catches the edit afterwards.
+
+## Instruction, guard, or both
+
+Three ways to run this, and the first is not a lesser version of the
+others.
+
+**Instruction only.** Paste `INSTRUCTION.md` and stop there.
+
+- Works on every agent and every model. Nothing to install, no state, no
+  cleanup, no hook to keep current.
+- Reported to work well in practice: agents follow a clear standing
+  instruction most of the time.
+- Fails quietly when it fails. A cheap model, a compacted context, or a
+  subagent that never loaded your instruction has nothing stopping it.
+
+**Instruction plus the check.** Add `/lazyspec-validate` before you
+finish, and the three settled searches to CI.
+
+- Still works everywhere. Costs one CI step.
+- Catches everything the guard would, one step later: at review rather
+  than at the moment of writing.
+- **The best value for most teams**, because it needs no hook and misses
+  nothing that reaches a pull request.
+
+**Instruction plus the guard.** Add the hook as well.
+
+- Only Claude Code, Cursor and opencode.
+- Refuses in the moment, deterministically, including from a subagent
+  that never read a word of your instruction. That is its real value.
+- Costs friction. It matches on patterns rather than parsing, so it
+  refuses honest work that merely *mentions* a specification in a shell
+  command: writing this README, a commit message quoting a requirement, a
+  script whose path argument happens to be a specification. Building
+  lazyspec itself, the guard refused legitimate work six times in a
+  single session.
+- Roughly a third of `lazyspec-guard` exists to manage the window the
+  guard itself needs.
+
+**Start with the instruction.** Add the check when you have a pull
+request worth gating. Add the guard when you are running agents you did
+not personally prompt — fleets, subagents, scheduled jobs — or when a
+silent requirement edit would genuinely hurt.
+
+The order matters: the instruction is what makes an agent *write the
+test*. The guard only stops a write. No amount of guard produces a
+married test, and no amount of hook substitutes for the sentence that
+tells an agent what a requirement is.
 
 ## Using it day to day
 
