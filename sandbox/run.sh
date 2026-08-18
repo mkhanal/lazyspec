@@ -10,7 +10,11 @@
 
 SRC=$(cd "$(dirname "$0")/.." && pwd)
 DEMO=$SRC/sandbox/demo
-NOTICE='<!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->'
+NOTICE='> **lazyspec.** Humans edit freely. Agents change this only through
+> `/lazyspec`, with its tests, in one edit.
+>
+> Each `##` heading is one requirement. Its test repeats that heading as
+> its own name — to find it, search the tests for that text.'
 pass=0; fail=0
 
 ok()  { pass=$((pass + 1)); printf '    ok    %s\n' "$1"; }
@@ -178,21 +182,23 @@ else ok "nothing executable is installed"; fi
 # --------------------------------------------------------- B. the notice
 
 sect "B. the notice travels in the file"
-first=$(head -1 "$DEMO/services/api/specs/billing.lazyspec.md")
-is "a specification opens with the notice" "$first" "$NOTICE"
-case $first in *"/lazyspec"*) ok "it names /lazyspec" ;; *) bad "no /lazyspec" ;; esac
-case $first in *[Aa]gents*) ok "it binds agents" ;; *) bad "does not say agents" ;; esac
-case $first in *[Hh]umans*) ok "and leaves people alone" ;; *) bad "does not free humans" ;; esac
+head=$(sed -n '1,5p' "$DEMO/services/api/specs/billing.lazyspec.md")
+is "a specification opens with the header" "$head" "$NOTICE"
+case $head in *"/lazyspec"*) ok "it names /lazyspec" ;; *) bad "no /lazyspec" ;; esac
+case $head in *[Aa]gents*) ok "it binds agents" ;; *) bad "does not say agents" ;; esac
+case $head in *[Hh]umans*) ok "and leaves people alone" ;; *) bad "does not free humans" ;; esac
+case $head in *"one requirement"*) ok "it says what a requirement is" ;; *) bad "no definition" ;; esac
+case $head in *"search the tests"*) ok "and how to find its test" ;; *) bad "no way to find tests" ;; esac
 
 unmarked=0
 for f in $(find "$DEMO" -name '*.lazyspec.md'); do
-  head -1 "$f" | grep -q 'lazyspec:' || unmarked=$((unmarked + 1))
+  head -1 "$f" | grep -q 'lazyspec' || unmarked=$((unmarked + 1))
 done
 is "every specification carries one" "$unmarked" "0"
 
 mkdir -p "$DEMO/copied"
 cp "$DEMO/services/api/specs/billing.lazyspec.md" "$DEMO/copied/"
-is "and it survives being copied anywhere" "$(head -1 "$DEMO/copied/billing.lazyspec.md")" "$NOTICE"
+is "and it survives being copied anywhere" "$(sed -n '1,5p' "$DEMO/copied/billing.lazyspec.md")" "$NOTICE"
 rm -rf "$DEMO/copied"
 
 # ------------------------------------------------- C. searching for proof

@@ -117,6 +117,12 @@ Ordinary code review still applies, for everything it is actually for.
 A specification is markdown. Each `## ` heading is one requirement.
 
 ```markdown
+> **lazyspec.** Humans edit freely. Agents change this only through
+> `/lazyspec`, with its tests, in one edit.
+>
+> Each `##` heading is one requirement. Its test repeats that heading as
+> its own name — to find it, search the tests for that text.
+
 # Refunds
 
 ## Refunds Never Exceed What Was Captured
@@ -142,6 +148,26 @@ describe('Refunds Never Exceed What Was Captured', () => {
 
 `sh sandbox/run.sh` builds a whole repository like this - in four
 languages - and checks every claim on this page against it.
+
+### The header does the work
+
+Those five lines at the top are not decoration. They are the only part of
+lazyspec that reaches **every** agent, because they travel in the file
+rather than in anybody's configuration.
+
+- **Nothing to install.** Copy a specification into a new repository and
+  the rule arrives with it.
+- **Read at the moment it matters.** An agent about to change a file has
+  just read it, so the rule lands while it is deciding — not at session
+  start, hundreds of messages earlier.
+- **It teaches, not just forbids.** An agent that never loaded your
+  instruction still learns from the file what a requirement is and how to
+  find the test that proves it. "Do not edit" would leave it stuck.
+- **It binds agents, not people.** Edit your own requirements by hand
+  whenever you like.
+
+`/lazyspec` writes it into every specification it creates, and
+`/lazyspec-validate` reports any specification missing one.
 
 ## How it binds
 

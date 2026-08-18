@@ -122,12 +122,20 @@ These are the steps.
    about, the way the others do. `covers` says what a set is for; the
    file's own opening says what this one is for.
 
-   Every specification opens with a notice. Copy the one the others use;
+   Every specification opens with a header. Copy the one the others use;
    if you are writing the first, it reads:
 
+   ```markdown
+   > **lazyspec.** Humans edit freely. Agents change this only through
+   > `/lazyspec`, with its tests, in one edit.
+   >
+   > Each `##` heading is one requirement. Its test repeats that heading
+   > as its own name — to find it, search the tests for that text.
    ```
-   <!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
-   ```
+
+   It teaches as well as forbids, which is the point: an agent that never
+   loaded your instruction still learns from the file what a requirement
+   is and how to find its proof.
 
    It travels inside the file rather than in anybody's configuration,
    which is what makes it reach every agent on every tool. Never remove

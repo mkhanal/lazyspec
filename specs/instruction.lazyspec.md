@@ -1,4 +1,8 @@
-<!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
+> **lazyspec.** Humans edit freely. Agents change this only through
+> `/lazyspec`, with its tests, in one edit.
+>
+> Each `##` heading is one requirement. Its test repeats that heading as
+> its own name — to find it, search the tests for that text.
 
 # The standing instruction
 
