@@ -34,3 +34,4 @@ CLAUDE.local.md
 .codex/log/
 .gemini/tmp/
 .continue/
+sandbox/install-demo/

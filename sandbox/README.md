@@ -5,11 +5,24 @@ test lazyspec the way somebody adopting it would meet it.
 
 ```
 sh sandbox/run.sh          # rebuild sandbox/demo and run every scenario
+sh sandbox/install.sh      # the manifests, the install routes, the paste
 sh sandbox/isolation.sh    # prove the demo is sealed off from this repo
 ```
 
-`sandbox/demo/` is gitignored and rebuilt each time. The scripts are
-committed; the demo is not.
+`sandbox/demo/` and `sandbox/install-demo/` are gitignored and rebuilt
+each time. The scripts are committed; the demos are not.
+
+`run.sh` starts from a repository that is already installed, because what
+it tests is the convention. `install.sh` starts from a stranger's
+repository that has never heard of lazyspec, because what it tests is
+everything that has to be true before a requirement can be written: that
+the manifests would resolve, that each route the README prints lands the
+skills where that agent looks, and that the paste `/lazyspec-setup`
+performs is verbatim, idempotent and leaves the team's own rules alone.
+
+Neither runs a test runner. They check names, files and text - the things
+lazyspec is made of. The language claims behind them were verified by
+running `go test`, `javac`, `pytest` and `unittest` by hand.
 
 ## What the demo is
 
