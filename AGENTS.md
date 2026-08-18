@@ -42,9 +42,9 @@ Mark it `## Name <!-- no-test: why -->`.
 only there, with its tests in the
 same edit, never beside unrelated work, and say that you did.
 
-**Write each requirement once it is known**, usually partway through
-rather than at either end. Code and tests may run ahead; the requirement
-catches up. Then leave it alone.
+**Write each requirement once it is known** - run `/lazyspec` to write
+it. Code and tests may run ahead; the requirement catches up. Then leave
+it alone.
 
 **Before finishing any task, check and report both.** `/lazyspec-validate`
 does it for you.

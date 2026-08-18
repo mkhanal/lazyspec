@@ -48,6 +48,10 @@ describe('The Standing Instruction Names /lazyspec And /lazyspec-validate', () =
 
   it('names /lazyspec as the way into a specification', () => {
     assert.match(instruction, /\/lazyspec\b/);
+    // Naming it as a condition - "locked unless you are in /lazyspec" -
+    // leaves an agent that has just learnt a requirement with nothing to
+    // do. It has to be named as the action too.
+    assert.match(instruction, /run `\/lazyspec`/);
   });
 
   it('names /lazyspec-validate as the way to check', () => {
