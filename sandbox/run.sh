@@ -257,6 +257,27 @@ rm -f "$SRC/.lazyspec-unlock.notreal"
 
 # ----------------------------------------------- E. the marriage searches
 
+sect "E1. the notice in the file"
+NOTICE='<!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->'
+for f in services/api/specs/billing.lazyspec.md services/ledger/specs/postings.lazyspec.md; do
+  { printf '%s\n\n' "$NOTICE"; cat "$DEMO/$f"; } > "$DEMO/$f.new"
+  mv "$DEMO/$f.new" "$DEMO/$f"
+done
+first=$(head -1 "$DEMO/services/api/specs/billing.lazyspec.md")
+is "a specification opens with the notice" "$first" "$NOTICE"
+case $first in *"/lazyspec"*) ok "the notice names /lazyspec" ;; *) bad "no /lazyspec" ;; esac
+case $first in *[Aa]gents*) ok "it binds agents" ;; *) bad "does not say agents" ;; esac
+case $first in *[Hh]umans*) ok "and leaves people alone" ;; *) bad "does not free humans" ;; esac
+unmarked=0
+for f in $(find "$DEMO" -name '*.lazyspec.md'); do
+  head -1 "$f" | grep -q 'lazyspec:' || unmarked=$((unmarked + 1))
+done
+is "a specification without it is reportable" "$unmarked" "2"
+is "the notice does not unlock anything" "$(guard "$(edit services/api/specs/billing.lazyspec.md)")" 2
+# The notice joins the baseline here, so the sections below still start
+# from a clean tree.
+git add -A >/dev/null 2>&1 && git commit -qm "notice" >/dev/null 2>&1
+
 sect "E. searching for proof"
 find_proof() {
   git grep --untracked -l -F -e "$1" -- . 2>/dev/null \

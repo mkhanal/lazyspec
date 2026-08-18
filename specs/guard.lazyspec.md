@@ -1,3 +1,5 @@
+<!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
+
 # lazyspec-guard
 
 The one executable lazyspec ships. A coding agent calls it before a

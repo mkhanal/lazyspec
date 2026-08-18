@@ -1,3 +1,5 @@
+<!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
+
 # The standing instruction
 
 `INSTRUCTION.md` is pasted into whatever the agent loads on every task.

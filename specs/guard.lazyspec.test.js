@@ -165,9 +165,15 @@ describe('Each Flow Opens Its Own Window', () => {
 
   it('does not refuse a shell call that writes a window', () => {
     const cwd = tmp();
-    const open = "printf '%s\\n' specs/billing.lazyspec.md > .lazyspec-unlock.alpha";
-    assert.equal(guard(bash(open), { cwd }).status, 0);
-    assert.equal(guard(bash('echo specs/a.lazyspec.md >.lazyspec-unlock'), { cwd }).status, 0);
+    for (const open of [
+      "printf '%s\\n' specs/billing.lazyspec.md > .lazyspec-unlock.alpha",
+      'echo specs/a.lazyspec.md >.lazyspec-unlock',
+      // JSON escapes the quotes, so the redirect reads > \".lazyspec-unlock\"
+      'printf x specs/a.lazyspec.md > ".lazyspec-unlock.$$"',
+      "{ echo specs/a.lazyspec.md; } > './.lazyspec-unlock.beta'",
+    ]) {
+      assert.equal(guard(bash(open), { cwd }).status, 0, open);
+    }
   });
 });
 

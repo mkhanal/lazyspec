@@ -59,6 +59,18 @@ the way in.
    Its filename decides which test file proves it, so if a test for this
    behaviour already exists, name the specification after that file.
 
+   Every specification opens with a notice saying it is locked. Copy the
+   one the others use; if you are writing the first, it reads:
+
+   ```
+   <!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
+   ```
+
+   This is the only part of lazyspec that reaches every agent on every
+   tool, because it travels inside the file rather than in anybody's
+   configuration. Never remove it, and never write a specification
+   without it.
+
 3. **Open a window of your own, naming only what you are about to edit.**
 
    ```

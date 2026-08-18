@@ -77,7 +77,9 @@ payload=$(cat)
 # Opening a window is never refused, or there would be no way to open a
 # narrow one: naming a specification inside a redirect is exactly what
 # the shell rule below refuses.
-printf '%s' "$payload" | grep -qE '>[[:space:]]*"?'"'"'?\.?/?\.lazyspec-unlock' && exit 0
+# Whatever sits between the redirect and the name - a quote, a backslash
+# JSON added escaping that quote, ./ - is not worth enumerating.
+printf '%s' "$payload" | grep -qE '>[[:space:]]*[^[:space:]]*\.lazyspec-unlock' && exit 0
 
 # Agents run side by side in one working tree, so one window per flow:
 # any file whose name starts .lazyspec-unlock is one. A flow removes the
