@@ -1,7 +1,7 @@
 # lazyspec
 
-Let the agent experiment. Write the requirement once you know. Then lock
-it, so nothing can quietly rewrite it.
+Let the agent experiment. Write the requirement once you know. Then say,
+in the file itself, that it is not to be rewritten in passing.
 
 ## Does this sound familiar
 
@@ -28,7 +28,8 @@ Two failures, opposite directions:
 lazyspec takes both:
 
 - Specify **late**, once the behaviour is known.
-- **Lock** the specification, so no agent edits one in passing.
+- **Mark** every specification as changed only through `/lazyspec`, so no
+  agent rewords one to match its code.
 
 ## What you write
 
@@ -104,15 +105,9 @@ somebody asks "which one covers this?"
 ## Install
 
 **The instruction is the install.** Paste `INSTRUCTION.md` where your
-agent reads it every task, ignore the unlock file, and you are done — see
-**Then two things** below. That much works on every agent, and for many
-teams it is the whole of it.
+agent reads it every task and you are done. That works on every agent.
 
-Everything after that is optional hardening. Read **Instruction, guard,
-or both** before deciding you want it.
-
-**Claude Code and Cursor** take the lot as a plugin — both skills, the
-guard, and the hook registered for you:
+**Claude Code and Cursor** take the skills as a plugin:
 
 ```
 /plugin marketplace add mkhanal/lazyspec
@@ -123,7 +118,6 @@ guard, and the hook registered for you:
 
 ```
 git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
-cp /tmp/lazyspec/lazyspec-guard .
 mkdir -p .claude/skills .agents/skills
 cp -R /tmp/lazyspec/skills/. .claude/skills/
 cp -R /tmp/lazyspec/skills/. .agents/skills/
@@ -136,11 +130,11 @@ opencode, `.agents/skills/` for Codex and opencode.
 `https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
 it."*
 
-### Then two things
+### Then one thing
 
-No installer can do either one.
+No installer can do it.
 
-**1. Paste `INSTRUCTION.md` where your agent reads it every task.**
+**Paste `INSTRUCTION.md` where your agent reads it every task.**
 
 ```
 <!-- lazyspec:begin -->
@@ -155,44 +149,15 @@ at it, never a second copy — see the table below.
   `AGENTS.md` looks set up and is not. One line, `@AGENTS.md`, fixes it.
 - Paste it, do not link to it. An instruction fetched on request is one
   that will not be followed.
-- A plugin cannot do this. Plugins carry skills and hooks, not files in
-  your repository.
+- A plugin cannot do this. Plugins carry skills, not files in your
+  repository.
 - **Already keep a `CONSTITUTION.md`, engineering principles, or house
   rules your agents load?** That is the right home. Paste it there and
-  point `AGENTS.md` at it. Lock that document too, by naming it in
-  `.lazyspec-locked`.
-
-This is also the only thing restraining an agent with no pre-tool hook.
-It carries the lock protocol — name what you are about to change in a
-`.lazyspec-unlock.<unique>` file, change it, delete only that one — so
-that agents which cannot be stopped are at least told, in the same words
-every time.
-
-**2. Ignore the unlock file.**
-
-```
-echo '.lazyspec-unlock' >> .gitignore
-```
-
-Commit it once and the guard is off forever, silently.
-
-There is no third step. `.lazyspec.yaml` is optional, and `/lazyspec`
-offers to write it when you make your first specification.
+  point `AGENTS.md` at it.
 
 ### Check it worked
 
-```
-echo '{"tool_name":"Edit","tool_input":{"file_path":"a.lazyspec.md"}}' \
-  | sh lazyspec-guard ; echo "exit $?"     # 2, with a message
-
-echo '{"tool_name":"Edit","tool_input":{"file_path":"a.ts"}}' \
-  | sh lazyspec-guard ; echo "exit $?"     # 0, silent
-```
-
-On the plugin route the guard lives inside the plugin, so ask your agent
-to edit a `*.lazyspec.md` and watch it be refused instead.
-
-Then, in a fresh session:
+In a fresh session:
 
 - `/lazyspec` and `/lazyspec-validate` appear in its skill list.
 - Ask *"where do this repository's requirements live?"* It answers at
@@ -200,110 +165,54 @@ Then, in a fresh session:
   nothing else here matters.
 - Ask for a behaviour change. It reaches for `/lazyspec`.
 
-## Locking other files
-
-`*.lazyspec.md` is locked by default. To lock anything else you treat as
-a specification — a `CONSTITUTION.md`, an architecture decision record,
-a set of documents inherited from spec-kit — put one extended regular
-expression on the first line of `.lazyspec-locked`:
-
-```
-specs/[^/]*/spec\.md
-```
-
-- It **adds to** the built-in pattern, so `*.lazyspec.md` cannot be
-  unlocked by a typo.
-- It lives in your repository, so updating lazyspec cannot clobber it.
-  That matters on the plugin route, where `lazyspec-guard` is not yours
-  to edit.
-- Unlike `.lazyspec-unlock`, **commit it**.
-
-**Migrating from another spec tool** needs nothing else from us. Point
-your agent at `/lazyspec` and the documents you already have; cutting
-prose into `## ` headings and marrying each to a test is what that skill
-describes. `specs:` in `.lazyspec.yaml` is a glob, so it finds your files
-whatever they are called.
-
-The one thing no tool can do for you is decide a requirement is true. A
-requirement converted without checking that a test proves it is exactly
-the thing this exists to prevent, so convert one specification at a time,
-as you touch them.
-
 ## Agent support
 
-Three capabilities. Every agent has the first, which is the one that does
-the work.
+The notice reaches every agent, because it is in the file. The
+instruction reaches every agent, because you paste it. Skills reach four.
 
-| agent | instruction file | skills | can refuse a write |
-|---|---|---|---|
-| Claude Code | `CLAUDE.md`, holding `@AGENTS.md` | `.claude/skills/` | **yes**, the plugin wires it |
-| Cursor | `.cursor/rules/lazyspec.mdc`, `alwaysApply: true` | `.cursor/skills/` | **yes**, the plugin wires it |
-| opencode | `AGENTS.md` | `.claude/skills/`, `.agents/skills/` | **yes**, via a `tool.execute.before` plugin you write |
-| Codex | `AGENTS.md` | `.agents/skills/` | no |
-| Gemini CLI | `GEMINI.md` | no | no |
-| Copilot | `.github/copilot-instructions.md` | no | no |
-| Windsurf | `.windsurfrules` | no | no |
-| Cline, Roo | `.clinerules` | no | no |
-| Aider | `CONVENTIONS.md`, `--read CONVENTIONS.md` | no | no |
+| agent | instruction file | skills |
+|---|---|---|
+| Claude Code | `CLAUDE.md`, holding `@AGENTS.md` | `.claude/skills/` |
+| Cursor | `.cursor/rules/lazyspec.mdc`, `alwaysApply: true` | `.cursor/skills/` |
+| opencode | `AGENTS.md` | `.claude/skills/`, `.agents/skills/` |
+| Codex | `AGENTS.md` | `.agents/skills/` |
+| Gemini CLI | `GEMINI.md` | no |
+| Copilot | `.github/copilot-instructions.md` | no |
+| Windsurf | `.windsurfrules` | no |
+| Cline, Roo | `.clinerules` | no |
+| Aider | `CONVENTIONS.md`, `--read CONVENTIONS.md` | no |
 
-Without a hook your agent is told rather than stopped, and
-`/lazyspec-validate` catches the edit afterwards.
+Where the skills do not reach, `/lazyspec` and `/lazyspec-validate` are
+still two documents you can point an agent at by path.
 
-## Instruction, guard, or both
+## Why there is no hook
 
-Three ways to run this, and the first is not a lesser version of the
-others.
+There was one: a pre-tool hook that refused writes to a specification. It
+is gone, and the reason is worth stating, because it is the same reason
+this tool exists at all.
 
-**Instruction only.** Paste `INSTRUCTION.md` and stop there.
+- It ran on **three agents out of nine**. On the rest it was never
+  invoked, so a repository could carry the whole apparatus and be
+  protected by nothing.
+- It was **tested on one**. Cursor's payload shape came from
+  documentation, never from a running Cursor; opencode needed a shim
+  nobody had written.
+- It **refused honest work**. Matching patterns rather than parsing, it
+  blocked writing a README that quoted a requirement, a commit message
+  that named one, a script whose argument happened to be a specification.
+  Building lazyspec, it refused legitimate work six times in one session.
+- It could be **opened by the agent it restrained**, which could create
+  its own unlock file and carry on.
 
-- Works on every agent and every model. Nothing to install, no state, no
-  cleanup, no hook to keep current.
-- Reaches further than you would think. Subagents inherit the whole
-  `CLAUDE.md` hierarchy, and a project `CLAUDE.md` is re-read from disk
-  after a compaction — so neither subagents nor a long session lose it.
-- Reported to work well in practice, and the mechanism explains why: an
-  instruction loaded on every task is what makes an agent write the test.
-- Fails quietly when it fails, and it fails as a probability rather than
-  a category: a model that reads the rule and does not follow it.
+None of that is flakiness. It did exactly what it was written to do. The
+problem is that it could not be *guaranteed*, and a check that looks like
+protection while providing none is worse than no check: it is a false
+indicator that people build habits on.
 
-**Instruction plus the check.** Add `/lazyspec-validate` before you
-finish, and the three settled searches to CI.
-
-- Still works everywhere. Costs one CI step.
-- Catches everything the guard would, one step later: at review rather
-  than at the moment of writing.
-- **The best value for most teams**, because it needs no hook and misses
-  nothing that reaches a pull request.
-
-**Instruction plus the guard.** Add the hook as well.
-
-- Only Claude Code, Cursor and opencode.
-- Refuses in the moment, deterministically. An instruction is followed
-  most of the time; a hook is followed every time. That difference is the
-  whole of its value, and it is a smaller difference than it sounds.
-- Its reach is narrower than you might expect, because the instruction
-  already covers subagents and compaction. What is left is a model that
-  reads the rule and ignores it, and agents nobody configured — a
-  teammate's unconfigured editor, an automation started with a bare
-  prompt, a tool with nowhere to paste an instruction.
-- Costs friction. It matches on patterns rather than parsing, so it
-  refuses honest work that merely *mentions* a specification in a shell
-  command: writing this README, a commit message quoting a requirement, a
-  script whose path argument happens to be a specification. Building
-  lazyspec itself, the guard refused legitimate work six times in a
-  single session.
-- Roughly a third of `lazyspec-guard` exists to manage the window the
-  guard itself needs.
-
-**Start with the instruction.** Add the check when you have a pull
-request worth gating. Add the guard when you want a mechanism instead of
-a probability: many contributors, mixed models and editors, or a
-repository where one silently reworded requirement would genuinely hurt.
-
-The order matters: the instruction is what makes an agent *write the
-test*. The guard only stops a write. No amount of guard produces a
-married test, and no amount of hook substitutes for the sentence that
-tells an agent what a requirement is.
+So what is left is honest about what it is. A notice every agent reads,
+an instruction every agent loads, and a check that finds what went wrong
+afterwards. None of them stops a determined agent. All of them work
+everywhere, and none of them claims more than it does.
 
 ## Using it day to day
 
@@ -315,76 +224,8 @@ Nothing changes until a requirement needs to move.
   unlocks, updates the tests in the same window, runs your suite, locks
   again.
 - **Finishing a task?** Run `/lazyspec-validate`.
-- **Editing a specification any other way?** The guard refuses you.
-
-## Locking
-
-**A lock is not something you do. It is the resting state.** A file is
-locked by *being* a specification — there is no command to lock one, and
-no state stored anywhere.
-
-**Unlocking is one file, it names what it opens, and it belongs to one
-agent.** `/lazyspec` writes the specification it is about to edit into a
-window of its own, makes the change, and deletes it:
-
-```
-printf '%s\n' specs/billing.lazyspec.md > .lazyspec-unlock.<your id>
-… the edit, and its tests …
-rm -f .lazyspec-unlock.<your id>    # always, even on abort
-```
-
-- **It names what it opens.** Only calls naming a listed path get
-  through, so a window opened for one specification cannot reach its
-  neighbour, and one a crashed session left behind leaks that path rather
-  than the repository. An empty file opens everything — that is what a
-  bare `touch` means.
-- **One window per agent.** Any file starting `.lazyspec-unlock` is a
-  window. Run agents and subagents in parallel and each gets its own, so
-  one finishing never shuts another's, and one opening never widens
-  another's.
-- **A forgotten window closes itself.** Four hours without being written
-  to and it stops counting. Sessions drop, logins expire, laptops sleep —
-  none of that should leave a specification writable for good, and no
-  human should have to remember to tidy up. Reopen it if you are somehow
-  still going.
-
-Nothing here needs maintaining. The window survives context compaction,
-because the guard reads the file rather than the agent's memory of it; it
-expires on its own if the session dies; and a leftover one is inert
-rather than dangerous.
-
-Which is why `.gitignore` matters. Commit `.lazyspec-unlock` once and
-every checkout is unlocked forever, with nothing to notice.
-`/lazyspec-validate` reports a lock left open, and whether it is
-committed.
-
-**Be clear about what this is.** It is a procedural control, not a
-permission boundary:
-
-- **Not file permissions, and not encryption.** Nothing on disk changes.
-- **Not a defence against people.** You can still open the file in your
-  editor.
-- **Not proof against a determined agent.** The window is opened by the
-  same agent it restrains, and a script that writes a specification
-  without naming it is not something a pattern can see.
-
-What it does is turn a silent edit into a deliberate one that leaves
-evidence — and that is the whole of the problem, because the failure this
-exists to stop is casual, not adversarial.
-
-`lazyspec-guard` is the hook that does the refusing:
-
-- **Refused:** editing tools, and shell commands that redirect, edit in
-  place or delete. An agent denied one reaches for the other.
-- **Allowed:** reading with `cat`, `grep`, `sed`.
-- **Allowed:** writing a file whose *content* merely mentions a
-  specification. A tool is judged by the path it writes to, nothing else.
-- **Refused:** any shell command running `python`, `node`, `perl` or
-  `ruby` near a specification. A script can write anything, and patterns
-  cannot tell.
-
-`/lazyspec` is the only thing that opens the window, and it always closes
-it. That is the only thing worth defending mechanically.
+- **Editing a specification any other way?** The notice on its first line
+  says not to, and `/lazyspec-validate` will find it if you do.
 
 ## Checking
 
@@ -428,9 +269,8 @@ behaviour should not have to satisfy one.
 ## Uninstall
 
 - Plugin: `/plugin uninstall lazyspec`.
-- By hand: delete `lazyspec-guard`, the skills, the hook block.
-- Either way: delete `.lazyspec.yaml`, the pasted instruction and the
-  `.gitignore` line.
+- By hand: delete the skills.
+- Either way: delete `.lazyspec.yaml` and the pasted instruction.
 
 Your specifications stay and their tests keep passing. The marriage was
 never enforced by anything but the tests.
@@ -446,9 +286,8 @@ is changed the way one in yours is, and refused the same way.
 INSTRUCTION.md              the standing instruction. the product.
 skills/lazyspec/            the only way to change a specification
 skills/lazyspec-validate/   the check
-lazyspec-guard              the one program
 specs/                      this repository's own requirements
-sandbox/                    a throwaway consumer repo, and 48 scenarios
+sandbox/                    a throwaway consumer repo, and its scenarios
 ```
 
 **Tests**
@@ -461,8 +300,8 @@ sh sandbox/isolation.sh                # proves the sandbox is sealed off
 
 No gate, no build.
 
-**Changing anything here.** Run `/lazyspec`; the guard refuses you
-otherwise. Run `/lazyspec-validate` before you finish.
+**Changing anything here.** Run `/lazyspec`. Run `/lazyspec-validate`
+before you finish.
 
 **On Windows**, `.claude/skills/*` are symlinks into `skills/`. Git only
 recreates them with `git config --global core.symlinks true` set before
@@ -472,7 +311,9 @@ else here is plain text and `sh`.
 
 **What is specified**, and why only these two:
 
-- `specs/guard.lazyspec.md` — what the hook refuses and lets through.
+- `specs/format.lazyspec.md` — that every specification carries its
+  notice. It is the one thing that reaches every agent, so it is the one
+  thing worth a test.
 - `specs/instruction.lazyspec.md` — the shipped writing's budget and
   shape. "Under two thousand characters" is a requirement, not a
   preference: `INSTRUCTION.md` is read on every task forever, and a test
@@ -481,10 +322,9 @@ else here is plain text and `sh`.
 The skills and this README are ordinary writing. Change them without
 ceremony.
 
-**It is a fair test of the guard.** This README, the instruction and the
-tests are full of the words `billing.lazyspec.md`, and all of them stay
-writable. If that regresses, this repository stops being editable before
-yours does.
+**Nothing here is a program.** There is no build, no gate, and nothing to
+install to work on it — which is the same claim the tool makes about
+itself, so it had better stay true.
 
 ## Why a name and not a link
 

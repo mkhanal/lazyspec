@@ -75,14 +75,10 @@ Report these as they stand. They need no judgement.
 - **Moved alone.** A specification changed and no file containing its
   requirements changed with it. A specification takes its tests with it.
 - **Unmarked.** A specification whose first line is not the lazyspec
-  notice. It is the only thing telling an agent with no hook that this
-  file is not ordinary, so a specification without it is unguarded on
-  most tools. Say which, and put the notice back through `/lazyspec`.
-- **The lock is open.** A `.lazyspec-unlock` exists. Outside a `/lazyspec`
-  flow that is a window somebody failed to close, and until it goes every
-  specification it names can be edited without anything refusing. Say so,
-  and say whether it is committed - a committed one is the lock switched
-  off permanently.
+  notice. It is the only thing telling an agent that this file is not
+  ordinary, and the only part of lazyspec that needs no install, so a
+  specification without it is unmarked everywhere. Say which, and put the
+  notice back through `/lazyspec`.
 
 ## What you settle
 

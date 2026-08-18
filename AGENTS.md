@@ -7,9 +7,8 @@ in here.
 Tests: `node --test specs/*.lazyspec.test.js`. `sh sandbox/run.sh`
 builds a throwaway consumer repository and exercises every scenario
 against it. There is no gate and no build.
-`lazyspec-guard` is the only program, and `specs/guard.lazyspec.md` says
-what it does. Everything else is writing: two skills, one standing
-instruction.
+Nothing here is a program. It is two skills, one standing instruction,
+and a notice every specification carries.
 
 This is the file every agent reads. Editors that look for a name of their
 own get a short file that points here rather than a second copy.
@@ -40,13 +39,9 @@ large, and split its test file with it. If the code already has tests,
 name the specification after the file that proves it. If a requirement
 cannot be tested, mark it `## Name <!-- no-test: why -->`.
 
-**Changing a specification means updating its tests in the same edit,
-never alongside unrelated work.** Run `/lazyspec`.
-
-**Specifications are locked.** To change one, name it in a
-`.lazyspec-unlock.<unique>` file of your own, change it, then delete only
-that one - others may be working here. If nothing refuses you, do it
-anyway, and say so.
+**Every specification opens with a notice saying so. Respect it.** Change
+one only through `/lazyspec`, which updates its tests in the same edit,
+and never alongside unrelated work. Say when you have changed one.
 
 **Only write a requirement once you know what the code does.** The other
 direction is loose on purpose: code and tests may run ahead while you are

@@ -22,13 +22,9 @@ large, and split its test file with it. If the code already has tests,
 name the specification after the file that proves it. If a requirement
 cannot be tested, mark it `## Name <!-- no-test: why -->`.
 
-**Changing a specification means updating its tests in the same edit,
-never alongside unrelated work.** Run `/lazyspec`.
-
-**Specifications are locked.** To change one, name it in a
-`.lazyspec-unlock.<unique>` file of your own, change it, then delete only
-that one - others may be working here. If nothing refuses you, do it
-anyway, and say so.
+**Every specification opens with a notice saying so. Respect it.** Change
+one only through `/lazyspec`, which updates its tests in the same edit,
+and never alongside unrelated work. Say when you have changed one.
 
 **Only write a requirement once you know what the code does.** The other
 direction is loose on purpose: code and tests may run ahead while you are

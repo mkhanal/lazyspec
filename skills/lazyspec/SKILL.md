@@ -1,12 +1,12 @@
 ---
 name: lazyspec
-description: The only way to change a specification. Opens the lock, keeps a requirement and its test married, closes it again. Use when a requirement needs to be added, reworded or removed.
+description: The only way to change a specification. Keeps a requirement and its test married, in one edit. Use when a requirement needs to be added, reworded or removed.
 ---
 
 # /lazyspec
 
-Specifications are locked so that nothing edits one in passing. This is
-the way in.
+Every specification says, on its first line, that it is changed only
+through these steps. This is them.
 
 ## Steps
 
@@ -59,45 +59,23 @@ the way in.
    Its filename decides which test file proves it, so if a test for this
    behaviour already exists, name the specification after that file.
 
-   Every specification opens with a notice saying it is locked. Copy the
-   one the others use; if you are writing the first, it reads:
+   Every specification opens with a notice. Copy the one the others use;
+   if you are writing the first, it reads:
 
    ```
    <!-- lazyspec: agents change this only via /lazyspec, with its tests. Humans edit freely. -->
    ```
 
-   This is the only part of lazyspec that reaches every agent on every
-   tool, because it travels inside the file rather than in anybody's
-   configuration. Never remove it, and never write a specification
-   without it.
+   It travels inside the file rather than in anybody's configuration,
+   which is what makes it reach every agent on every tool. Never remove
+   it, and never write a specification without it.
 
-3. **Open a window of your own, naming only what you are about to edit.**
+3. **Make the change.**
 
-   ```
-   printf '%s\n' path/to/the.lazyspec.md > ".lazyspec-unlock.$$"
-   ```
-
-   The suffix must be unique to **this run of these steps**, not to you
-   and not to your session. One session opens and closes the lock many
-   times, and a subagent may be holding one while you work. `$$` is the
-   shell's own process id and needs no thought; a timestamp does as well.
-   Reuse an id and you will close a window somebody else is still using.
-
-   Name every file you will touch, one per line. The window opens for
-   those and nothing else, so a slip cannot reach a neighbouring
-   specification, and a window you fail to close leaks one path instead
-   of the whole repository. An empty file opens everything; use that only
-   when you genuinely do not yet know the filename.
-
-   `.lazyspec-unlock*` must be in `.gitignore`. Committed once, the lock
-   is off for good and nobody will notice.
-
-4. **Make the change.**
-
-5. **Marry the tests before you close the lock.** Every heading needs a
-   test whose name repeats its words exactly, in the one file named after
-   this specification - one file, so a specification being changed never
-   has to guess which tests change with it.
+4. **Marry the tests, in the same edit.** Every heading needs a test
+   whose name repeats its words exactly, in the one file named after this
+   specification - one file, so a specification being changed never has
+   to guess which tests change with it.
 
    Look at how this repository already names and runs its tests, and do
    the same. The test file has to be one the test runner picks up, and
@@ -108,16 +86,13 @@ the way in.
    Reword a heading and you reword its test. If a test fails, fix the
    code - never the requirement.
 
-6. **Check your work.** Every heading has its test, and the repository's
+5. **Check your work.** Every heading has its test, and the repository's
    own test command passes. Find that command; do not guess it.
 
-7. **Lock again**: delete the one window you made, and only that one.
-   Always, including when you give up part way. Leaving it costs less
-   than it used to - a window stops counting four hours after it was
-   written - but four hours is not nothing.
-
-8. **Report**: which headings you touched, which tests now prove them,
-   and what the test run did.
+6. **Report**, and say plainly that you changed a specification: which
+   headings you touched, which tests now prove them, and what the test
+   run did. Nothing enforces this but you, which is exactly why saying it
+   matters.
 
 ## Writing a requirement
 
@@ -136,5 +111,5 @@ Write less.
 
 ## Rules
 
-- The lock stays open for this one job and no longer.
 - Never change a specification in the same breath as unrelated work.
+- Never change one without saying you did.

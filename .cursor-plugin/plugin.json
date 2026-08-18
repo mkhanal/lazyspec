@@ -17,7 +17,5 @@
   "description": "Let the agent experiment, then write the requirement. Specifications are locked, so an agent can never rewrite your requirements to match what it built.",
   "skills": [
     "./skills"
-  ],
-  "//hooks": "Cursor's event names and payload differ from Claude Code's, so this is a separate file. The guard reads the payload with patterns rather than parsing it, and refuses anything it cannot reduce to a target path, so an unfamiliar payload shape errs toward refusing rather than toward letting a write through.",
-  "hooks": ".cursor-plugin/hooks.json"
+  ]
 }
