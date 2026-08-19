@@ -3,7 +3,8 @@
 Write each requirement the moment it is known — and you will know them
 one at a time, as the build goes.
 
-Not up front, where you would be guessing. Rare cases as all at the end, but mostly as you build.  A specification accretes: something settles, you
+Not up front: some level of guessing or too much effort to get there.
+Rare cases as all at the end, but mostly as you build.  A specification accretes: something settles, you
 write it down, it stops moving.
 
 Specs are outcomes of your discussion with the LLM. your existing workflows for analysis and research should guide this (or eg: superpowers:brainstorm).
