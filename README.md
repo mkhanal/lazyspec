@@ -39,6 +39,34 @@ requirement is written when it is known, and changed safely after.
 - Nothing to change about how you work. Keep your planning, your tickets,
   your branching, your tests.
 
+## Where this comes from
+
+> **It is in daily use in a software product for a regulated industry.**
+> The convention lazyspec packages runs an electronic quality management
+> system — close to three hundred requirements, each married to the test
+> that proves it, in a domain where "the specification says one thing and
+> the code does another" is not a review nit but something somebody has to
+> answer for. That is where every rule on this page was worn in, and it is
+> still the repository this gets tested against.
+>
+> **It works, and the usual failure modes have not turned up.** No
+> specification quietly reworded to match what was built. No requirement
+> written before anybody understood the behaviour and then abandoned. No
+> specify-plan-tasks workflow to adopt and then route around, because
+> there is no workflow — see [Why not one of the
+> others](#why-not-one-of-the-others). That is why it is packaged at all,
+> rather than staying one team's habit: it seemed worth the ecosystem
+> having.
+>
+> **That use settled the hook question early.** We shipped script
+> guardrails and took them out, because they did not work as well as the
+> instruction did — see [Why there is no hook](#why-there-is-no-hook). A
+> hook refuses a write and teaches nothing; an agent that meets the rule
+> in the file it is about to edit changes what it does next. Every
+> mechanism that had to be installed reached fewer agents, cost more
+> friction, and moved the outcome less than the sentence that arrived
+> unbidden.
+
 ## Install
 
 **Recommended — hand it to your agent.** In the repository you want it
@@ -228,34 +256,6 @@ We ship no workflow for your repository. Which agent runs the judged
 half, which credentials it uses, and whether a verdict blocks a merge are
 yours —
 `/lazyspec-validate` describes what to give a reviewing agent.
-
-## Where this comes from
-
-**It is in daily use in a software product for a regulated industry.**
-The convention lazyspec packages runs an electronic quality management
-system — close to three hundred requirements, each married to the test
-that proves it, in a domain where "the specification says one thing and
-the code does another" is not a review nit but something somebody has to
-answer for. That is where every rule on this page was worn in, and it is
-still the repository this gets tested against.
-
-**It works, and the usual failure modes have not turned up.** No
-specification quietly reworded to match what was built. No requirement
-written before anybody understood the behaviour and then abandoned. No
-specify-plan-tasks workflow to adopt and then route around, because
-there is no workflow — see [Why not one of the
-others](#why-not-one-of-the-others). That is why it is packaged at all,
-rather than staying one team's habit: it seemed worth the ecosystem
-having.
-
-**That use settled the hook question early.** We shipped script
-guardrails and took them out, because they did not work as well as the
-instruction did — see [Why there is no hook](#why-there-is-no-hook). A
-hook refuses a write and teaches nothing; an agent that meets the rule
-in the file it is about to edit changes what it does next. Every
-mechanism that had to be installed reached fewer agents, cost more
-friction, and moved the outcome less than the sentence that arrived
-unbidden.
 
 ## Pointed at itself
 
