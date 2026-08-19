@@ -18,8 +18,11 @@ describe('Where Requirements Live Is Written In Prose', () => {
   it('names one area per bullet, and a glob only where it is not the default', () => {
     const ours = areas(read('lazyspec.md'));
     assert.ok(ours.length >= 1, 'lazyspec.md names no area');
-    const unnamed = ours.filter((l) => !/`[^`]+`/.test(l));
-    assert.deepEqual(unnamed, [], 'an area bullet names no glob or path');
+    // An area that uses the default names no glob, so writing the bare
+    // default back is the redundancy this rules out. Anything narrower -
+    // `specs/*.lazyspec.md` - is a real narrowing and belongs there.
+    const redundant = ours.filter((l) => /`\*\.lazyspec\.md`/.test(l));
+    assert.deepEqual(redundant, [], 'an area names the default glob instead of omitting it');
   });
 
   it('carries no schema, so there is nothing to learn beyond markdown', () => {
