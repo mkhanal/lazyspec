@@ -193,7 +193,35 @@ In a fresh session:
 
 ## Recommended
 
-Six things that decide whether this earns its keep or becomes overhead.
+Seven things that decide whether this earns its keep or becomes overhead.
+
+**Marry requirements at a level where one test can cover the whole
+promise.** This is the decision everything else rests on, and the one
+that is worst to get wrong.
+
+A requirement almost always crosses several files and a couple of
+boundaries — a route, a service, a table, a queue. A unit test cannot
+express that, so a married unit test does one of two useless things: it
+proves a fragment of the requirement and reports the rest as covered, or
+it restates the implementation in the requirement's words.
+
+The second reason is the one that settles it. **Agents rewrite unit tests
+without hesitation** — a unit test is the nearest thing to hand when
+something goes red — so whatever protection it offered decays as the
+codebase is worked on. A requirement's proof has to be a test nobody
+edits casually: acceptance, contract, end to end, whatever your project
+calls the level where a promise is observable from outside. That is also
+the level where the words of the requirement can appear in a test name
+without embarrassment.
+
+Write the level down in `lazyspec.md`, in the sentence for each area, so
+the next requirement lands where the last one did instead of drifting
+downward one commit at a time.
+
+Everything below that level carries on exactly as it does now — unit
+tests, integration tests, fixtures, property tests, benchmarks. Write
+them, change them, delete them freely. Most of a suite marries nothing,
+and that is the design.
 
 **Put specifications next to the code they describe.** Not one central
 folder.

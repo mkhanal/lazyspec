@@ -1,6 +1,9 @@
 # A throwaway consumer repo, rebuilt by sandbox/run.sh on every run.
 sandbox/demo/
 
+# Local planning that is not part of the tool.
+outreach/
+
 # Operating systems
 .DS_Store
 .AppleDouble

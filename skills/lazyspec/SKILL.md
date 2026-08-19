@@ -198,6 +198,11 @@ contract or end to end. Everything below that keeps working as it did.
 - **A specification does not replace those tests.** A requirement says
   what the software promises; a unit test says a function works. Both
   worth having, only one a promise to anybody outside the code.
+- **A requirement married at unit level protects nothing.** It crosses
+  several files, so one unit test proves a fragment and reports the rest
+  as covered - and a unit test is the first thing an agent rewrites when
+  something goes red, so the protection decays as the code is worked on.
+  Marry at the level a promise is observable from outside.
 - **Other test files may share a specification's name.**
   `billing.lazyspec.md` is
   married to whichever file repeats its headings; `billing.unit.test.ts`
