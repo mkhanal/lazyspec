@@ -18,7 +18,8 @@ nothing.**
 
 - If no file holds a requirement's words, nothing proves it.
 - A file that does hold them may be the test - or a comment, a README, a
-  changelog, a fixture, a mock, another specification. Only reading it tells you which.
+  changelog, a fixture, a mock, another specification. Only reading it
+  tells you which.
 
 Searching settles what is missing. You settle the rest, and never call a
 requirement proved because a search found its words somewhere.
@@ -121,14 +122,14 @@ limits, two error messages, one side optional and the other required.
 
 - `/lazyspec` catches these before the second is written, so you are the
   backstop and you check narrowly: only requirements **this change
-  touched**, against their counterparts. Do not sweep every set.
+  touched**, against their counterparts. Do not sweep every area.
 - The counterpart is the other side of the same behaviour, the same
   nouns, the same named thing. Read that and quote both when they
   disagree. Two requirements describing one behaviour from opposite sides
   are fine - each is proved by its own test and breaks on its own.
 - The seam worth your attention is where one side was specified long
   before the other. A behaviour written into whichever specification
-  existed at the time gets restated when the set that owns it finally
+  existed at the time gets restated when the area that owns it finally
   exists, and the copy left behind is the one that rots.
 
 **Wrong level.** The requirement is not the kind this area is for - an

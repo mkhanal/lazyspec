@@ -73,7 +73,7 @@ specification says so on its first line.
 
    Do not read every specification. Go where an overlap is likely:
 
-   - **The counterpart set.** Most behaviours are described twice, from
+   - **The counterpart area.** Most behaviours are described twice, from
      two sides - producer and consumer, writer and reader, scheduler and
      runner. Find the other side. That is where disagreements live.
    - **The same nouns.** Search for the domain words in your heading, not
@@ -89,7 +89,9 @@ specification says so on its first line.
    A new requirement joins the specification it belongs to. Start a new
    `*.lazyspec.md` only when none fits. Its filename decides which test
    file proves it, so if a test for this behaviour already exists, name
-   the specification after that file. Give a new one a title and a
+   the specification after that file and rename the file to carry
+   `lazyspec` too - until it does, nothing can tell it is the married
+   one. Give a new one a title and a
    sentence saying what it is about: `lazyspec.md` says what an area is
    for, the file's own opening says what this one is for.
 
@@ -151,7 +153,8 @@ contract or end to end. Everything below that keeps working as it did.
   tests, benchmarks.** No requirement, no heading, no marriage. Write,
   change and delete them freely.
 - **Never write a requirement to justify a test that already exists.**
-  It fills the set with implementation detail and makes the specification a second, worse copy of the suite.
+  It fills the area with implementation detail and makes the
+  specification a second, worse copy of the suite.
 - **A specification does not replace those tests.** A requirement says
   what the software promises; a unit test says a function works. Both
   worth having, only one a promise to anybody outside the code.
@@ -161,7 +164,7 @@ contract or end to end. Everything below that keeps working as it did.
   beside it is ordinary and unrelated.
 - **`lazyspec` in a test file's name is a claim, so only the married file
   makes it.** Its neighbours do not, however closely related. A file
-  claiming it with no specification beside it is an orphan.
+  claiming it with no such specification is an orphan.
 
 If a requirement only makes sense to somebody reading the
 implementation, it is a unit test wearing a heading. Delete the heading
@@ -183,9 +186,9 @@ and keep the test.
   heading.
 - If it cannot be tested, write `## Its Name <!-- no-test: why not -->`.
 - Split a specification while it is still short enough to read at a
-  glance. Nobody should read the whole set to find one thing.
+  glance. Nobody should read a whole file to find one thing.
 
-Every word here is read again by every agent, on every task. Write
+Every word here is read again by every agent that opens the file. Write
 less.
 
 ## Rules

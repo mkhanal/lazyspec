@@ -1,8 +1,8 @@
 ## Specifications
 
 Requirements live in `*.lazyspec.md`. Read `lazyspec.md` first if there is
-one: which files count, and what a requirement in each area is for. A requirement is a
-`## ` heading, and its text is its name.
+one: which files count, and what a requirement in each area is for. A
+requirement is a `## ` heading, and its text is its name.
 
 **It is married to a test repeating that text word for word, in the one
 file naming the specification and `lazyspec`.** Join them the way this
@@ -18,7 +18,8 @@ billing_lazyspec_test.go   t.Run("Refunds Never Exceed What Was Captured", ..)
 Most tests marry nothing, and should not: unit and integration tests sit
 below the requirements. One specification, one test file - split one that
 grows too large and split its tests with it. If the code already has
-tests, name the specification after the file that proves it. Untestable?
+tests, name the specification after the file that proves it, and add
+`lazyspec` to that file's name. Untestable?
 Mark it `## Name <!-- no-test: why -->`.
 
 **Specifications are locked unless you are in `/lazyspec`.** Run
