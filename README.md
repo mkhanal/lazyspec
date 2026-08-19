@@ -193,6 +193,57 @@ In a fresh session:
   nothing else here matters.
 - Ask for a behaviour change. It reaches for `/lazyspec`.
 
+## Recommended
+
+Six things that decide whether this earns its keep or becomes overhead.
+
+**Put specifications next to the code they describe.** Not one central
+folder.
+
+- **Small repository?** One `specs/` folder is fine.
+- **Anything bigger?** Co-locate: `services/api/specs/billing.lazyspec.md`.
+- **Monorepo?** One bullet in `lazyspec.md` per package. An area is the
+  folder a specification's name must be unique inside, so two packages
+  can each have a `billing.lazyspec.md`.
+
+It costs less on three counts. An agent working in `services/api` finds
+the requirement by proximity instead of scanning a global list, and reads
+fewer of them per task. The married test lands where that package's
+runner already looks, so nothing has to widen a glob to collect it. And
+"which requirement covers this?" stops being a question about the whole
+repository. Nesting is free; a single flat directory is what gets
+expensive, because every requirement in it is a candidate every time.
+
+**Let your agent install it.** The block at the top of this section is
+the whole of it. It reads this page, picks the route your editor
+actually supports, and runs `/lazyspec-setup`, which proposes and waits
+rather than writing into your rules unasked.
+
+**Paste the instruction into the rules document you already keep.** A
+rule filed beside rules people already respect is followed. A rule in a
+file of its own competes for attention with everything else an agent
+loads.
+
+**Leave your existing tests alone.** Start by writing married files for
+new requirements only. Nothing needs migrating, the old suite keeps
+marrying nothing, and adoption costs one requirement rather than an
+afternoon. Moving old assertions across later is an easy job to hand an
+agent, if you ever want it.
+
+**Work in bigger pieces than a story.** Story-sized slices exist because
+a person can hold only so much at once; an agent has the opposite
+problem, attention to spare and context to lack. Give it a whole
+capability and it sees the shape — the edge cases, the interactions, the
+requirement nobody thought to ask for. It is also when the conversation
+about the specification is worth having, because there is finally
+something to disagree about. Cut the same work into fragments and the
+specification comes out fragmented too, because that is how it was
+written.
+
+**Split a specification while it is still short enough to read at a
+glance.** Nobody should read a whole file to find one thing, and moving
+headings later means moving the blocks that prove them at the same time.
+
 ## The three skills
 
 | skill | when it runs |
@@ -323,20 +374,6 @@ Nothing changes until a requirement needs to move.
 - **Editing a specification any other way?** It is locked: you are not in
   spec mode, so it is not yours to touch. `/lazyspec-validate` finds it
   if you do.
-
-### Work in bigger pieces
-
-Story-sized slices exist because a person can hold only so much at once.
-An agent has the opposite problem: attention to spare, context to lack.
-
-Give it a whole capability and it sees the shape — the edge cases, the
-interactions, the requirement nobody thought to ask for. It is also when
-the conversation about the specification is worth having, because there
-is finally something to disagree about.
-
-Cut the same work into fragments and each gets designed alone. The
-specification comes out fragmented too, because that is how it was
-written.
 
 ## What you write
 
@@ -526,22 +563,6 @@ a guess anybody has to make.
   import and `unittest` skip the file without a word. The token survives
   every ecosystem; the punctuation does not.
 - `<!-- no-test: why -->` marks a requirement nothing can prove.
-
-## Where specifications live
-
-Put a specification next to the code it describes.
-
-- **Small repository?** One `specs/` folder is fine.
-- **Anything bigger?** Co-locate: `services/api/specs/billing.lazyspec.md`.
-  An agent working in `services/api` finds the requirement by proximity
-  instead of scanning a global list, and reads fewer of them per task.
-- **Monorepo?** One bullet in `lazyspec.md` per package. An area is the
-  folder a specification's name must be unique inside, so two packages
-  can each have a `billing.lazyspec.md`.
-
-Nesting is free and costs nothing to an agent. A single flat directory is
-what gets expensive: every requirement in it is a candidate every time
-somebody asks "which one covers this?"
 
 ## What a specification is about
 
