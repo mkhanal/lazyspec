@@ -87,11 +87,20 @@ specification says so on its first line.
    own. Two that cannot both be true are not - say so and stop.
 
    A new requirement joins the specification it belongs to. Start a new
-   `*.lazyspec.md` only when none fits. Its filename decides which test
-   file proves it, so if a test for this behaviour already exists, name
-   the specification after that file and rename the file to carry
-   `lazyspec` too - until it does, nothing can tell it is the married
-   one. Give a new one a title and a
+   `*.lazyspec.md` only when none fits, and its filename decides which
+   test file proves it.
+
+   **Where a test already covers the behaviour, still write the married
+   file under the convention.** Do not adopt the existing one. Names in
+   an ordinary suite were not written to be requirements - they describe
+   what a case does, not what the software promises - and one that reads
+   well today gets reworded tomorrow by somebody who has no idea it is
+   load-bearing. A marriage to a name nobody knew was a name is the
+   drift this exists to prevent, arranged on purpose.
+
+   The old test stays exactly where it is and marries nothing, like most
+   of the suite. Moving its assertions across is optional, and an easy
+   job to hand an agent if you want it done. Give a new one a title and a
    sentence saying what it is about: `lazyspec.md` says what an area is
    for, the file's own opening says what this one is for.
 

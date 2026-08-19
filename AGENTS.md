@@ -36,10 +36,10 @@ billing_lazyspec_test.go   t.Run("Refunds Never Exceed What Was Captured", ..)
 
 Most tests marry nothing, and should not: unit and integration tests sit
 below the requirements. One specification, one test file - split one that
-grows too large and split its tests with it. If the code already has
-tests, name the specification after the file that proves it, and add
-`lazyspec` to that file's name. Untestable?
-Mark it `## Name <!-- no-test: why -->`.
+grows too large and split its tests with it. Where tests already exist,
+write the married file anyway: names in an ordinary suite were not
+written to be requirements. The old tests stay, marrying nothing.
+Untestable? Mark it `## Name <!-- no-test: why -->`.
 
 **Specifications are locked unless you are in `/lazyspec`.** Run
 `/lazyspec` to change one, with its tests in the same edit, never beside
