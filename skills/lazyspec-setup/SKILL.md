@@ -78,8 +78,18 @@ cannot see.** You have the repository in front of you. Read it.
   because a specification's name has to be unique inside its `root` or
   two packages both claim the same test file. One project gets one set
   with `root: .`.
-- **Where specifications will sit.** Next to the code they describe, in
-  the folder that package already uses for tests or docs.
+- **Specifications that are already here.** Look before you propose a
+  name. A repository that has been doing this by hand, or arrived from
+  another tool, has files full of requirements called something else -
+  `SPEC.md`, `requirements.md`, `docs/behaviour/*.md`. Point `specs:` at
+  what it already has. A glob that matches nothing leaves every existing
+  requirement outside the set, unchecked and invisible, and the check
+  will report a clean repository because it can see no specifications at
+  all. Renaming them is somebody's decision to make later, not yours to
+  force now.
+- **Where new ones will sit**, if there are none yet. Next to the code
+  they describe, in the folder that package already uses for tests or
+  docs.
 - **What each set is likely to cover.** A service is what a caller
   observes at its boundary. A pipeline is what holds of the data after a
   run. A worker is what happens per job. A library is its public surface.
@@ -91,13 +101,13 @@ inferred**:
 ```yaml
 sets:
   - root: services/ingest       # found: a server, routes, contract tests
-    specs: specs/*.lazyspec.md
+    specs: specs/*.lazyspec.md  # nothing here yet, so the default name
     covers: |
       What a caller observes at the boundary: what is accepted, what
       is refused, what comes back.               # inferred - check me
 
   - root: pipelines/nightly     # found: a scheduler, fixtures, dbt tests
-    specs: specs/*.lazyspec.md
+    specs: '**/SPEC.md'         # found: 11 of them, already written
     covers: |
       What must hold of the data after a run, and what happens when a
       run fails halfway.                          # inferred - check me

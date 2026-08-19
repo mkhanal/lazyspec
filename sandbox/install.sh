@@ -146,6 +146,20 @@ grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
 grep -q 'lazyspec-setup' "$SRC/README.md" && ok "README sends you to /lazyspec-setup after installing" \
   || bad "README never mentions the step that does the work"
 
+# A repository that already keeps requirements under another name is the
+# case that loses most by a wrong glob: the set matches nothing, the check
+# sees no specifications, and reports a clean repository.
+mkdir -p legacy/src && printf '# Billing\n\n## Refunds Never Exceed What Was Captured\n' > legacy/SPEC.md
+existing=$(find . -name 'SPEC.md' -not -path './.claude/*' | wc -l | tr -d ' ')
+is "a repository can arrive with specifications already written" "$existing" "1"
+grep -q 'Specifications that are already here' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "setup is told to look for them before proposing a name" \
+  || bad "setup would propose a glob matching nothing"
+grep -q "specs: '\*\*/SPEC.md'" "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "and its example shows a set pointed at what was found" \
+  || bad "every example still shows the default name"
+rm -rf legacy
+
 # ------------------------------------------- F. the plugin route, replayed
 
 sect "F. the plugin route, replayed"
