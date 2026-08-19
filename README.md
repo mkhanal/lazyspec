@@ -127,9 +127,17 @@ nothing of the kind, `AGENTS.md` is the default.
 This is the step that makes the tool work, and no installer can do it.
 Everything else here is copying files around.
 
-- **Paste it, do not link to it.** An instruction fetched on request is
-  one that will not be followed. It has to arrive in context before the
-  agent starts, every task, without being asked for.
+- **It has to arrive before the agent starts, every task.** An include
+  your editor resolves for you counts as arriving — `CLAUDE.md` holding
+  `@AGENTS.md`, a Cursor rule with `alwaysApply: true`. A reference the
+  agent has to decide to open does not: nothing prompts it to look,
+  because not knowing the convention exists is exactly what it does not
+  know.
+- **Detail can sit behind a pointer once the instruction has arrived.**
+  `lazyspec.md` gets read because the instruction's first line says to
+  read it. That works for what a requirement in an area is for. It would
+  not work for the convention itself, which has to be what does the
+  prompting.
 - **Claude Code never looks for `AGENTS.md`.** A repository with only an
   `AGENTS.md` looks set up and is not. One line, `@AGENTS.md`, fixes it.
 - **Every other editor gets a short file pointing at the home**, where
