@@ -229,6 +229,25 @@ half, which credentials it uses, and whether a verdict blocks a merge are
 yours —
 `/lazyspec-validate` describes what to give a reviewing agent.
 
+## Where this comes from
+
+**It is in daily use in a regulated industry.** The convention lazyspec
+packages runs an electronic quality management system — close to three
+hundred requirements, each married to the test that proves it, in a
+domain where "the specification says one thing and the code does
+another" is not a code-review nit but something somebody has to answer
+for. That is where every rule on this page was worn in, and it is still
+the repository this gets tested against.
+
+**That use settled the hook question early.** We shipped script
+guardrails and took them out, because they did not work as well as the
+instruction did — see [Why there is no hook](#why-there-is-no-hook). A
+hook refuses a write and teaches nothing; an agent that meets the rule
+in the file it is about to edit changes what it does next. Every
+mechanism that had to be installed reached fewer agents, cost more
+friction, and moved the outcome less than the sentence that arrived
+unbidden.
+
 ## Pointed at itself
 
 This repository is the tool, and the first thing the tool is used on.
@@ -669,7 +688,9 @@ own editor whenever you like.
 ## Why there is no hook
 
 There was one: a pre-tool hook that refused writes to a specification. It
-is gone, and the reason is worth stating.
+is gone, and the reason generalises past it — **every guardrail we tried
+that had to be installed did less than the instruction that arrived on
+its own.**
 
 **No mechanism guarantees what an agent does.** A hook is a tool call
 away from being disabled, worked around with a script, or simply
@@ -721,18 +742,15 @@ never enforced by anything but the tests.
 
 ## Feedback, and what would help most
 
-**Everything here has been verified on one machine, one editor, one
-person's judgement.** The gap between that and "it works" is you.
-
 - **Run it on an agent it has not been run on.** The table above says
-  where each one reads its instruction, and most of those rows come from
-  documentation rather than from watching it happen. Claude Code is the
-  one that has actually been installed and driven end to end. Tell us
-  which rows are wrong.
-- **Run it on a repository unlike this one.** Another language, another
-  runner, a monorepo, a codebase that already keeps requirements under
-  some other name. The conventions are meant to bend to yours; where they
-  do not, that is the finding.
+  where each one reads its instruction, and several of those rows come
+  from documentation rather than from watching it happen. Claude Code is
+  the one that has been installed and driven end to end. Tell us which
+  rows are wrong.
+- **Run it on a repository unlike ours.** Another language, another
+  runner, a different monorepo shape, a codebase that already keeps
+  requirements under some other name. The conventions are meant to bend
+  to yours; where they do not, that is the finding.
 - **Tell us where the writing failed you.** Almost everything this gets
   wrong is a sentence that read clearly to whoever wrote it and not to
   the agent that had to act on it — and that is only ever visible from
