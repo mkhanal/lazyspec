@@ -158,6 +158,9 @@ grep -q 'Specifications that are already here' "$SRC/skills/lazyspec-setup/SKILL
 grep -q "specs: '\*\*/SPEC.md'" "$SRC/skills/lazyspec-setup/SKILL.md" \
   && ok "and its example shows a set pointed at what was found" \
   || bad "every example still shows the default name"
+grep -q 'is where a repository should end up' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "while still naming *.lazyspec.md as where to end up" \
+  || bad "it accommodates the old name without naming the destination"
 rm -rf legacy
 
 # ------------------------------------------- F. the plugin route, replayed

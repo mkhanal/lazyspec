@@ -85,8 +85,13 @@ cannot see.** You have the repository in front of you. Read it.
   what it already has. A glob that matches nothing leaves every existing
   requirement outside the set, unchecked and invisible, and the check
   will report a clean repository because it can see no specifications at
-  all. Renaming them is somebody's decision to make later, not yours to
-  force now.
+  all.
+
+  `*.lazyspec.md` is where a repository should end up - the name is what
+  makes a specification recognisable to an agent that opens one knowing
+  nothing else. Say so. But a rename is a change to their repository and
+  not part of installing yours, so point the set at what exists, and let
+  them move when they choose.
 - **Where new ones will sit**, if there are none yet. Next to the code
   they describe, in the folder that package already uses for tests or
   docs.
