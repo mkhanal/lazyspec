@@ -19,8 +19,8 @@ to make the change.
 
 ## A Requirement Is A Level Two Heading
 
-- `##` marks a requirement in every project, and `.lazyspec.yaml` has no
-  setting to move it.
+- `##` marks a requirement in every project, and nothing a project
+  writes about its own requirements moves it.
 - Both shipped copies of the convention name `##`: the standing
   instruction, and the header every specification carries.
 - A specification uses `##` for nothing else, so every one of its

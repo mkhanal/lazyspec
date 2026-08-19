@@ -4,15 +4,16 @@ Write each requirement the moment it is known — and you will know them
 one at a time, as the build goes.
 
 Not up front: some level of guessing or too much effort to get there.
-Rare cases as all at the end, but mostly as you build.  A specification accretes: something settles, you
+Rare cases: all at the end
+But mostly: as you build.  A specification accretes: something settles, you
 write it down, it stops moving.
 
-Specs are outcomes of your discussion with the LLM. your existing workflows for analysis and research should guide this (or eg: superpowers:brainstorm).
-
-Each spec works twice. 
+Each spec works twice
 - Written, it is the **input** — hand it to the agent as the thing to satisfy. 
-- Kept, it is a **harness** — the thing already
-settled cannot drift without somebody deciding it should.
+- Kept, it is a **harness** — Dedicated MARRIED Tests, ensuring things already settled cannot drift without somebody deciding it should.
+
+Specs are outcomes of your discussion with the LLM. 
+your existing workflows for analysis and research should guide this (or eg: superpowers:brainstorm).
 
 Nothing else about how you work changes. There is no workflow here to
 adopt: plan how you already plan, and lazyspec only ensures the
@@ -20,10 +21,8 @@ requirement is written when it is known, and changed safely after.
 
 ## In short
 
-- A requirement is a `## ` heading in a `*.lazyspec.md` file. Its text is
-  its identifier.
-- Its test declares itself by that text, word for word, in the file
-  sharing the specification's stem.
+- A requirement is a `## ` heading in a `*.lazyspec.md` file. Its text is its identifier.
+- Its test declares itself by that text, word for word, in the file sharing the specification's stem.
 - `billing.lazyspec.md` is married by the one test file naming both
   `billing` and `lazyspec`, spelled however your language spells names —
   `billing.lazyspec.test.ts`, `test_billing_lazyspec.py`,
@@ -31,14 +30,32 @@ requirement is written when it is known, and changed safely after.
   marries them, so either file can live anywhere.
 - Reword the requirement and its test is orphaned at once, loudly.
 - Write each requirement once it is known, which is usually partway
-  through the build rather than at either end. Then keep it still.
+  through the build rather than at either end. Then keep it still or keep evolving until certain.
 - A specification is locked unless you are in `/lazyspec`. That is a mode
-  the agent is in or is not, and it is almost never in it.
+  the agent is in or is not, and it is almost never in it unless you put it in
+  (You can type /lazyspec or ask agent to go into this mode)
 - Nothing to run: no program, no gate, no build.
 - Nothing to change about how you work. Keep your planning, your tickets,
   your branching, your tests.
 
 ## Install
+
+**Recommended — hand it to your agent with below instructions
+>
+> ```
+> Read https://github.com/mkhanal/lazyspec/blob/main/README.md and install it.
+> ```
+
+It reads this page, puts the skills where your editor looks, and runs
+`/lazyspec-setup` — which proposes where the instruction should live
+and waits for your answer before touching anything.
+It consents to the skills being copied in
+and the instruction pasted into your standing rules. It does not
+consent to a requirement being written — nothing here writes one — and
+whatever `/lazyspec-setup` infers for `lazyspec.md` comes back
+marked for you to check.
+
+The rest of this section is the same thing by hand.
 
 **The instruction is the install.** Paste `INSTRUCTION.md` where your
 agent reads it every task and you are done. That works on every agent.
@@ -84,14 +101,6 @@ disk, at the version the skills beside it were written for.
 `.claude/skills/` is read by Claude Code and opencode, `.agents/skills/`
 by OpenAI's Codex and opencode, `.cursor/skills/` by Cursor. Drop the
 ones you do not use.
-
-**Or hand it over:** *"Read
-`https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
-it."* That sentence is your yes: it consents to the skills being copied
-in and the instruction being pasted into your standing rules. It does not
-consent to a requirement being written — nothing here writes one — and
-whatever `/lazyspec-setup` infers for `.lazyspec.yaml` still comes back
-marked for you to check.
 
 ### Then the one thing that matters
 
@@ -464,31 +473,32 @@ somebody asks "which one covers this?"
 Two questions, two homes. Both are the project's to answer, and lazyspec
 answers neither for you.
 
-**What is this set for?** `covers` in `.lazyspec.yaml`, free text, read
-by whoever writes the next requirement:
+**What is this area for?** `lazyspec.md`, prose, read by whoever writes
+the next requirement:
 
-```yaml
-sets:
-  - root: services/ingest
-    specs: specs/*.lazyspec.md
-    covers: |
-      What a caller observes at the boundary: what is accepted, what
-      is refused, what comes back. Not internal helpers.
+```markdown
+# Where our requirements live
 
-  - root: pipelines/nightly
-    specs: specs/*.lazyspec.md
-    covers: |
-      What must hold of the data after a run, and what happens when a
-      run fails halfway. Not the shape of any one query.
+- **services/ingest** — `specs/*.lazyspec.md`.
+  What a caller observes at the boundary: what is accepted, what is
+  refused, what comes back. Not internal helpers.
 
-  - root: workers/settlement
-    specs: specs/*.lazyspec.md
-    covers: |
-      What happens for each job, including retries, duplicates and
-      ordering. Not the queue library's own behaviour.
+- **pipelines/nightly** — `docs/spec/*.lazyspec.md`.
+  What must hold of the data after a run, and what happens to a run that
+  fails halfway. Not the shape of any one query.
+
+- **workers/settlement** — `spec/*.lazyspec.md`.
+  What happens for each job, including retries, duplicates and ordering.
+  Not the queue library's own behaviour.
 ```
 
-These are different kinds of promise, so two sets rarely say the same
+No schema to learn, and no second format: it is the same markdown the
+specifications are written in. `/lazyspec-setup` writes it by asking, and
+marks what it inferred. `lazyspec.example.md` shows more layouts —
+specifications per module, per package, in a central folder, and a
+repository still on its old name.
+
+These are different kinds of promise, so two areas rarely say the same
 thing here. A team using consumer contracts might say a requirement is
 one of those; a team without them might say it is whatever a caller can
 observe. Both are right, and only the project knows which. A scanner, an
@@ -504,10 +514,10 @@ sentence, the way any document says what it is:
 How money goes back to a customer. Not how it arrives.
 ```
 
-### Two sets may cover the same ground
+### Two areas may cover the same ground
 
 Most behaviours are described twice, from two sides. Whoever produces and
-whoever consumes. Whoever schedules and whoever runs. One set says a
+whoever consumes. Whoever schedules and whoever runs. One area says a
 value is refused at the boundary; another says the caller never sends it
 in the first place. That is one rule from two angles, and both are worth
 writing: each is proved by a different test, and each breaks on its own.
@@ -650,7 +660,7 @@ is the honest maximum, and it is what is left.
 
 - Plugin: `/plugin uninstall lazyspec`.
 - By hand: delete the skills.
-- Either way: delete `.lazyspec.yaml` and the pasted instruction.
+- Either way: delete `lazyspec.md` and the pasted instruction.
 
 Your specifications stay and their tests keep passing. The marriage was
 never enforced by anything but the tests.

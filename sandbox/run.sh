@@ -54,26 +54,21 @@ cat > .claude/settings.json <<SETTINGS
 }
 SETTINGS
 
-cat > .lazyspec.yaml <<'YAML'
-sets:
-  - root: services/api
-    specs: specs/*.lazyspec.md
-    covers: |
-      The HTTP contract a caller can observe. Not internal helpers.
-  - root: services/ledger
-    specs: specs/*.lazyspec.md
-    covers: |
-      Double-entry invariants that must hold after any posting.
-  - root: services/router
-    specs: specs/*.lazyspec.md
-    covers: |
-      How a request is matched to a handler, and what happens when none is.
-  - root: apps/web
-    specs: specs/*.lazyspec.md
-    covers: |
-      What a person can see and do in the browser, proved end to end.
-      Not component internals, and never a CSS class.
-YAML
+cat > lazyspec.md <<'MD'
+# Where our requirements live
+
+- **services/api** — `specs/*.lazyspec.md`.
+  The HTTP contract a caller can observe. Not internal helpers.
+
+- **services/ledger** — `specs/*.lazyspec.md`.
+  What must hold of the books after a posting. Not the query shapes.
+
+- **services/router** — `specs/*.lazyspec.md`.
+  What happens to a request that names no known route.
+
+- **apps/web** — `specs/*.lazyspec.md`.
+  What a person can do in the cart, and what they are refused.
+MD
 
 # --- a JavaScript service
 mkdir -p services/api/src
@@ -357,18 +352,16 @@ git checkout -q -- .
 # ------------------------------------------------------- E. configuration
 
 sect "E. configuration"
-sets=$(grep -c 'root:' .lazyspec.yaml)
-is ".lazyspec.yaml declares one set per package" "$sets" "4"
-covers=$(grep -c 'covers:' .lazyspec.yaml)
-is "every set says what it covers" "$covers" "4"
-api=$(sed -n '/root: services\/api/,/covers:/p' .lazyspec.yaml | tail -1)
-web=$(sed -n '/root: apps\/web/,/covers:/p' .lazyspec.yaml | tail -1)
-[ -n "$api" ] && [ -n "$web" ] && ok "two sets each declare their own level" \
-  || bad "a set is missing its level"
-mv .lazyspec.yaml .lazyspec.yaml.off
+areas=$(grep -c '^- \*\*' lazyspec.md)
+is "lazyspec.md names one area per package" "$areas" "4"
+described=$(grep -cE '^  [A-Z]' lazyspec.md)
+is "and every area says what a requirement there is for" "$described" "4"
+is "it is prose, so it needs no schema" "$(grep -c 'sets:\|root:\|covers:' lazyspec.md)" "0"
+is "and never uses ## , which would read as a requirement" "$(grep -c '^## ' lazyspec.md)" "0"
+mv lazyspec.md lazyspec.md.off
 found=$(git ls-files --cached --others --exclude-standard '*.lazyspec.md' | wc -l | tr -d ' ')
-is "with no config, every specification still counts" "$found" "4"
-mv .lazyspec.yaml.off .lazyspec.yaml
+is "with no such file, every specification still counts" "$found" "4"
+mv lazyspec.md.off lazyspec.md
 
 # ---------------------------------------------------------------- report
 

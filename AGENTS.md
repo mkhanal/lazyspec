@@ -19,8 +19,8 @@ own get a short file that points here rather than a second copy.
 
 ## Specifications
 
-Requirements live in `*.lazyspec.md`. Read `.lazyspec.yaml` first if there
-is one: which files count, and what each set is for. A requirement is a
+Requirements live in `*.lazyspec.md`. Read `lazyspec.md` first if there is
+one: which files count, and what a requirement in each area is for. A requirement is a
 `## ` heading, and its text is its name.
 
 **It is married to a test repeating that text word for word, in the one

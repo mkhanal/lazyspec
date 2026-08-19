@@ -12,43 +12,45 @@ specification says so on its first line.
 
 ## Steps
 
-0. **If there is no `.lazyspec.yaml`, offer to write one now.** Skip this
-   whenever the file exists - `/lazyspec-setup` usually wrote it at
-   install time. Read the repository, propose it, wait for a yes:
+0. **If there is no `lazyspec.md`, offer to write one now.** Skip this
+   whenever it exists - `/lazyspec-setup` usually wrote it at install
+   time, and this is only the second chance. Read the repository,
+   propose it, wait for a yes:
 
-   ```yaml
-   sets:
-     - root: services/ingest
-       specs: specs/*.lazyspec.md
-       covers: |
-         What a caller observes at the interface: what is accepted,
-         what is refused, what comes back. Not internal helpers.
+   ```markdown
+   # Where our requirements live
 
-     - root: workers/settlement
-       specs: specs/*.lazyspec.md
-       covers: |
-         What happens for each job, including retries, duplicates and
-         ordering. Not the queue library's own behaviour.
+   - **services/ingest** — `specs/*.lazyspec.md`. What a caller observes
+     at the interface: what is accepted, what is refused, what comes
+     back. Not internal helpers.
+
+   - **workers/settlement** — `specs/*.lazyspec.md`. What happens for
+     each job, including retries, duplicates and ordering. Not the queue
+     library's own behaviour.
    ```
 
-   - `root` is the folder a specification's name must be unique inside,
-     because two packages each holding `billing.lazyspec.md` would claim
-     the same test file. One project makes that `.`; a monorepo makes it
-     one entry per package, service or job.
-   - Each set works at whatever level suits it. The promises are
-     different kinds of thing, as those two `covers` show.
-   - **`covers` is the project's decision, yours to ask about and not to
-     assume.** Free text, read by whoever writes the next requirement. A
-     team using
-     consumer-driven contracts might call a requirement here a consumer
-     contract; a team without them might call it whatever a caller can
-     observe. Both are right, and only the project knows which.
+   - One bullet per area whose specification names have to be unique -
+     two packages each holding `billing.lazyspec.md` would claim the same
+     test file. One project is one bullet. A monorepo is one per package,
+     service or job.
+   - **The sentence after the path is the point, and it is the project's
+     decision - yours to ask about, not to assume.** It is read by
+     whoever writes the next requirement, and it is the difference
+     between an area that stays coherent and one that silts up with every
+     stray thought. A team using consumer-driven contracts might call a
+     requirement here a consumer contract; a team without them might call
+     it whatever a caller can observe. Both are right, and only the
+     project knows which. Keep it to a sentence or two, and say what it
+     excludes.
    - Choose the level where a specification earns its keep: per module,
-     at the boundary others depend on, or end to end. One set per
-     deployable is common; a single end-to-end set is a fair answer.
+     at the boundary others depend on, or end to end. One area per
+     deployable is common; a single end-to-end one is a fair answer.
+   - Name the glob only where it is not `*.lazyspec.md` already.
    - **No setting for the language, the test runner or where tests live,
      and you are not to add one.** You read all three off the repository,
      and a written-down answer only goes stale.
+   - **Never use `## ` in this file.** That mark means a requirement
+     everywhere else. Title, then bullets.
    - The file is optional - without it every `*.lazyspec.md` counts,
      which is right for a small repository. Do not write one just to have
      it.
@@ -57,12 +59,12 @@ specification says so on its first line.
    adding, rewording, removing, and why. If the user did not ask for a
    change in what the software does, stop and ask.
 
-2. **Choose the file.** Read the `covers` of the set it would belong to.
-   If what you are about to write is not what that set is for - an
-   internal helper where the set covers a boundary others depend on, a
+2. **Choose the file.** Read what `lazyspec.md` says the area it would
+   belong to is for. If what you are about to write is not that - an
+   internal helper where the area covers a boundary others depend on, a
    rendering detail where it covers what the data must satisfy - say so
-   and stop. It may belong in another set, at another level, or nowhere.
-   A set that quietly widens is a set nobody trusts.
+   and stop. It may belong in another area, at another level, or nowhere.
+   An area that quietly widens is one nobody trusts.
 
    **Then look for a conflict, before writing anything.** This is the
    cheapest moment there will be: nothing exists yet, so reconciling
@@ -78,7 +80,7 @@ specification says so on its first line.
      the heading: `git grep -il "refund" -- '*.lazyspec.md'`
    - **The same named thing** - a table, a queue, a contract address, a
      file format, a route - if your requirement names one.
-   - **Sets whose `covers` mentions your area.**
+   - **Areas whose description in `lazyspec.md` mentions yours.**
 
    Two requirements covering one behaviour from opposite sides are fine
    and often necessary: each is proved by its own test and breaks on its
@@ -88,8 +90,8 @@ specification says so on its first line.
    `*.lazyspec.md` only when none fits. Its filename decides which test
    file proves it, so if a test for this behaviour already exists, name
    the specification after that file. Give a new one a title and a
-   sentence saying what it is about: `covers` says what a set is for, the
-   file's own opening says what this one is for.
+   sentence saying what it is about: `lazyspec.md` says what an area is
+   for, the file's own opening says what this one is for.
 
    Every specification opens with this header. Never remove it, and never
    write a specification without it:
@@ -142,7 +144,7 @@ specification says so on its first line.
 ## What does not become a requirement
 
 Most of a test suite marries nothing, and that is the design.
-Requirements sit at the level `covers` declares - often acceptance,
+Requirements sit at the level `lazyspec.md` declares - often acceptance,
 contract or end to end. Everything below that keeps working as it did.
 
 - **Unit tests, integration tests, database tests, fixtures, property

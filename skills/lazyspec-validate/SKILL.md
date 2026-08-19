@@ -8,8 +8,8 @@ description: Check that every requirement is still married to a test that really
 One question: is every requirement still married to a test that proves
 it, and did this change write down what it changed.
 
-Scope is every `*.lazyspec.md`, unless `.lazyspec.yaml` narrows it — its
-`specs:` globs win. Read each set's `covers` while you are there.
+Scope is every `*.lazyspec.md`, unless `lazyspec.md` names other globs —
+those win. Read what it says each area is for while you are there.
 
 ## The one thing to get right
 
@@ -28,9 +28,9 @@ requirement proved because a search found its words somewhere.
 You know how to search a repository. Four things to collect, and the
 parts that are not obvious:
 
-- **Every specification.** `*.lazyspec.md`, or what `.lazyspec.yaml`
-  narrows that to. Count untracked files: one written this session is
-  still a specification.
+- **Every specification.** `*.lazyspec.md`, or the globs `lazyspec.md`
+  names. Count untracked files: one written this session is still a
+  specification.
 - **Every requirement.** Each `## ` heading. Skip the ones marked
   `<!-- no-test: … -->` and trim the trailing comment off the rest.
 - **Every file holding a requirement's words.** Search the literal words,
@@ -68,10 +68,10 @@ These need no judgement. Report them as facts.
   contents. Say how many `###` headings are really requirements, and say
   the fix: lift them to `##`, drop the sections. `##` is the mark in
   every project and there is no setting for it.
-- **Written twice.** Two specifications in one set share a `## `
-  heading. Across sets it is not this finding: two roots may word the
+- **Written twice.** Two specifications in one area share a `## `
+  heading. Across areas it is not this finding: two of them may word the
   same promise the same way, each proved by its own test. Check they are
-  not one requirement wearing two roots before reporting it.
+  not one requirement wearing two hats before reporting it.
 - **Moved alone.** A specification changed and no file holding its
   requirements changed with it. A specification takes its tests with it.
 - **Orphaned.** A test file naming `lazyspec` and a specification's
@@ -131,11 +131,11 @@ limits, two error messages, one side optional and the other required.
   existed at the time gets restated when the set that owns it finally
   exists, and the copy left behind is the one that rots.
 
-**Wrong level.** The requirement is not the kind this set is for - an
-internal helper where `covers` says wire contract, a rendering detail
-where it says what the data must satisfy. Quote the `covers`, say where
-the requirement belongs. A set that widens quietly is a set nobody
-trusts.
+**Wrong level.** The requirement is not the kind this area is for - an
+internal helper where `lazyspec.md` says wire contract, a rendering
+detail where it says what the data must satisfy. Quote what it says, and
+say where the requirement belongs. An area that widens quietly is one
+nobody trusts.
 
 **Unspecified change.** A changed file changes what the software does and
 no requirement changed with it. Name the missing requirement. A rename, a

@@ -101,6 +101,16 @@ grep -q 'claude plugin marketplace add' "$SRC/README.md" \
   && ok "and a shell form of the plugin install, for an agent doing it for you" \
   || bad "the plugin route is slash commands only, which an agent cannot run"
 
+# the route we recommend has to be the one a reader meets first
+handover=$(grep -n 'and install it' "$SRC/README.md" | head -1 | cut -d: -f1)
+manual=$(grep -n 'plugin marketplace add' "$SRC/README.md" | head -1 | cut -d: -f1)
+[ -n "$handover" ] && [ "$handover" -lt "$manual" ] \
+  && ok "handing it to an agent comes before any command to type" \
+  || bad "the manual routes come first, so the recommended one reads as a footnote"
+sed -n "${handover}p" "$SRC/README.md" | grep -q '^>' \
+  && ok "and it is set off in a block, not buried in a paragraph" \
+  || bad "the recommendation is not visually separated"
+
 # ------------------------------------------------ D. what /lazyspec-setup does
 
 sect "D. what /lazyspec-setup does"
@@ -158,9 +168,15 @@ is "a repository can arrive with specifications already written" "$existing" "1"
 grep -q 'Specifications that are already here' "$SRC/skills/lazyspec-setup/SKILL.md" \
   && ok "setup is told to look for them before proposing a name" \
   || bad "setup would propose a glob matching nothing"
-grep -q "specs: '\*\*/SPEC.md'" "$SRC/skills/lazyspec-setup/SKILL.md" \
-  && ok "and its example shows a set pointed at what was found" \
+grep -q 'SPEC.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "and it names the file a migrating repository already has" \
   || bad "every example still shows the default name"
+grep -q 'Never use `## ` in that file' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "and forbids ## there, which would read as a requirement" \
+  || bad "nothing stops ## appearing in lazyspec.md"
+[ -f "$SRC/lazyspec.example.md" ] && [ "$(grep -c '^## ' "$SRC/lazyspec.example.md")" = "0" ] \
+  && ok "the shipped example shows several layouts and uses no ##" \
+  || bad "lazyspec.example.md is missing or uses ##"
 grep -q 'is where a repository should end up' "$SRC/skills/lazyspec-setup/SKILL.md" \
   && ok "while still naming *.lazyspec.md as where to end up" \
   || bad "it accommodates the old name without naming the destination"

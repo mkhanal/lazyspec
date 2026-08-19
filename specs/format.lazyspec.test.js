@@ -42,30 +42,21 @@ describe('Every Specification Says It Is Locked', () => {
   });
 });
 
-// Every key any shipped `.lazyspec.yaml` may carry. A heading-level key
-// appearing here would be the failure this test exists to catch.
-const KEYS = ['sets', 'root', 'specs', 'covers'];
-
-// Fenced yaml only. Prose and a skill's own frontmatter are not
-// configuration, and a line of English can end in a colon.
-const yamlKeys = (text) =>
-  [...text.matchAll(/```yaml\n([\s\S]*?)```/g)]
-    .flatMap((block) => block[1].split('\n'))
-    .map((line) => /^\s*-?\s*([a-z][a-z_]*):(\s|$)/.exec(line))
-    .filter(Boolean)
-    .map((m) => m[1]);
+// The files where a project writes down where its requirements live. A
+// `## ` in one of these is the failure this test exists to catch: it
+// would read as a requirement, and nothing would ever prove it.
+const WHERE = ['lazyspec.md', 'lazyspec.example.md'];
 
 describe('A Requirement Is A Level Two Heading', () => {
-  it('marks a requirement in every project, with no setting to move it', () => {
-    const shipped = [['.lazyspec.yaml', yamlKeys('```yaml\n' + read('.lazyspec.yaml') + '```')]]
-      .concat(
-        fs
-          .readdirSync(path.join(ROOT, 'skills'))
-          .map((d) => path.join('skills', d, 'SKILL.md'))
-          .map((rel) => [rel, yamlKeys(read(rel))]),
-      );
-    const stray = shipped.flatMap(([rel, keys]) =>
-      keys.filter((k) => !KEYS.includes(k)).map((k) => `${rel}: ${k}`),
+  it('marks a requirement in every project, and nothing written moves it', () => {
+    const found = WHERE.filter((rel) => fs.existsSync(path.join(ROOT, rel)));
+    assert.deepEqual(found, WHERE, 'a file describing the areas is missing');
+    const stray = found.flatMap((rel) =>
+      read(rel)
+        .split('\n')
+        .map((line, i) => [line, i + 1])
+        .filter(([line]) => line.startsWith('## '))
+        .map(([, n]) => `${rel}:${n}`),
     );
     assert.deepEqual(stray, []);
   });

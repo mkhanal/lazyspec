@@ -69,59 +69,63 @@ yes**. This is somebody's standing rules; do not edit them unasked.
 - **Already there?** Replace between the markers and say what changed. If
   the text is identical, say so and stop.
 
-## 4. Offer to write `.lazyspec.yaml`
+## 4. Offer to write `lazyspec.md`
 
-Skip this if the file already exists, or if they would rather wait — it
+Skip this if the file already exists, or if they would rather wait - it
 is optional, and without it every `*.lazyspec.md` counts, which is right
 for a small repository.
 
 Otherwise **work it out yourself first, and ask only what you genuinely
 cannot see.** You have the repository in front of you. Read it.
 
-- **The boundaries.** Package manifests, workspace globs, service
-  folders, deployment units. A monorepo gets one set per boundary,
-  because a specification's name has to be unique inside its `root` or
-  two packages both claim the same test file. One project gets one set
-  with `root: .`.
 - **Specifications that are already here.** Look before you propose a
   name. A repository that has been doing this by hand, or arrived from
   another tool, has files full of requirements called something else -
-  `SPEC.md`, `requirements.md`, `docs/behaviour/*.md`. Point `specs:` at
-  what it already has. A glob that matches nothing leaves every existing
-  requirement outside the set, unchecked and invisible, and the check
-  will report a clean repository because it can see no specifications at
-  all.
+  `SPEC.md`, `requirements.md`, `docs/behaviour/*.md`. Name what it
+  already has. A glob that matches nothing leaves every existing
+  requirement outside, unchecked and invisible, and the check will report
+  a clean repository because it can see no specifications at all.
 
   `*.lazyspec.md` is where a repository should end up - the name is what
   makes a specification recognisable to an agent that opens one knowing
   nothing else. Say so. But a rename is a change to their repository and
-  not part of installing yours, so point the set at what exists, and let
-  them move when they choose.
-- **Where new ones will sit**, if there are none yet. Next to the code
-  they describe, in the folder that package already uses for tests or
-  docs.
-- **What each set is likely to cover.** A service is what a caller
+  not part of installing yours, so name what exists, and let them move
+  when they choose.
+- **The areas.** One bullet per area whose specification names have to be
+  unique: two packages each holding `billing.lazyspec.md` would claim the
+  same test file. Read package manifests, workspace globs, service
+  folders, deployment units. One project is one bullet.
+- **Where specifications sit in each.** Beside the code they describe, in
+  the folder that package already uses for tests or docs - `spec/`,
+  `specs/`, `docs/spec/`. Layouts differ and all of them are fine.
+- **What a requirement in each is for.** A service is what a caller
   observes at its boundary. A pipeline is what holds of the data after a
   run. A worker is what happens per job. A library is its public surface.
-  Read the code and say which this is, then say what it excludes.
+  Read the code, say which this is, then say what it excludes. A generic
+  answer is a real answer; a guessed one that nobody checks is not.
 
 Then put the whole thing in front of them, filled in, and **mark what you
 inferred**:
 
-```yaml
-sets:
-  - root: services/ingest       # found: a server, routes, contract tests
-    specs: specs/*.lazyspec.md  # nothing here yet, so the default name
-    covers: |
-      What a caller observes at the boundary: what is accepted, what
-      is refused, what comes back.               # inferred - check me
+```markdown
+# Where our requirements live
 
-  - root: pipelines/nightly     # found: a scheduler, fixtures, dbt tests
-    specs: '**/SPEC.md'         # found: 11 of them, already written
-    covers: |
-      What must hold of the data after a run, and what happens when a
-      run fails halfway.                          # inferred - check me
+- **apps/api** — `spec/*.lazyspec.md`     <!-- found: routes, contract tests -->
+  What a caller observes at the boundary: what is accepted, what is
+  refused, what comes back. Not internal helpers.   <!-- inferred - check me -->
+
+- **pipelines/nightly** — `docs/spec/*.lazyspec.md`  <!-- found: a scheduler, dbt tests -->
+  What must hold of the data after a run, and what happens when a run
+  fails halfway.                                    <!-- inferred - check me -->
 ```
+
+`lazyspec.example.md` in this project shows more layouts - specifications
+per module, per package, in a central folder, and a repository still on
+its old name.
+
+**Never use `## ` in that file.** The mark means a requirement everywhere
+else, and a check that meets one there will look for a test to prove it.
+Title, then bullets.
 
 Ask only the questions the repository does not answer, and ask them as
 questions with your best answer already in them:
@@ -130,15 +134,15 @@ questions with your best answer already in them:
   contract files as well as unit tests. Should a requirement here be one
   of those contracts, or whatever a caller can observe?" That is a
   genuine choice and the repository cannot settle it.
-- **A boundary you cannot place.** A package that could be its own set
-  or part of a larger one.
+- **An area you cannot place.** A package that could stand alone or be
+  part of a larger one.
 - **Nothing else.** Do not ask what you can read. A question whose answer
   is in `package.json` wastes the one moment somebody is paying
   attention.
 
-`covers` is the project's decision, so never invent it silently. A
-sentence you guessed and nobody corrected is worse than no sentence,
-because the next agent will treat it as settled.
+What each area is for is the project's decision, so never invent it
+silently. A sentence you guessed and nobody corrected is worse than no
+sentence, because the next agent will treat it as settled.
 
 ## 5. Point the other editors at it
 
@@ -157,7 +161,7 @@ stale instruction is worse than none.
 ## 6. Report
 
 - Which file now carries the instruction, and whether you created it.
-- Whether you wrote `.lazyspec.yaml`, and which parts of it you inferred
+- Whether you wrote `lazyspec.md`, and which parts of it you inferred
   rather than were told.
 - Which editors were pointed at it.
 - Anything you could not verify — an editor whose standing-context file
@@ -178,7 +182,7 @@ decision somebody makes, and nobody has made it in front of you.
 
 ## Rules
 
-- Change nothing but the instruction files and `.lazyspec.yaml`. No
+- Change nothing but the instruction files and `lazyspec.md`. No
   specifications, no code, no other configuration.
 - Never write a specification here. A requirement reverse-engineered
   from code is a description of the implementation wearing a promise's

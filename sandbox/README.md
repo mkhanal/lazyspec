@@ -55,7 +55,7 @@ Nothing executable is installed, and a scenario checks that.
 - **judging a change** — a specification that moved alone, one that moved
   with its test, and code that moved with neither
 - **configuration** — one set per package, and that removing
-  `.lazyspec.yaml` changes nothing essential
+  `lazyspec.md` changes nothing essential
 
 ## Isolation
 
