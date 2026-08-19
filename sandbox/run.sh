@@ -242,7 +242,7 @@ carries "services/api/specs/billing.lazyspec.md" "services/ledger/tests/test_pos
 # ...and every one of them says lazyspec, so the name can be read the
 # other way: from a test back to the specification it claims to prove.
 claims() {
-  basename "$1" | tr 'A-Z' 'a-z' | tr -d '_-.' | grep -q lazyspec
+  basename "$1" | tr 'A-Z' 'a-z' | tr -d '_.-' | grep -q lazyspec
 }
 for t in services/api/specs/billing.lazyspec.test.js \
          services/ledger/tests/test_postings_lazyspec.py \
@@ -265,7 +265,7 @@ mkdir -p orphans
 found=0
 for t in orphans/*; do
   claims "$t" || continue
-  stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_-.' \
+  stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_.-' \
     | sed 's/lazyspec.*//; s/^test//; s/test$//')
   [ -n "$stem" ] || continue
   ls -- *"$stem"*.lazyspec.md >/dev/null 2>&1 || found=$((found + 1))
@@ -313,7 +313,7 @@ sect "C2. an orphaned specification test"
 orphans() {
   find . -type f -not -path './.git/*' -not -name '*.lazyspec.md' | while read -r t; do
     claims "$t" || continue
-    stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_-.' \
+    stem=$(basename "$t" | tr 'A-Z' 'a-z' | tr -d '_.-' \
       | sed 's/lazyspec.*//; s/^test//; s/test$//')
     [ -n "$stem" ] || continue
     find . -name '*.lazyspec.md' | tr -d '_-' | grep -qi "/$stem.lazyspec.md$" \
