@@ -160,6 +160,12 @@ grep -qE 'https?://[^ ]*lazyspec\.instruction\.md' "$SRC/skills/lazyspec-setup/S
   || ok "setup never fetches the instruction, so it cannot paste a stranger's"
 grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
   && ok "it stops and asks when the file is missing" || bad "no answer when it is missing"
+
+# the session that runs setup is the one session where the paste is not
+# in effect, because standing rules are read when a session starts
+grep -q 'is not loaded yet' "$SRC/skills/lazyspec-setup/SKILL.md" \
+  && ok "and says the paste is not live until a new session" \
+  || bad "setup lets somebody test the install in the one session it cannot work in"
 grep -q 'lazyspec-setup' "$SRC/README.md" && ok "README sends you to /lazyspec-setup after installing" \
   || bad "README never mentions the step that does the work"
 

@@ -171,6 +171,13 @@ stale instruction is worse than none.
   way to write to. Say so plainly; guessing a filename is worse than
   admitting it.
 
+**Say that what you just pasted is not loaded yet.** An agent reads the
+standing rules when its session starts, so the session you are in was
+given them before you wrote anything. Yours is the one session in this
+repository where the instruction is not in effect. Tell them to start a
+new one and ask "where do this repository's requirements live?" - an
+immediate answer means it is loaded, and searching means it is not.
+
 Then tell them what is left, because none of it is yours to do:
 
 - Requirements are written by `/lazyspec`, as soon as somebody knows
