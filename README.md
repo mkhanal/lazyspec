@@ -283,8 +283,8 @@ skills and does the one thing a plugin cannot, which is write a file into
 your repository. Getting the skills is any of the routes above.
 
 `lazyspec.instruction.md` ships beside the skills, so once the plugin is
-installed the text is already on your machine and `/lazyspec-setup` knows where to
-find it.
+installed the text is already on your machine and `/lazyspec-setup`
+knows where to find it.
 
 ## Checking
 
@@ -348,8 +348,9 @@ That is not a slogan; it is where the bugs came from:
   There is a specification for installing now because the check said
   there wasn't one.
 - **The marriage caught real drift.** `AGENTS.md` carries
-  `lazyspec.instruction.md` word for word; the day the instruction changed and the copy did not,
-  the test failed rather than the two quietly disagreeing.
+  `lazyspec.instruction.md` word for word; the day the instruction
+  changed and the copy did not, the test failed rather than the two
+  quietly disagreeing.
 - **`/lazyspec` made the scope widen out loud.** Installing was outside
   what `lazyspec.md` said requirements here cover, so that sentence
   changed first, in its own edit, before anything was written under it.
