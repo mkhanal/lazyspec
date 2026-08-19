@@ -39,8 +39,11 @@ parts that are not obvious:
   escaping and nothing needs to guess what a test looks like.
 - **What changed, and against what.** Uncommitted work is against `HEAD`.
   A branch or a pull request is against its merge base with the branch it
-  targets, which covers every commit on it however many there are. Say
-  which base you used; a reader cannot judge your findings without it.
+  targets, which covers every commit on it however many there are. Where
+  there is no target and no history to speak of - a first commit, a
+  single branch, no remote - judge the whole tree and say that is what
+  you did. Say which base you used either way; a reader cannot weigh your
+  findings without it.
 
 Let git decide what to skip. Never hand-roll a list of folders - it
 already knows what is ignored, vendored or a submodule.
@@ -78,7 +81,9 @@ These need no judgement. Report them as facts.
 - **Orphaned.** A test file naming `lazyspec` and a specification's
   stem, with no such specification. It was deleted or renamed and its
   test was left behind, still passing, proving a requirement nobody has.
-  Say which way it goes: the specification back, or the test out.
+  Say which way it goes: the specification back, or the test out. If the
+  history does not say - nothing was deleted in any commit you can see -
+  report both and leave the choice.
 - **Unmarked.** A specification whose first line is not the lazyspec
   header. Restore it through `/lazyspec`.
 
@@ -224,6 +229,11 @@ refuses it in a class name, pytest fails to import
 Run this repository's own test command first. Find it; do not guess it.
 Where packages have their own runners, run one per package a touched
 specification or test lives in, not one for the tree.
+
+If there is no such command anywhere - no manifest, no Makefile, no CI -
+say so, run whatever the test files themselves imply, and report that as
+inferred rather than found. A suite you guessed at is still worth
+running; a reader just has to know you guessed.
 
 ```
 VERDICT: pass | fail

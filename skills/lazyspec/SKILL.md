@@ -131,10 +131,24 @@ specification says so on its first line.
    silence.
 
    Fit that to how this repository already names and runs its tests. The
-   file has to be one the runner picks up, and the words can sit wherever
-   the language puts a test's name: a string, a docstring, an annotation,
-   a comment. Do not invent a runner, a layout or a naming style the
-   repository does not already use.
+   words can sit wherever the language puts a test's name: a string, a
+   docstring, an annotation, a comment. Do not invent a runner, a layout
+   or a naming style the repository does not already use.
+
+   **The file has to be one the runner actually collects, and that is
+   worth checking rather than assuming.** A repository whose command is
+   `node --test tests/*.test.js` will never see a married file written
+   into `specs/`: the suite passes, the test never ran, and the marriage
+   proves nothing. Put it where the runner already looks - the two files
+   do not have to sit together, the name is what marries them - or say
+   the glob has to widen and let them decide.
+
+   **Splitting moves both halves.** Take the headings out of the old
+   specification and the blocks proving them out of the old test file,
+   into a new pair named for the new stem. Leave nothing behind: a
+   heading proved from two files is `proved elsewhere`, and a block whose
+   heading has gone is `left behind`. Both are findings the check will
+   raise against you for having followed this rule carelessly.
 
    Reword a heading and you reword its test. Remove one and you remove
    its test in the same edit: a test whose requirement is gone still
