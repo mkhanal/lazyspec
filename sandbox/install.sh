@@ -82,19 +82,19 @@ printf '# Someone else project\n\nRules we already keep.\n' > CONSTITUTION.md
 git add -A >/dev/null; git commit -qm initial
 
 for d in .claude/skills .agents/skills .cursor/skills; do
-  mkdir -p $d; cp -R "$SRC"/skills/. $d/; cp "$SRC/INSTRUCTION.md" $d/
+  mkdir -p $d; cp -R "$SRC"/skills/. $d/
 done
+cp "$SRC/INSTRUCTION.md" .claude/skills/
 is "Claude Code and opencode find three skills" "$(ls -d .claude/skills/*/ | wc -l | tr -d ' ')" "3"
 is "Codex and opencode find three skills"       "$(ls -d .agents/skills/*/ | wc -l | tr -d ' ')" "3"
 is "Cursor finds three skills"                  "$(ls -d .cursor/skills/*/ | wc -l | tr -d ' ')" "3"
 
 # the product itself, not just the skills that place it
-missing=$(for d in .claude .agents .cursor; do [ -f $d/skills/INSTRUCTION.md ] || echo $d; done)
-[ -z "$missing" ] && ok "the instruction lands beside them, so setup needs no network" \
-  || bad "no instruction on disk under: $missing"
-grep -q 'cp /tmp/lazyspec/INSTRUCTION.md \$d/' "$SRC/README.md" \
-  && ok "README's copy route carries the instruction too" \
-  || bad "README's copy route drops the instruction"
+copies=$(find .claude .agents .cursor -name INSTRUCTION.md | wc -l | tr -d ' ')
+is "the instruction lands on disk, so setup needs no network" "$copies" "1"
+grep -q 'cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/' "$SRC/README.md" \
+  && ok "README's copy route carries it, once" \
+  || bad "README's copy route drops the instruction, or copies it more than once"
 grep -q 'for d in .claude/skills .agents/skills .cursor/skills' "$SRC/README.md" \
   && ok "README prints one loop covering all three" || bad "README's copy command differs"
 grep -q 'claude plugin marketplace add' "$SRC/README.md" \

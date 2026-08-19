@@ -39,34 +39,6 @@ requirement is written when it is known, and changed safely after.
 - Nothing to change about how you work. Keep your planning, your tickets,
   your branching, your tests.
 
-## Where this comes from
-
-> **It is in daily use in a software product for a regulated industry.**
-> The convention lazyspec packages runs an electronic quality management
-> system — close to three hundred requirements, each married to the test
-> that proves it, in a domain where "the specification says one thing and
-> the code does another" is not a review nit but something somebody has to
-> answer for. That is where every rule on this page was worn in, and it is
-> still the repository this gets tested against.
->
-> **It works, and the usual failure modes have not turned up.** No
-> specification quietly reworded to match what was built. No requirement
-> written before anybody understood the behaviour and then abandoned. No
-> specify-plan-tasks workflow to adopt and then route around, because
-> there is no workflow — see [Why not one of the
-> others](#why-not-one-of-the-others). That is why it is packaged at all,
-> rather than staying one team's habit: it seemed worth the ecosystem
-> having.
->
-> **That use settled the hook question early.** We shipped script
-> guardrails and took them out, because they did not work as well as the
-> instruction did — see [Why there is no hook](#why-there-is-no-hook). A
-> hook refuses a write and teaches nothing; an agent that meets the rule
-> in the file it is about to edit changes what it does next. Every
-> mechanism that had to be installed reached fewer agents, cost more
-> friction, and moved the outcome less than the sentence that arrived
-> unbidden.
-
 ## Install
 
 **Recommended — hand it to your agent.** In the repository you want it
@@ -119,14 +91,18 @@ here: add this repository through that editor's own plugin interface.
 rm -rf /tmp/lazyspec
 git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
 for d in .claude/skills .agents/skills .cursor/skills; do
-  mkdir -p $d
-  cp -R /tmp/lazyspec/skills/. $d/
-  cp /tmp/lazyspec/INSTRUCTION.md $d/
+  mkdir -p $d && cp -R /tmp/lazyspec/skills/. $d/
 done
+cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/
 ```
 
-Copying `INSTRUCTION.md` is not optional. It is the product; the skills
-only put it somewhere. Copy it in and `/lazyspec-setup` finds it on your
+That last line is not optional, and one copy is enough — put it beside
+whichever skills folder you keep. Nothing loads it: a skill is a
+directory holding a `SKILL.md`, so a loose file there is only a file.
+It is the **source of the paste**, and `/lazyspec-setup` reads it from
+disk so it never has to fetch the instruction over a network and paste
+text nobody in your team has seen. Once the paste is in your standing
+rules you can delete it. Copy it in and `/lazyspec-setup` finds it on your
 disk, at the version the skills beside it were written for.
 
 `.claude/skills/` is read by Claude Code and opencode, `.agents/skills/`
@@ -244,12 +220,40 @@ written.
 glance.** Nobody should read a whole file to find one thing, and moving
 headings later means moving the blocks that prove them at the same time.
 
+## Where this comes from
+
+> **It is in daily use in a software product for a regulated industry.**
+> The convention lazyspec packages runs an electronic quality management
+> system — close to three hundred requirements, each married to the test
+> that proves it, in a domain where "the specification says one thing and
+> the code does another" is not a review nit but something somebody has to
+> answer for. That is where every rule on this page was worn in, and it is
+> still the repository this gets tested against.
+>
+> **It works, and the usual failure modes have not turned up.** No
+> specification quietly reworded to match what was built. No requirement
+> written before anybody understood the behaviour and then abandoned. No
+> specify-plan-tasks workflow to adopt and then route around, because
+> there is no workflow — see [Why not one of the
+> others](#why-not-one-of-the-others). That is why it is packaged at all,
+> rather than staying one team's habit: it seemed worth the ecosystem
+> having.
+>
+> **That use settled the hook question early.** We shipped script
+> guardrails and took them out, because they did not work as well as the
+> instruction did — see [Why there is no hook](#why-there-is-no-hook). A
+> hook refuses a write and teaches nothing; an agent that meets the rule
+> in the file it is about to edit changes what it does next. Every
+> mechanism that had to be installed reached fewer agents, cost more
+> friction, and moved the outcome less than the sentence that arrived
+> unbidden.
+
 ## The three skills
 
 | skill | when it runs |
 |---|---|
 | `/lazyspec-setup` | once, after installing: the instruction, and where specs live |
-| `/lazyspec` | the only way to add, reword or remove a requirement |
+| `/lazyspec` | the only way to add, update or remove a requirement |
 | `/lazyspec-validate` | before you finish, and on a pull request |
 
 `/lazyspec-setup` is not an installer — it runs *after* you have the
