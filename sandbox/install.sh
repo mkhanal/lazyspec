@@ -101,6 +101,12 @@ grep -q 'claude plugin marketplace add' "$SRC/README.md" \
   && ok "and a shell form of the plugin install, for an agent doing it for you" \
   || bad "the plugin route is slash commands only, which an agent cannot run"
 
+# the privacy statement claims no network calls, and the shipped skills
+# have to keep that true
+[ -f "$SRC/PRIVACY.md" ] && ok "a privacy statement ships" || bad "no PRIVACY.md"
+calls=$(grep -rc 'http' "$SRC"/skills/*/SKILL.md | grep -v ':0' | wc -l | tr -d ' ')
+is "and no shipped skill makes a network call, as it says" "$calls" "0"
+
 # the call for contributors is the first thing on the page, and it says
 # which models the depth actually comes from
 banner=$(grep -n 'Contributors wanted' "$SRC/README.md" | head -1 | cut -d: -f1)
