@@ -107,9 +107,13 @@ manual=$(grep -n 'plugin marketplace add' "$SRC/README.md" | head -1 | cut -d: -
 [ -n "$handover" ] && [ "$handover" -lt "$manual" ] \
   && ok "handing it to an agent comes before any command to type" \
   || bad "the manual routes come first, so the recommended one reads as a footnote"
-sed -n "${handover}p" "$SRC/README.md" | grep -q '^>' \
-  && ok "and it is set off in a block, not buried in a paragraph" \
-  || bad "the recommendation is not visually separated"
+# set off from the prose - a fenced block or a quote, either reads as one
+before=$(sed -n "$((handover - 1))p" "$SRC/README.md")
+line=$(sed -n "${handover}p" "$SRC/README.md")
+case "$before$line" in
+  '```'*|*'>'*) ok "and it is set off in a block, not buried in a paragraph" ;;
+  *) bad "the recommendation is not visually separated" ;;
+esac
 
 # ------------------------------------------------ D. what /lazyspec-setup does
 

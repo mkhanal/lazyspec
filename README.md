@@ -22,34 +22,37 @@ requirement is written when it is known, and changed safely after.
 ## In short
 
 - A requirement is a `## ` heading in a `*.lazyspec.md` file. Its text is its identifier.
-- Its test declares itself by that text, word for word, in the file sharing the specification's stem.
+- Its test declares itself by that text, word for word.
 - `billing.lazyspec.md` is married by the one test file naming both
   `billing` and `lazyspec`, spelled however your language spells names —
   `billing.lazyspec.test.ts`, `test_billing_lazyspec.py`,
   `billing_lazyspec_test.go`, `BillingLazyspecTest.java`. The name
   marries them, so either file can live anywhere.
 - Reword the requirement and its test is orphaned at once, loudly.
-- Write each requirement once it is known, which is usually partway
-  through the build rather than at either end. Then keep it still or keep evolving until certain.
+- Write each requirement as soon as you know it — before the code,
+  during it, or after. Then it stops moving, unless you go back into
+  `/lazyspec`.
 - A specification is locked unless you are in `/lazyspec`. That is a mode
-  the agent is in or is not, and it is almost never in it unless you put it in
-  (You can type /lazyspec or ask agent to go into this mode)
+  the agent is in or is not, and it is almost never in it unless you put
+  it there — type `/lazyspec`, or ask the agent to.
 - Nothing to run: no program, no gate, no build.
 - Nothing to change about how you work. Keep your planning, your tickets,
   your branching, your tests.
 
 ## Install
 
-**Recommended — hand it to your agent with below instructions
->
-> ```
-> Read https://github.com/mkhanal/lazyspec/blob/main/README.md and install it.
-> ```
+**Recommended — hand it to your agent.** In the repository you want it
+in, paste this to whatever agent you already use:
+
+```
+Read https://github.com/mkhanal/lazyspec/blob/main/README.md and install it.
+```
 
 It reads this page, puts the skills where your editor looks, and runs
 `/lazyspec-setup` — which proposes where the instruction should live
 and waits for your answer before touching anything.
-It consents to the skills being copied in
+
+That sentence is your yes: it consents to the skills being copied in
 and the instruction pasted into your standing rules. It does not
 consent to a requirement being written — nothing here writes one — and
 whatever `/lazyspec-setup` infers for `lazyspec.md` comes back
@@ -94,7 +97,7 @@ for d in .claude/skills .agents/skills .cursor/skills; do
 done
 ```
 
-The last two lines matter. `INSTRUCTION.md` is the product; the skills
+Copying `INSTRUCTION.md` is not optional. It is the product; the skills
 only put it somewhere. Copy it in and `/lazyspec-setup` finds it on your
 disk, at the version the skills beside it were written for.
 
@@ -172,7 +175,7 @@ In a fresh session:
 
 `/lazyspec-setup` is not an installer — it runs *after* you have the
 skills and does the one thing a plugin cannot, which is write a file into
-your repository. Getting the skills is the two commands above.
+your repository. Getting the skills is any of the routes above.
 
 `INSTRUCTION.md` ships beside the skills, so once the plugin is installed
 the text is already on your machine and `/lazyspec-setup` knows where to
@@ -203,7 +206,7 @@ Five checks need no judgement, and each is a few lines of shell around a
 search:
 
 - a requirement whose words appear nowhere,
-- one heading in two specifications of the same set,
+- one heading in two specifications of the same area,
 - a specification that changed while nothing proving it did,
 - a specification not opening with the lazyspec header,
 - a test file carrying `lazyspec` whose specification is gone.
@@ -221,8 +224,9 @@ Run it pre-push, not pre-commit: a requirement is written when it
 settles, so the commits made while finding that out should not have to
 satisfy one.
 
-We ship no workflow file. Which agent runs the judged half, which
-credentials it uses, and whether a verdict blocks a merge are yours —
+We ship no workflow for your repository. Which agent runs the judged
+half, which credentials it uses, and whether a verdict blocks a merge are
+yours —
 `/lazyspec-validate` describes what to give a reviewing agent.
 
 ## Pointed at itself
@@ -275,15 +279,16 @@ instruction reaches every agent, because you paste it. Skills reach four.
 | Cline, Roo | `.clinerules` | no |
 | Aider | `CONVENTIONS.md`, `--read CONVENTIONS.md` | no |
 
-Where the skills do not reach, `/lazyspec` and `/lazyspec-validate` are
-still two documents you can point an agent at by path.
+Where the skills do not reach, all three are still documents you can
+point an agent at by path.
 
 ## Using it day to day
 
 Nothing changes until a requirement needs to move.
 
 - **Building something new?** Work normally. Experiment, rewrite, throw
-  it away. A requirement is written when it settles, not before.
+  it away. A requirement is written as soon as you know it, which is
+  often partway through and sometimes before a line exists.
 - **Behaviour is settled?** Run `/lazyspec`. It writes the requirement,
   updates its test in the same edit, and runs your suite.
 - **Finishing a task?** Run `/lazyspec-validate`.
@@ -359,7 +364,8 @@ t.Run("Refunds Never Exceed What Was Captured", func(t *testing.T) { ... })
 ```
 
 `sh sandbox/run.sh` builds a whole repository like this — in those four
-languages — and checks every claim on this page against it.
+languages — and checks the naming, the searching and the orphan rules
+against it.
 
 ### The header does the work
 
@@ -501,9 +507,9 @@ Put a specification next to the code it describes.
 - **Anything bigger?** Co-locate: `services/api/specs/billing.lazyspec.md`.
   An agent working in `services/api` finds the requirement by proximity
   instead of scanning a global list, and reads fewer of them per task.
-- **Monorepo?** One `sets:` entry per package. `root` is the folder a
-  specification's name must be unique inside, so two packages can each
-  have a `billing.lazyspec.md`.
+- **Monorepo?** One bullet in `lazyspec.md` per package. An area is the
+  folder a specification's name must be unique inside, so two packages
+  can each have a `billing.lazyspec.md`.
 
 Nesting is free and costs nothing to an agent. A single flat directory is
 what gets expensive: every requirement in it is a candidate every time
@@ -573,30 +579,33 @@ Afterwards the same conflict costs an argument about which one was right.
 
 It does not read every specification — a real repository has hundreds of
 requirements and nobody sustains that. It goes where an overlap is
-likely: the counterpart set, the same domain nouns, the same named thing
+likely: the counterpart area, the same domain nouns, the same named thing
 — a table, a queue, a contract address, a file format.
 `/lazyspec-validate` is only the backstop, and checks narrowly.
 
 Watch the seam where one side was specified long before the other. A
 behaviour written into whichever specification existed at the time,
-because there was nowhere else to put it, gets restated once the set that
-owns it exists — and the copy left behind is the one that goes stale.
+because there was nowhere else to put it, gets restated once the area
+that owns it exists — and the copy left behind is the one that goes stale.
 
-`covers` keeps a set from quietly widening until nobody can say what
-belongs in it. `/lazyspec` reads it before adding a requirement and stops
-if the requirement is the wrong kind; `/lazyspec-validate` reports one
-that slipped in below the declared level.
+What `lazyspec.md` says an area is for keeps it from quietly widening
+until nobody can say what belongs in it. `/lazyspec` reads that sentence
+before adding a requirement and stops if the requirement is the wrong
+kind; `/lazyspec-validate` reports one that slipped in below the declared
+level.
 
 **`/lazyspec-setup` drafts the whole file for you.** It reads the
-repository — package manifests, workspace globs, service folders — works
-out the boundaries, proposes a `covers` for each, marks what it inferred,
-and asks only what the repository cannot answer. The level a set works at
-is usually the one real question, and it asks that one with its best
-guess already in it.
+repository — package manifests, workspace globs, service folders,
+specifications already written under another name — works out the areas,
+proposes a sentence for each, marks what it inferred, and asks only what
+the repository cannot answer. The level an area works at is usually the
+one real question, and it asks that one with its best guess already in
+it.
 
-Writing down where specifications will live is not specifying. The shape
-of a repository is knowable on day one; what its code does is not, which
-is why one is settled at install and the other waits.
+Writing down where specifications will live is not specifying. You can
+read a repository's shape off its files on day one. What it promises is a
+decision somebody makes, which is why one is settled at install and the
+other waits.
 
 ## What it does not replace
 
@@ -610,7 +619,8 @@ nothing, and that is the design.
 | integration and database tests | no |
 | fixtures, property tests, benchmarks | no |
 
-Requirements sit at whatever level `covers` declares. Everything below
+Requirements sit at whatever level `lazyspec.md` declares. Everything
+below
 that keeps working exactly as it did: write it, change it, delete it,
 without touching a specification.
 
@@ -623,7 +633,7 @@ without touching a specification.
   so the name can be checked — and because the token fits every naming
   scheme, that check works in Java and Python as well as it does here.
 - **Never write a requirement to justify a test you already have.** That
-  is the tail wagging the dog: the set fills with implementation detail
+  is the tail wagging the dog: the area fills with implementation detail
   and the specification becomes a second, worse copy of the suite.
 - **A requirement is a promise; a unit test is a check.** A requirement
   says what the software promises somebody outside the code. A unit test
@@ -670,7 +680,8 @@ unlock file whenever it liked.
 Given that the ceiling is the same either way, the hook was paying for
 nothing:
 
-- It ran on **three agents out of nine**. On the rest a repository could
+- It ran on **three of the agents in that table**. On the rest a
+  repository could
   carry the whole apparatus and be defended by nothing.
 - It was **tested on one**. Cursor's payload shape came from
   documentation, never from a running Cursor; opencode needed a shim
@@ -692,8 +703,8 @@ is the honest maximum, and it is what is left.
 ## What it does not do
 
 - It does not judge whether a test is any good.
-- It ships no gate and no CI workflow. Which agent, which credentials and
-  what a verdict does to a pull request are yours.
+- It ships no gate, and no CI workflow for your repository. Which agent,
+  which credentials and what a verdict does to a pull request are yours.
 - It is not a permission system. A human with a text editor and
   `--no-verify` is not in scope.
 
@@ -734,6 +745,8 @@ is changed the way one in yours is.
 
 ```
 INSTRUCTION.md              the standing instruction. the product.
+lazyspec.md                 where this repository's requirements live
+lazyspec.example.md         the same file, in several layouts
 skills/lazyspec-setup/      puts that instruction where agents read it
 skills/lazyspec/            the only way to change a specification
 skills/lazyspec-validate/   the check
@@ -745,8 +758,8 @@ sandbox/                    a throwaway consumer repo, and its scenarios
 
 ```
 node --test specs/*.lazyspec.test.js   # this repository's own requirements
-sh sandbox/run.sh                      # 50 scenarios in a throwaway repo
-sh sandbox/install.sh                  # 59 more: manifests, both install routes, the paste
+sh sandbox/run.sh                      # 51 scenarios in a throwaway repo
+sh sandbox/install.sh                  # 63 more: manifests, both install routes, the paste
 sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```
 
@@ -769,7 +782,7 @@ cloning, and that needs Developer Mode or an elevated shell. Otherwise
 copy the folder instead: `cp -R skills/. .claude/skills/`. Everything
 else here is plain text and `sh`.
 
-**What is specified**, and why only these two:
+**What is specified**, and why only these three:
 
 - `specs/format.lazyspec.md` — that every specification carries its
   notice. It is the one thing that reaches every agent, so it is the one
@@ -778,6 +791,9 @@ else here is plain text and `sh`.
   shape. "Under two thousand characters" is a requirement, not a
   preference: `INSTRUCTION.md` is read on every task forever, and a test
   is the only thing that holds prose to a budget.
+- `specs/install.lazyspec.md` — what installing must leave behind. The
+  manifests are load-bearing and invisible: get one name wrong and the
+  skills arrive with no instruction to point at.
 
 The skills and this README are ordinary writing. Change them without
 ceremony.
