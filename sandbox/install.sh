@@ -36,12 +36,12 @@ grep -q '/plugin install lazyspec@lazyspec' "$SRC/README.md" \
   && ok "README types that pair exactly" || bad "README install command disagrees"
 
 # source "./" makes the plugin root the repository root, which is the only
-# reason ${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md resolves.
+# reason ${CLAUDE_PLUGIN_ROOT}/lazyspec.instruction.md resolves.
 is "claude marketplace source is ./" "$(j "$SRC/.claude-plugin/marketplace.json" .plugins[0].source)" "./"
 is "cursor marketplace source is ./" "$(j "$SRC/.cursor-plugin/marketplace.json" .plugins[0].source)" "./"
-[ -f "$SRC/INSTRUCTION.md" ] && ok "so INSTRUCTION.md sits at the plugin root" \
-  || bad "INSTRUCTION.md is not where the plugin root would put it"
-grep -q 'CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
+[ -f "$SRC/lazyspec.instruction.md" ] && ok "so lazyspec.instruction.md sits at the plugin root" \
+  || bad "lazyspec.instruction.md is not where the plugin root would put it"
+grep -q 'CLAUDE_PLUGIN_ROOT}/lazyspec.instruction.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
   && ok "and the setup skill looks for it there" || bad "setup skill looks elsewhere"
 
 # Claude discovers skills/; Cursor and Codex are told, as a string. This
@@ -84,15 +84,15 @@ git add -A >/dev/null; git commit -qm initial
 for d in .claude/skills .agents/skills .cursor/skills; do
   mkdir -p $d; cp -R "$SRC"/skills/. $d/
 done
-cp "$SRC/INSTRUCTION.md" .claude/skills/
+cp "$SRC/lazyspec.instruction.md" .claude/skills/
 is "Claude Code and opencode find three skills" "$(ls -d .claude/skills/*/ | wc -l | tr -d ' ')" "3"
 is "Codex and opencode find three skills"       "$(ls -d .agents/skills/*/ | wc -l | tr -d ' ')" "3"
 is "Cursor finds three skills"                  "$(ls -d .cursor/skills/*/ | wc -l | tr -d ' ')" "3"
 
 # the product itself, not just the skills that place it
-copies=$(find .claude .agents .cursor -name INSTRUCTION.md | wc -l | tr -d ' ')
+copies=$(find .claude .agents .cursor -name lazyspec.instruction.md | wc -l | tr -d ' ')
 is "the instruction lands on disk, so setup needs no network" "$copies" "1"
-grep -q 'cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/' "$SRC/README.md" \
+grep -q 'cp /tmp/lazyspec/lazyspec.instruction.md .claude/skills/' "$SRC/README.md" \
   && ok "README's copy route carries it, once" \
   || bad "README's copy route drops the instruction, or copies it more than once"
 grep -q 'for d in .claude/skills .agents/skills .cursor/skills' "$SRC/README.md" \
@@ -121,7 +121,7 @@ sect "D. what /lazyspec-setup does"
 paste_it() { # its step 3, by hand, into the file its step 2 would choose
   { sed '/<!-- lazyspec:begin -->/,$d' CONSTITUTION.md
     printf '<!-- lazyspec:begin -->\n'
-    cat "$SRC/INSTRUCTION.md"
+    cat "$SRC/lazyspec.instruction.md"
     printf '<!-- lazyspec:end -->\n'
     sed -n '/<!-- lazyspec:end -->/,$p' CONSTITUTION.md | tail -n +2
   } > .tmp && mv .tmp CONSTITUTION.md
@@ -132,7 +132,7 @@ grep -q 'Rules we already keep' CONSTITUTION.md \
 grep -q 'lazyspec:begin' CONSTITUTION.md && ok "between markers" || bad "no markers"
 node -e "
 const fs=require('fs');
-const body=fs.readFileSync('$SRC/INSTRUCTION.md','utf8').trim();
+const body=fs.readFileSync('$SRC/lazyspec.instruction.md','utf8').trim();
 process.exit(fs.readFileSync('CONSTITUTION.md','utf8').includes(body)?0:1)" \
   && ok "word for word, so a reader gets the whole rule" || bad "the paste is not verbatim"
 
@@ -147,7 +147,7 @@ lines=$(wc -l < CLAUDE.md | tr -d ' ')
 [ "$lines" -le 2 ] && ok "Claude Code gets a pointer, not a copy" || bad "CLAUDE.md holds content"
 node -e "
 const fs=require('fs');
-const inst=fs.readFileSync('$SRC/INSTRUCTION.md','utf8').trim();
+const inst=fs.readFileSync('$SRC/lazyspec.instruction.md','utf8').trim();
 const dup=['CLAUDE.md','AGENTS.md'].filter(f=>fs.readFileSync(f,'utf8').includes(inst));
 process.exit(dup.length?1:0)" \
   && ok "no second copy to drift" || bad "the instruction is in two files"
@@ -155,7 +155,7 @@ process.exit(dup.length?1:0)" \
 # ------------------------------------------------- E. what the README claims
 
 sect "E. what the README claims"
-grep -qE 'https?://[^ ]*INSTRUCTION\.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
+grep -qE 'https?://[^ ]*lazyspec\.instruction\.md' "$SRC/skills/lazyspec-setup/SKILL.md" \
   && bad "setup would fetch the instruction over the network" \
   || ok "setup never fetches the instruction, so it cannot paste a stranger's"
 grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
@@ -241,15 +241,15 @@ PLUGIN_ROOT=$CFG/plugins/cache/$MK/$PL/$VER
 is "install caches it at cache/$MK/$PL/<version>" "$(basename "$PLUGIN_ROOT")" "$VER"
 
 # everything the skills then rely on, read from where they will be read
-[ -f "$PLUGIN_ROOT/INSTRUCTION.md" ] \
-  && ok "\${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md is there, so setup needs no network" \
+[ -f "$PLUGIN_ROOT/lazyspec.instruction.md" ] \
+  && ok "\${CLAUDE_PLUGIN_ROOT}/lazyspec.instruction.md is there, so setup needs no network" \
   || bad "the instruction is not at the plugin root"
 is "and three skills are discoverable beside it" \
    "$(ls -d "$PLUGIN_ROOT"/skills/*/ 2>/dev/null | wc -l | tr -d ' ')" "3"
 node -e "
 const fs=require('fs');
-const a=fs.readFileSync('$PLUGIN_ROOT/INSTRUCTION.md','utf8');
-const b=fs.readFileSync('$SRC/INSTRUCTION.md','utf8');
+const a=fs.readFileSync('$PLUGIN_ROOT/lazyspec.instruction.md','utf8');
+const b=fs.readFileSync('$SRC/lazyspec.instruction.md','utf8');
 process.exit(a===b?0:1)" \
   && ok "byte for byte what this repository ships" || bad "the installed instruction differs"
 grep -q 'skills' "$PLUGIN_ROOT/.gitignore" 2>/dev/null \

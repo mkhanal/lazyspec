@@ -60,7 +60,7 @@ marked for you to check.
 
 The rest of this section is the same thing by hand.
 
-**The instruction is the install.** Paste `INSTRUCTION.md` where your
+**The instruction is the install.** Paste `lazyspec.instruction.md` where your
 agent reads it every task and you are done. That works on every agent.
 
 **Claude Code** takes the skills as a plugin:
@@ -93,7 +93,7 @@ git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
 for d in .claude/skills .agents/skills .cursor/skills; do
   mkdir -p $d && cp -R /tmp/lazyspec/skills/. $d/
 done
-cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/
+cp /tmp/lazyspec/lazyspec.instruction.md .claude/skills/
 ```
 
 That last line is not optional, and one copy is enough — put it beside
@@ -119,7 +119,7 @@ precisely what lazyspec exists to stop an agent doing, and a tool that
 did it in order to install itself would not deserve the benefit of the
 doubt.
 
-By hand it is the same two minutes: **put `INSTRUCTION.md` into the
+By hand it is the same two minutes: **put `lazyspec.instruction.md` into the
 standing rules your agents already load.** If you keep a
 `CONSTITUTION.md`, engineering principles, or house rules, that is the
 right home — paste it there and point `AGENTS.md` at it. If you keep
@@ -127,7 +127,7 @@ nothing of the kind, `AGENTS.md` is the default.
 
 ```
 <!-- lazyspec:begin -->
-… the body of INSTRUCTION.md …
+… the body of lazyspec.instruction.md …
 <!-- lazyspec:end -->
 ```
 
@@ -260,7 +260,7 @@ headings later means moving the blocks that prove them at the same time.
 skills and does the one thing a plugin cannot, which is write a file into
 your repository. Getting the skills is any of the routes above.
 
-`INSTRUCTION.md` ships beside the skills, so once the plugin is installed
+`lazyspec.instruction.md` ships beside the skills, so once the plugin is installed
 the text is already on your machine and `/lazyspec-setup` knows where to
 find it.
 
@@ -325,7 +325,7 @@ That is not a slogan; it is where the bugs came from:
   not resolve without them — and no requirement claimed any of them.
   There is a specification for installing now because the check said
   there wasn't one.
-- **The marriage caught real drift.** `AGENTS.md` carries `INSTRUCTION.md`
+- **The marriage caught real drift.** `AGENTS.md` carries `lazyspec.instruction.md`
   word for word; the day the instruction changed and the copy did not,
   the test failed rather than the two quietly disagreeing.
 - **`/lazyspec` made the scope widen out loud.** Installing was outside

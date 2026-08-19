@@ -5,7 +5,8 @@ description: Set lazyspec up in this repository - put the instruction where agen
 
 # /lazyspec-setup
 
-Two jobs, once. Put `INSTRUCTION.md` where this repository's agents read
+Two jobs, once. Put `lazyspec.instruction.md` where this repository's
+agents read
 it on every task, and settle where specifications will live. Nothing
 else.
 
@@ -18,8 +19,9 @@ this waits to be invoked, does its two jobs, and shows its work.
 
 It ships beside these skills. Look, in order:
 
-- `${CLAUDE_PLUGIN_ROOT}/INSTRUCTION.md` — the plugin route.
-- `INSTRUCTION.md` in or beside the skills folder, if it was copied in.
+- `${CLAUDE_PLUGIN_ROOT}/lazyspec.instruction.md` — the plugin route.
+- - `lazyspec.instruction.md` in or beside the skills folder, if it was
+  copied in.
 
 Read it whole, and paste only what you read.
 
@@ -57,7 +59,7 @@ yes**. This is somebody's standing rules; do not edit them unasked.
 
 ```
 <!-- lazyspec:begin -->
-… the body of INSTRUCTION.md, word for word …
+… the body of lazyspec.instruction.md, word for word …
 <!-- lazyspec:end -->
 ```
 

@@ -40,11 +40,11 @@ git config user.name demo
 mkdir -p .claude/skills .agents/skills
 cp -R "$SRC"/skills/. .claude/skills/
 cp -R "$SRC"/skills/. .agents/skills/
-cp "$SRC/INSTRUCTION.md" .claude/skills/
-cp "$SRC/INSTRUCTION.md" .agents/skills/
+cp "$SRC/lazyspec.instruction.md" .claude/skills/
+cp "$SRC/lazyspec.instruction.md" .agents/skills/
 
 printf '<!-- lazyspec:begin -->\n' > AGENTS.md
-cat "$SRC/INSTRUCTION.md" >> AGENTS.md
+cat "$SRC/lazyspec.instruction.md" >> AGENTS.md
 printf '<!-- lazyspec:end -->\n' >> AGENTS.md
 printf '@AGENTS.md\n' > CLAUDE.md
 
@@ -172,7 +172,7 @@ done
 grep -q 'lazyspec:begin' AGENTS.md && ok "instruction pasted between markers" || bad "markers"
 is "CLAUDE.md is a one-line shim" "$(cat CLAUDE.md)" "@AGENTS.md"
 grep -q 'lazyspec-validate' AGENTS.md && ok "the instruction names the check" || bad "instruction"
-[ -f "$SRC/INSTRUCTION.md" ] && ok "the instruction ships beside the skills, for /lazyspec-setup" || bad "instruction not shipped"
+[ -f "$SRC/lazyspec.instruction.md" ] && ok "the instruction ships beside the skills, for /lazyspec-setup" || bad "instruction not shipped"
 if [ -e "$DEMO/lazyspec-guard" ]; then bad "something executable was installed"
 else ok "nothing executable is installed"; fi
 
@@ -205,7 +205,7 @@ find_proof() {
   git grep --untracked -l -F -e "$1" -- . 2>/dev/null \
     | grep -v '\.lazyspec\.md$' | grep -v '^AGENTS.md$' | grep -v '^CLAUDE.md$' \
     | grep -v '^\.claude/' | grep -v '^\.agents/' \
-    | grep -vE '(^|/)INSTRUCTION\.md$' | tr '\n' ' '
+    | grep -vE '(^|/)lazyspec\.instruction\.md$' | tr '\n' ' '
 }
 is "JavaScript, describe()" "$(find_proof 'Refunds Never Exceed What Was Captured')" \
    "services/api/specs/billing.lazyspec.test.js "
@@ -217,10 +217,10 @@ is "Java, @DisplayName"     "$(find_proof 'A Cart Holds At Most Fifty Lines')" \
    "apps/web/CheckoutLazyspecTest.java "
 is "an unmarried requirement finds nothing" "$(find_proof 'Chargebacks Are Held For Review')" ""
 
-# The copy install leaves INSTRUCTION.md beside the skills, and it carries
+# The copy install leaves lazyspec.instruction.md beside the skills, and it carries
 # an example requirement, so it answers a search like a real test would.
 decoys=$(git grep --untracked -l -F -e 'Refunds Never Exceed What Was Captured' -- . \
-  | grep -cE '(^|/)INSTRUCTION\.md$')
+  | grep -cE '(^|/)lazyspec\.instruction\.md$')
 is "the copied instruction is a decoy, and there are two" "$decoys" "2"
 is "and the check discounts every one" \
    "$(find_proof 'Refunds Never Exceed What Was Captured')" \

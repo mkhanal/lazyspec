@@ -10,7 +10,7 @@ is for working on lazyspec itself.
 ## What is where
 
 ```
-INSTRUCTION.md              the standing instruction. the product.
+lazyspec.instruction.md              the standing instruction. the product.
 lazyspec.md                 where this repository's requirements live
 lazyspec.example.md         the same file, in several layouts
 skills/lazyspec-setup/      puts the instruction where agents read it
@@ -26,7 +26,7 @@ sandbox/                    throwaway consumer repos, and their scenarios
 ```
 node --test specs/*.lazyspec.test.js   # this repository's own requirements
 sh sandbox/run.sh                      # 51 scenarios in a throwaway repo
-sh sandbox/install.sh                  # 63 more: manifests, both install routes, the paste
+sh sandbox/install.sh                  # 63 more: manifests, install, the paste
 sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```
 
@@ -57,8 +57,8 @@ commit that you changed a specification, because nothing but you will.
   part that reaches every agent with nothing installed.
 - `specs/instruction.lazyspec.md` — the shipped writing's budget and
   shape. "Under two thousand characters" is a requirement, not a
-  preference: `INSTRUCTION.md` is read on every task forever, and a test
-  is the only thing that holds prose to a budget.
+  preference: `lazyspec.instruction.md` is read on every task forever,
+  and a test is the only thing that holds prose to a budget.
 - `specs/install.lazyspec.md` — what installing must leave behind. The
   manifests are load-bearing and invisible: get one name wrong and the
   skills arrive with no instruction to point at.

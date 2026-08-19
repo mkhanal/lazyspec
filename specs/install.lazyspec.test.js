@@ -11,7 +11,7 @@ const json = (rel) => JSON.parse(read(rel));
 
 // Everything an agent or a person could read the instruction out of.
 const shipped = () =>
-  ['INSTRUCTION.md', 'AGENTS.md', 'README.md']
+  ['lazyspec.instruction.md', 'AGENTS.md', 'README.md']
     .concat(fs.readdirSync(path.join(ROOT, 'skills')).map((d) => `skills/${d}/SKILL.md`));
 
 describe('The Plugin Resolves To This Repository', () => {
@@ -38,9 +38,9 @@ describe('The Plugin Resolves To This Repository', () => {
 });
 
 describe('Installing Leaves The Instruction On Disk', () => {
-  it('puts INSTRUCTION.md where /lazyspec-setup looks for it first', () => {
-    assert.ok(fs.existsSync(path.join(ROOT, 'INSTRUCTION.md')));
-    assert.match(read('skills/lazyspec-setup/SKILL.md'), /CLAUDE_PLUGIN_ROOT\}\/INSTRUCTION\.md/);
+  it('puts lazyspec.instruction.md where /lazyspec-setup looks for it first', () => {
+    assert.ok(fs.existsSync(path.join(ROOT, 'lazyspec.instruction.md')));
+    assert.match(read('skills/lazyspec-setup/SKILL.md'), /CLAUDE_PLUGIN_ROOT\}\/lazyspec\.instruction\.md/);
   });
 
   it('puts the three skills beside it', () => {
@@ -51,7 +51,7 @@ describe('Installing Leaves The Instruction On Disk', () => {
   });
 
   it('fetches it over the network from nowhere', () => {
-    const fetchers = shipped().filter((rel) => /https?:\/\/\S*INSTRUCTION\.md/.test(read(rel)));
+    const fetchers = shipped().filter((rel) => /https?:\/\/\S*lazyspec\.instruction\.md/.test(read(rel)));
     assert.deepEqual(fetchers, []);
   });
 });

@@ -62,7 +62,7 @@ describe('A Requirement Is A Level Two Heading', () => {
   });
 
   it('names ## in the standing instruction and in every header', () => {
-    assert.match(read('INSTRUCTION.md'), /`## ` heading/);
+    assert.match(read('lazyspec.instruction.md'), /`## ` heading/);
     const silent = specs().filter((rel) => !/`##`/.test(header(rel)));
     assert.deepEqual(silent, []);
   });

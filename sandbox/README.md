@@ -38,7 +38,7 @@ vendor/proto      somebody else's SPEC.md
 ```
 
 It is installed the way `README.md` says to: the skills in
-`.claude/skills/` and `.agents/skills/`, `INSTRUCTION.md` pasted into
+`.claude/skills/` and `.agents/skills/`, `lazyspec.instruction.md` pasted into
 `AGENTS.md` between markers, and `CLAUDE.md` holding `@AGENTS.md`.
 Nothing executable is installed, and a scenario checks that.
 

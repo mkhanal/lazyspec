@@ -53,7 +53,8 @@ already knows what is ignored, vendored or a submodule.
 This runs **from requirements to tests**. An ordinary test with no
 requirement is never a finding: unit, integration and database tests
 marry nothing by design, and complaining about them would demand that a
-project specify its own implementation. The one exception is a test that **named
+project specify its own implementation. The one exception is a test that
+**named
 itself** one - `lazyspec` in a test file's name is a claim, and a claim can
 be checked backwards.
 
@@ -103,9 +104,9 @@ proof and what the other matches were. Two matches never count:
 - **lazyspec's own writing**, wherever it sits. The instruction carries an
   example requirement, so it hits like a real one: in the standing rules
   between `<!-- lazyspec:begin -->` and `<!-- lazyspec:end -->`, and as
-  `INSTRUCTION.md` itself, which the copy install leaves beside the
+  `lazyspec.instruction.md` itself, which the copy install leaves beside the
   skills. Discount the skills folders whole - `.claude/skills/`,
-  `.agents/skills/`, a plugin cache - and every `INSTRUCTION.md`.
+  `.agents/skills/`, a plugin cache - and every `lazyspec.instruction.md`.
 - **The specification itself**, and any other quoting it.
 
 **Proved elsewhere.** Real proof, wrong file. `billing.lazyspec.md` is

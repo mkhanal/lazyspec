@@ -19,10 +19,10 @@ to say.
 
 ## Installing Leaves The Instruction On Disk
 
-- `INSTRUCTION.md` sits at the plugin root, where `/lazyspec-setup`
+- `lazyspec.instruction.md` sits at the plugin root, where `/lazyspec-setup`
   looks for it first.
 - The three skills sit beside it.
-- Nothing shipped fetches `INSTRUCTION.md` over the network.
+- Nothing shipped fetches `lazyspec.instruction.md` over the network.
 
 ## The Paste Is Bounded By Named Markers
 

@@ -14,10 +14,10 @@ const skills = () =>
 
 describe('The Standing Instruction Fits In Every Prompt', () => {
   it('stays under two thousand characters', () => {
-    const instruction = read('INSTRUCTION.md');
+    const instruction = read('lazyspec.instruction.md');
     assert.ok(
       instruction.length < 2000,
-      `INSTRUCTION.md is ${instruction.length} characters`,
+      `lazyspec.instruction.md is ${instruction.length} characters`,
     );
   });
 });
@@ -31,8 +31,8 @@ const editorFiles = () =>
     .filter((f) => /^(AGENTS|CLAUDE|GEMINI|CONVENTIONS)\.md$/.test(f));
 
 describe('This Repository Loads Its Own Instruction', () => {
-  it('carries the body of INSTRUCTION.md word for word in AGENTS.md', () => {
-    assert.ok(read('AGENTS.md').includes(read('INSTRUCTION.md').trim()));
+  it('carries the body of lazyspec.instruction.md word for word in AGENTS.md', () => {
+    assert.ok(read('AGENTS.md').includes(read('lazyspec.instruction.md').trim()));
   });
 
   it('points every other editor at AGENTS.md rather than repeating it', () => {
@@ -44,7 +44,7 @@ describe('This Repository Loads Its Own Instruction', () => {
 });
 
 describe('The Standing Instruction Names /lazyspec And /lazyspec-validate', () => {
-  const instruction = read('INSTRUCTION.md');
+  const instruction = read('lazyspec.instruction.md');
 
   it('names /lazyspec as the way into a specification', () => {
     assert.match(instruction, /\/lazyspec\b/);
@@ -61,7 +61,7 @@ describe('The Standing Instruction Names /lazyspec And /lazyspec-validate', () =
 
 describe('The Procedures Live In The Skills Alone', () => {
   it('copies no line of any skill into the instruction', () => {
-    const instruction = read('INSTRUCTION.md');
+    const instruction = read('lazyspec.instruction.md');
     const copied = skills().flatMap((rel) =>
       read(rel)
         .split('\n')

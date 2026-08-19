@@ -15,7 +15,7 @@ and a notice every specification carries.
 This is the file every agent reads. Editors that look for a name of their
 own get a short file that points here rather than a second copy.
 
-<!-- Below is INSTRUCTION.md, word for word. Change it there, not here. -->
+<!-- Below is lazyspec.instruction.md, word for word. Change it there, not here. -->
 
 ## Specifications
 
