@@ -332,7 +332,7 @@ That is not a slogan; it is where the bugs came from:
   what `lazyspec.md` said requirements here cover, so that sentence
   changed first, in its own edit, before anything was written under it.
 
-Ten requirements, each married to a test the runner collects. Six of them
+Eleven requirements, each married to a test the runner collects. Six of them
 have been checked by breaking the thing they promise and watching the
 test go red — a blown character budget, a stripped header, a desynced
 copy, a misspelled marker, a mismatched version, an instruction fetched

@@ -50,7 +50,7 @@ checked by running `go test`, `javac`, `pytest` and `unittest` by hand.
 Run `/lazyspec`. Run `/lazyspec-validate` before you finish. Say in the
 commit that you changed a specification, because nothing but you will.
 
-**What is specified**, and why only these three:
+**What is specified**, and why only these four:
 
 - `specs/format.lazyspec.md` — the shape of a specification: its header,
   its heading level, and how its test is named. The header is the one
@@ -62,6 +62,9 @@ commit that you changed a specification, because nothing but you will.
 - `specs/install.lazyspec.md` — what installing must leave behind. The
   manifests are load-bearing and invisible: get one name wrong and the
   skills arrive with no instruction to point at.
+- `specs/areas.lazyspec.md` — that where requirements live is written in
+  prose. It was a yaml schema once, and the requirement exists so that
+  drifting back is a failing test rather than a preference.
 
 The skills and the README are ordinary writing. Change them without
 ceremony — but read [the note on prose](#the-part-no-test-reaches) first.
