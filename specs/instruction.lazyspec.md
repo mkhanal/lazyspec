@@ -8,8 +8,7 @@
 
 `lazyspec.instruction.md` is pasted into whatever the agent loads on
 every task. It is read again on every task forever, so its size is a
-requirement
-rather than a preference.
+requirement rather than a preference.
 
 ## The Standing Instruction Fits In Every Prompt
 
