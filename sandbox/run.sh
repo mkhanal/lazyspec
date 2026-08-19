@@ -36,12 +36,12 @@ git init -q .
 git config user.email demo@example.com
 git config user.name demo
 
-# install, the way README.md says to
+# install, the way README.md says to - two of the three skill folders,
+# because a repository keeps the ones its own agents read
 mkdir -p .claude/skills .agents/skills
 cp -R "$SRC"/skills/. .claude/skills/
 cp -R "$SRC"/skills/. .agents/skills/
 cp "$SRC/lazyspec.instruction.md" .claude/skills/
-cp "$SRC/lazyspec.instruction.md" .agents/skills/
 
 printf '<!-- lazyspec:begin -->\n' > AGENTS.md
 cat "$SRC/lazyspec.instruction.md" >> AGENTS.md
@@ -217,11 +217,12 @@ is "Java, @DisplayName"     "$(find_proof 'A Cart Holds At Most Fifty Lines')" \
    "apps/web/CheckoutLazyspecTest.java "
 is "an unmarried requirement finds nothing" "$(find_proof 'Chargebacks Are Held For Review')" ""
 
-# The copy install leaves lazyspec.instruction.md beside the skills, and it carries
-# an example requirement, so it answers a search like a real test would.
+# The copy install leaves one lazyspec.instruction.md beside the skills,
+# and it carries an example requirement, so it answers a search like a
+# real test would.
 decoys=$(git grep --untracked -l -F -e 'Refunds Never Exceed What Was Captured' -- . \
   | grep -cE '(^|/)lazyspec\.instruction\.md$')
-is "the copied instruction is a decoy, and there are two" "$decoys" "2"
+is "the copied instruction is a decoy the check has to discount" "$decoys" "1"
 is "and the check discounts every one" \
    "$(find_proof 'Refunds Never Exceed What Was Captured')" \
    "services/api/specs/billing.lazyspec.test.js "
