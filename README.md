@@ -45,7 +45,7 @@ requirement is written when it is known, and changed safely after.
 in, paste this to whatever agent you already use:
 
 ```
-Read https://github.com/mkhanal/lazyspec/blob/main/README.md and install it.
+Read https://github.com/mkhanal/lazyspec/blob/main/README.md and install it
 ```
 
 It reads this page, puts the skills where your editor looks, and runs
@@ -719,88 +719,38 @@ never enforced by anything but the tests.
 
 ---
 
-## Something not working?
+## Feedback, and what would help most
 
-**Open an issue:** <https://github.com/mkhanal/lazyspec/issues> — and
-raise it early rather than working around it. Almost everything this
-tool gets wrong is a sentence that reads clearly to whoever wrote it and
-not to the agent that has to act on it, and that is only visible from
-outside.
+**Everything here has been verified on one machine, one editor, one
+person's judgement.** The gap between that and "it works" is you.
 
-Worth including:
+- **Run it on an agent it has not been run on.** The table above says
+  where each one reads its instruction, and most of those rows come from
+  documentation rather than from watching it happen. Claude Code is the
+  one that has actually been installed and driven end to end. Tell us
+  which rows are wrong.
+- **Run it on a repository unlike this one.** Another language, another
+  runner, a monorepo, a codebase that already keeps requirements under
+  some other name. The conventions are meant to bend to yours; where they
+  do not, that is the finding.
+- **Tell us where the writing failed you.** Almost everything this gets
+  wrong is a sentence that read clearly to whoever wrote it and not to
+  the agent that had to act on it — and that is only ever visible from
+  outside.
+
+**Open an issue:** <https://github.com/mkhanal/lazyspec/issues>. Raise it
+early rather than working around it. Worth including:
 
 - which agent, and which editor.
 - what you asked for, and what it did instead.
 - the requirement and the test, if a marriage was involved.
 - what `/lazyspec-validate` said, if it ran.
 
-Requests are welcome too, with one caveat: this ships no program, so the
+Requests are welcome, with one caveat: this ships no program, so the
 answer to most of them is wording rather than code — which also means a
 fix is usually a line, not a release.
 
-# Contributing
-
-This repository is the tool, pointed at itself. A specification in here
-is changed the way one in yours is.
-
-```
-INSTRUCTION.md              the standing instruction. the product.
-lazyspec.md                 where this repository's requirements live
-lazyspec.example.md         the same file, in several layouts
-skills/lazyspec-setup/      puts that instruction where agents read it
-skills/lazyspec/            the only way to change a specification
-skills/lazyspec-validate/   the check
-specs/                      this repository's own requirements
-sandbox/                    a throwaway consumer repo, and its scenarios
-```
-
-**Tests**
-
-```
-node --test specs/*.lazyspec.test.js   # this repository's own requirements
-sh sandbox/run.sh                      # 51 scenarios in a throwaway repo
-sh sandbox/install.sh                  # 63 more: manifests, both install routes, the paste
-sh sandbox/isolation.sh                # proves the sandbox is sealed off
-```
-
-`.github/workflows/tests.yml` runs all four on every push, under dash and
-under busybox. That workflow is this repository's own and is not a
-template for yours: lazyspec ships no CI, because which agent runs the
-judged half and what a verdict does to a pull request are not ours to
-choose. Two userlands because one is not enough - a `tr` set that deleted
-three characters on BSD and none on busybox passed on a laptop and failed
-everywhere else.
-
-No gate, no build.
-
-**Changing anything here.** Run `/lazyspec`. Run `/lazyspec-validate`
-before you finish.
-
-**On Windows**, `.claude/skills/*` are symlinks into `skills/`. Git only
-recreates them with `git config --global core.symlinks true` set before
-cloning, and that needs Developer Mode or an elevated shell. Otherwise
-copy the folder instead: `cp -R skills/. .claude/skills/`. Everything
-else here is plain text and `sh`.
-
-**What is specified**, and why only these three:
-
-- `specs/format.lazyspec.md` — that every specification carries its
-  notice. It is the one thing that reaches every agent, so it is the one
-  thing worth a test.
-- `specs/instruction.lazyspec.md` — the shipped writing's budget and
-  shape. "Under two thousand characters" is a requirement, not a
-  preference: `INSTRUCTION.md` is read on every task forever, and a test
-  is the only thing that holds prose to a budget.
-- `specs/install.lazyspec.md` — what installing must leave behind. The
-  manifests are load-bearing and invisible: get one name wrong and the
-  skills arrive with no instruction to point at.
-
-The skills and this README are ordinary writing. Change them without
-ceremony.
-
-**Nothing here is a program.** There is no build, no gate, and nothing to
-install to work on it — which is the same claim the tool makes about
-itself, so it had better stay true.
+**Working on lazyspec itself** is [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Why a name and not a link
 

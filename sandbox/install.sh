@@ -163,6 +163,18 @@ grep -q 'stop and ask for it' "$SRC/skills/lazyspec-setup/SKILL.md" \
 grep -q 'lazyspec-setup' "$SRC/README.md" && ok "README sends you to /lazyspec-setup after installing" \
   || bad "README never mentions the step that does the work"
 
+# using it and working on it are different documents, and each has to
+# point at the other or one of them silently becomes the only one read
+grep -q 'CONTRIBUTING.md' "$SRC/README.md" \
+  && ok "README points at CONTRIBUTING.md for working on the tool" \
+  || bad "the README carries contributor instructions or drops them"
+grep -q 'README.md' "$SRC/CONTRIBUTING.md" \
+  && ok "and CONTRIBUTING.md points back for using it" \
+  || bad "CONTRIBUTING.md does not say where using it is documented"
+grep -qE 'sandbox/(run|install)\.sh' "$SRC/CONTRIBUTING.md" \
+  && ok "the test commands live with the contributor guide" \
+  || bad "CONTRIBUTING.md does not say how to run the tests"
+
 # A repository that already keeps requirements under another name is the
 # case that loses most by a wrong glob: the set matches nothing, the check
 # sees no specifications, and reports a clean repository.
