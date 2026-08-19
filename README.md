@@ -673,7 +673,7 @@ sandbox/                    a throwaway consumer repo, and its scenarios
 
 ```
 node --test specs/*.lazyspec.test.js   # this repository's own requirements
-sh sandbox/run.sh                      # 48 scenarios in a throwaway repo
+sh sandbox/run.sh                      # 50 scenarios in a throwaway repo
 sh sandbox/install.sh                  # 53 more: manifests, both install routes, the paste
 sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```

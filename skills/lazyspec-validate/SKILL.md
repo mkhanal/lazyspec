@@ -94,9 +94,12 @@ lands, "the test may not fully exercise the requirement" does not.
 - a comment, a README, a mock, a changelog. Say which file holds the real
 proof and what the other matches were. Two matches never count:
 
-- **The pasted instruction.** `AGENTS.md` and its like carry an example
-  requirement. Anything between `<!-- lazyspec:begin -->` and
-  `<!-- lazyspec:end -->` is instruction.
+- **lazyspec's own writing**, wherever it sits. The instruction carries an
+  example requirement, so it hits like a real one: in the standing rules
+  between `<!-- lazyspec:begin -->` and `<!-- lazyspec:end -->`, and as
+  `INSTRUCTION.md` itself, which the copy install leaves beside the
+  skills. Discount the skills folders whole - `.claude/skills/`,
+  `.agents/skills/`, a plugin cache - and every `INSTRUCTION.md`.
 - **The specification itself**, and any other quoting it.
 
 **Proved elsewhere.** Real proof, wrong file. `billing.lazyspec.md` is
