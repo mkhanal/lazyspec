@@ -833,12 +833,14 @@ report — and all of them survive the requirement changing, which is the
 only moment that matters. A name does not. Reword the requirement and
 every test carrying the old words is orphaned at once, loudly.
 
-## Prior work
+## Prior work / Appreciation
 
 Behaviour-driven development with the specification locked, the binding
-made from the requirement's own words, and the timing inverted. Owes Dan
-North for BDD, Gojko Adzic for Specification by Example, and Cucumber for
-binding specifications to executable steps at all.
+made from the requirement's own words, and the timing inverted. Owes `Dan
+North` for BDD, `Gojko Adzic` for Specification by Example, and
+`Cucumber` for binding specifications to executable steps at all, plus
+many more that aren't on top of my head right now. (PRs accepted for the
+Appreciation list as well.)
 
 ## Licence
 
