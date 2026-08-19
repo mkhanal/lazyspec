@@ -86,6 +86,12 @@ specification says so on its first line.
    and often necessary: each is proved by its own test and breaks on its
    own. Two that cannot both be true are not - say so and stop.
 
+   **Stopping means changing nothing, not choosing carefully.** Where
+   there is nobody to ask - an unattended run, a queue, CI - put the
+   question and the options in your report and leave the tree as you
+   found it. Reconciling two requirements is a decision somebody makes,
+   and a stop that quietly picks one is worse than no check at all.
+
    A new requirement joins the specification it belongs to. Start a new
    `*.lazyspec.md` only when none fits, and its filename decides which
    test file proves it.
@@ -155,8 +161,19 @@ specification says so on its first line.
    passes, and nothing downstream can tell it apart from a real one. If
    a test fails, fix the code - never the requirement.
 
+   **Removing a requirement does not remove the behaviour.** The code
+   that satisfied it is still there and now nothing describes it, which
+   is the state this exists to prevent, arrived at from the other
+   direction. Either take it out in the same change, or say in your
+   report that it is still shipping and no requirement covers it. Do not
+   leave that unsaid.
+
 5. **Check your work.** Every heading has its test, and the repository's
-   own test command passes. Find that command; do not guess it. If you
+   own test command passes. Find that command; do not guess it. If there
+   is none to find - no manifest, no Makefile, no CI - run what the test
+   files themselves imply, say it was inferred, and say plainly that
+   nothing in this repository currently collects the file you just
+   wrote. If you
    renamed or deleted a specification, its test file follows - same name,
    same moment. A test file naming `lazyspec` left behind with no
    specification is an orphan that still passes, proving a requirement
