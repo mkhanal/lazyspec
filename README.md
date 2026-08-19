@@ -231,13 +231,22 @@ yours —
 
 ## Where this comes from
 
-**It is in daily use in a regulated industry.** The convention lazyspec
-packages runs an electronic quality management system — close to three
-hundred requirements, each married to the test that proves it, in a
-domain where "the specification says one thing and the code does
-another" is not a code-review nit but something somebody has to answer
-for. That is where every rule on this page was worn in, and it is still
-the repository this gets tested against.
+**It is in daily use in a software product for a regulated industry.**
+The convention lazyspec packages runs an electronic quality management
+system — close to three hundred requirements, each married to the test
+that proves it, in a domain where "the specification says one thing and
+the code does another" is not a review nit but something somebody has to
+answer for. That is where every rule on this page was worn in, and it is
+still the repository this gets tested against.
+
+**It works, and the usual failure modes have not turned up.** No
+specification quietly reworded to match what was built. No requirement
+written before anybody understood the behaviour and then abandoned. No
+specify-plan-tasks workflow to adopt and then route around, because
+there is no workflow — see [Why not one of the
+others](#why-not-one-of-the-others). That is why it is packaged at all,
+rather than staying one team's habit: it seemed worth the ecosystem
+having.
 
 **That use settled the hook question early.** We shipped script
 guardrails and took them out, because they did not work as well as the
