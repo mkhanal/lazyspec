@@ -678,6 +678,14 @@ sh sandbox/install.sh                  # 53 more: manifests, both install routes
 sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```
 
+`.github/workflows/tests.yml` runs all four on every push, under dash and
+under busybox. That workflow is this repository's own and is not a
+template for yours: lazyspec ships no CI, because which agent runs the
+judged half and what a verdict does to a pull request are not ours to
+choose. Two userlands because one is not enough - a `tr` set that deleted
+three characters on BSD and none on busybox passed on a laptop and failed
+everywhere else.
+
 No gate, no build.
 
 **Changing anything here.** Run `/lazyspec`. Run `/lazyspec-validate`

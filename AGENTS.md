@@ -7,7 +7,8 @@ in here.
 Tests: `node --test specs/*.lazyspec.test.js`. `sh sandbox/run.sh`
 builds a throwaway consumer repository and exercises every scenario
 against it; `sh sandbox/install.sh` does the same for the manifests, the
-install routes and the paste. There is no gate and no build.
+install routes and the paste. CI runs all four under dash and busybox.
+There is no gate and no build.
 Nothing here is a program. It is three skills, one standing instruction,
 and a notice every specification carries.
 

@@ -1,0 +1,46 @@
+# This repository's own tests. It is not a template: lazyspec ships no
+# workflow for yours, because which agent runs the judged half and what a
+# verdict does to a pull request are not ours to choose.
+#
+# Two userlands on purpose. A tr set that deleted three characters on BSD
+# and none on busybox passed on a laptop and failed everywhere else, and
+# nothing but a second shell was ever going to say so.
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gnu:
+    name: ubuntu, dash, node ${{ matrix.node }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['18', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      - run: git config --global user.email ci@example.com && git config --global user.name ci
+      - run: node --test specs/*.lazyspec.test.js
+      - run: sh sandbox/run.sh
+      - run: sh sandbox/install.sh
+      - run: sh sandbox/isolation.sh
+
+  busybox:
+    name: alpine, busybox
+    runs-on: ubuntu-latest
+    container: node:22-alpine
+    steps:
+      - run: apk add --no-cache git
+      - uses: actions/checkout@v4
+      - run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - run: git config --global user.email ci@example.com && git config --global user.name ci
+      - run: node --test specs/*.lazyspec.test.js
+      - run: sh sandbox/run.sh
+      - run: sh sandbox/install.sh
+      - run: sh sandbox/isolation.sh
