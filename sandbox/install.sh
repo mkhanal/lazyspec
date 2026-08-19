@@ -101,6 +101,16 @@ grep -q 'claude plugin marketplace add' "$SRC/README.md" \
   && ok "and a shell form of the plugin install, for an agent doing it for you" \
   || bad "the plugin route is slash commands only, which an agent cannot run"
 
+# the call for contributors is the first thing on the page, and it says
+# which models the depth actually comes from
+banner=$(grep -n 'Contributors wanted' "$SRC/README.md" | head -1 | cut -d: -f1)
+{ [ -n "$banner" ] && [ "$banner" -lt 12 ]; } \
+  && ok "the call for contributors is at the top, not buried" \
+  || bad "the contributors banner is missing or has been pushed down"
+sed -n "$((banner - 1)),$((banner + 20))p" "$SRC/README.md" | grep -q 'Opus, Sonnet and' \
+  && ok "and names the models the depth comes from" \
+  || bad "the banner does not say which models this was proven with"
+
 # the route we recommend has to be the one a reader meets first
 handover=$(grep -n 'and install it' "$SRC/README.md" | head -1 | cut -d: -f1)
 manual=$(grep -n 'plugin marketplace add' "$SRC/README.md" | head -1 | cut -d: -f1)

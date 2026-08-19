@@ -1,5 +1,27 @@
 # lazyspec
 
+> ### Contributors wanted — especially outside Claude
+>
+> Everything here has been worked hard with **Claude — Opus, Sonnet and
+> Fable**: in daily use on a production codebase, and driven end to end
+> by agents turned loose on repositories they had never seen. That is the
+> depth behind every rule on this page.
+>
+> **No other model or editor has been exercised anywhere near as far.**
+> The other rows of the [agent support table](#agent-support) come from
+> documentation rather than from watching it happen, and Claude Code is
+> the only editor whose install has been run start to finish.
+>
+> If you work with Codex, Cursor, Gemini, Copilot, Windsurf, Cline, Aider
+> or anything else: **run it, and say what happened.** Validate it against
+> a real repository, [open an
+> issue](https://github.com/mkhanal/lazyspec/issues), send a pull
+> request. The conventions are meant to bend to your repository and your
+> agent; where they do not, that is the finding — and it is one nobody
+> here can see from the inside. See [what would help
+> most](#feedback-and-what-would-help-most).
+
+
 Write each requirement the moment it is known — and you will know them
 one at a time, as the build goes.
 
