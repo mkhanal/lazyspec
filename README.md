@@ -217,6 +217,39 @@ We ship no workflow file. Which agent runs the judged half, which
 credentials it uses, and whether a verdict blocks a merge are yours —
 `/lazyspec-validate` describes what to give a reviewing agent.
 
+## Pointed at itself
+
+This repository is the tool, and the first thing the tool is used on.
+Every requirement in it was written through `/lazyspec`, and
+`/lazyspec-validate` runs before work here is called finished.
+
+That is not a slogan; it is where the bugs came from:
+
+- **`/lazyspec-validate` found requirements this project owed and had not
+  written.** Six manifest files shipped, load-bearing — the plugin does
+  not resolve without them — and no requirement claimed any of them.
+  There is a specification for installing now because the check said
+  there wasn't one.
+- **The marriage caught real drift.** `AGENTS.md` carries `INSTRUCTION.md`
+  word for word; the day the instruction changed and the copy did not,
+  the test failed rather than the two quietly disagreeing.
+- **`/lazyspec` made the scope widen out loud.** Installing was outside
+  what `lazyspec.md` said requirements here cover, so that sentence
+  changed first, in its own edit, before anything was written under it.
+
+Ten requirements, each married to a test the runner collects. Six of them
+have been checked by breaking the thing they promise and watching the
+test go red — a blown character budget, a stripped header, a desynced
+copy, a misspelled marker, a mismatched version, an instruction fetched
+over the network.
+
+**What none of that reaches is the writing.** No assertion can tell you
+whether an agent reading a skill does the right thing. The only test for
+that is handing the repository to agents that have never seen it and
+watching — which found four documentation defects the day it was tried,
+including a rule in the README that contradicted a skill forty lines
+away. That half stays honest by being read, not by being green.
+
 ## Agent support
 
 The notice reaches every agent, because it is in the file. The
