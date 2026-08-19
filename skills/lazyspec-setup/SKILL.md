@@ -36,10 +36,15 @@ you downloaded is not the one they installed.
 Read the repository before deciding. In order of preference:
 
 1. **A document the team already keeps** — `CONSTITUTION.md`,
-   `PRINCIPLES.md`, engineering standards, house rules. If one exists and
-   agents already load it, that is the home. A rule filed beside rules
-   people already respect is followed; a rule in a file of its own
-   competes for attention.
+   `PRINCIPLES.md`, engineering standards, house rules. If one exists,
+   that is the home. A rule filed beside rules people already respect is
+   followed; a rule in a file of its own competes for attention.
+
+   **Whether anything loads it today does not change the answer.** If
+   nothing does, step 5 fixes that: `AGENTS.md` and `CLAUDE.md` point at
+   it, and the team's own rules start arriving in context too, which they
+   were not before. Do not leave their document sitting unread beside a
+   new one of yours.
 2. **`AGENTS.md`** — the default when there is no such document.
 3. **Any other file this repository already keeps**: `.cursor/rules/`,
    `.github/copilot-instructions.md`, `GEMINI.md`, `.clinerules`,

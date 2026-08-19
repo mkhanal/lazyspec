@@ -81,22 +81,25 @@ printf 'print("hello")\n' > main.py
 printf '# Someone else project\n\nRules we already keep.\n' > CONSTITUTION.md
 git add -A >/dev/null; git commit -qm initial
 
-mkdir -p .claude/skills .agents/skills
-cp -R "$SRC"/skills/. .claude/skills/
-cp -R "$SRC"/skills/. .agents/skills/
-is "Claude Code and opencode find three skills" "$(ls .claude/skills | wc -l | tr -d ' ')" "3"
-is "Codex and opencode find three skills"       "$(ls .agents/skills | wc -l | tr -d ' ')" "3"
+for d in .claude/skills .agents/skills .cursor/skills; do
+  mkdir -p $d; cp -R "$SRC"/skills/. $d/; cp "$SRC/INSTRUCTION.md" $d/
+done
+is "Claude Code and opencode find three skills" "$(ls -d .claude/skills/*/ | wc -l | tr -d ' ')" "3"
+is "Codex and opencode find three skills"       "$(ls -d .agents/skills/*/ | wc -l | tr -d ' ')" "3"
+is "Cursor finds three skills"                  "$(ls -d .cursor/skills/*/ | wc -l | tr -d ' ')" "3"
 
 # the product itself, not just the skills that place it
-cp "$SRC/INSTRUCTION.md" .claude/skills/
-cp "$SRC/INSTRUCTION.md" .agents/skills/
-[ -f .claude/skills/INSTRUCTION.md ] && [ -f .agents/skills/INSTRUCTION.md ] \
-  && ok "the instruction lands beside them, so setup needs no network" \
-  || bad "the instruction is not on disk after a copy install"
-grep -q 'cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/' "$SRC/README.md" \
-  && ok "README prints that copy too" || bad "README's copy route drops the instruction"
-grep -q 'cp -R /tmp/lazyspec/skills/\. \.claude/skills/' "$SRC/README.md" \
-  && ok "README prints the command that does this" || bad "README's copy command differs"
+missing=$(for d in .claude .agents .cursor; do [ -f $d/skills/INSTRUCTION.md ] || echo $d; done)
+[ -z "$missing" ] && ok "the instruction lands beside them, so setup needs no network" \
+  || bad "no instruction on disk under: $missing"
+grep -q 'cp /tmp/lazyspec/INSTRUCTION.md \$d/' "$SRC/README.md" \
+  && ok "README's copy route carries the instruction too" \
+  || bad "README's copy route drops the instruction"
+grep -q 'for d in .claude/skills .agents/skills .cursor/skills' "$SRC/README.md" \
+  && ok "README prints one loop covering all three" || bad "README's copy command differs"
+grep -q 'claude plugin marketplace add' "$SRC/README.md" \
+  && ok "and a shell form of the plugin install, for an agent doing it for you" \
+  || bad "the plugin route is slash commands only, which an agent cannot run"
 
 # ------------------------------------------------ D. what /lazyspec-setup does
 

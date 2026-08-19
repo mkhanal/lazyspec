@@ -49,30 +49,48 @@ agent reads it every task and you are done. That works on every agent.
 /plugin install lazyspec@lazyspec
 ```
 
+Those are slash commands, so an agent doing this for you cannot run them.
+The same two, from a shell:
+
+```
+claude plugin marketplace add mkhanal/lazyspec
+claude plugin install lazyspec@lazyspec
+```
+
+It clones over SSH and falls back to HTTPS on its own, so no keys are
+needed. The plugin installs the skills for you, everywhere; the copy
+below installs them in one repository, for everybody working in it.
+
 **Cursor and Codex** each read their own plugin directory, and both ship
 here: add this repository through that editor's own plugin interface.
 
 **Anything else** is a clone and a copy:
 
 ```
+rm -rf /tmp/lazyspec
 git clone --depth 1 https://github.com/mkhanal/lazyspec /tmp/lazyspec
-mkdir -p .claude/skills .agents/skills
-cp -R /tmp/lazyspec/skills/. .claude/skills/
-cp -R /tmp/lazyspec/skills/. .agents/skills/
-cp /tmp/lazyspec/INSTRUCTION.md .claude/skills/
-cp /tmp/lazyspec/INSTRUCTION.md .agents/skills/
+for d in .claude/skills .agents/skills .cursor/skills; do
+  mkdir -p $d
+  cp -R /tmp/lazyspec/skills/. $d/
+  cp /tmp/lazyspec/INSTRUCTION.md $d/
+done
 ```
 
 The last two lines matter. `INSTRUCTION.md` is the product; the skills
 only put it somewhere. Copy it in and `/lazyspec-setup` finds it on your
 disk, at the version the skills beside it were written for.
 
-Two directories cover three agents: `.claude/skills/` for Claude Code
-and opencode, `.agents/skills/` for OpenAI's Codex and opencode.
+`.claude/skills/` is read by Claude Code and opencode, `.agents/skills/`
+by OpenAI's Codex and opencode, `.cursor/skills/` by Cursor. Drop the
+ones you do not use.
 
 **Or hand it over:** *"Read
 `https://github.com/mkhanal/lazyspec/blob/main/README.md` and install
-it."*
+it."* That sentence is your yes: it consents to the skills being copied
+in and the instruction being pasted into your standing rules. It does not
+consent to a requirement being written — nothing here writes one — and
+whatever `/lazyspec-setup` infers for `.lazyspec.yaml` still comes back
+marked for you to check.
 
 ### Then the one thing that matters
 
@@ -104,8 +122,10 @@ Everything else here is copying files around.
   agent starts, every task, without being asked for.
 - **Claude Code never looks for `AGENTS.md`.** A repository with only an
   `AGENTS.md` looks set up and is not. One line, `@AGENTS.md`, fixes it.
-- **Every other editor gets a short file pointing at `AGENTS.md`**, never
-  a second copy — see the table below.
+- **Every other editor gets a short file pointing at the home**, where
+  it can include one — see the table below. Where an editor has no
+  include mechanism, it gets the text itself, and you now have two copies
+  to keep in step. Say so when you make the second one.
 - **A plugin cannot do this.** Plugins carry skills, not files in your
   repository.
 
@@ -674,7 +694,7 @@ sandbox/                    a throwaway consumer repo, and its scenarios
 ```
 node --test specs/*.lazyspec.test.js   # this repository's own requirements
 sh sandbox/run.sh                      # 50 scenarios in a throwaway repo
-sh sandbox/install.sh                  # 57 more: manifests, both install routes, the paste
+sh sandbox/install.sh                  # 59 more: manifests, both install routes, the paste
 sh sandbox/isolation.sh                # proves the sandbox is sealed off
 ```
 
